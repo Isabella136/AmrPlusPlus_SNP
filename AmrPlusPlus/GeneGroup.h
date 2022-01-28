@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <unordered_map>
+#include <iostream>
 #include "Gene.h"
 
 using namespace std;
@@ -8,16 +9,39 @@ using namespace std;
 class GeneGroup
 {
 	private:
-		GeneType* geneType;
-		GeneClass* geneClass;
-		GeneMechanism* geneMechanism;
 		string geneGroup;
 		unordered_map<string, Gene*> genes;
 	public:
-		GeneGroup(string geneName, string geneSequence, int delimiterIndexBeforeGroup);
+		GeneGroup(string geneName, string geneSequence, int delimiter4, int delimiter5);
 		Gene* getGene(string geneName);
-		void setGeneType(GeneType& gType);
-		void setGeneClass(GeneClass& gClass);
-		void setGeneMechanism(GeneMechanism& gMechanisms);
 		void addGene(string geneName, string geneSequence);
 };
+
+GeneGroup::GeneGroup(string geneName, string geneSequence, int delimiter4, int delimiter5)
+{
+	geneGroup = geneName.substr(delimiter4 + 1, delimiter5 - delimiter4 - 1);
+	addGene(geneName, geneSequence);
+}
+Gene* GeneGroup::getGene(string geneName)
+{
+	try 
+	{
+		return genes.at(geneName);
+	}
+	catch (const out_of_range& oor)
+	{
+		return nullptr;
+	}
+	
+}
+void GeneGroup::addGene(string geneName, string geneSequence)
+{
+	if (!getGene(geneName))
+	{
+		genes.emplace(geneGroup, new Gene(geneName, geneSequence));
+	}
+	else
+	{
+		cout << "Gene name \"" << geneName << "\" already exists";
+	}
+}

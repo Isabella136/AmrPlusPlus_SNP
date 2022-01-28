@@ -10,39 +10,52 @@ class GeneType
 	private:
 		string geneType;
 		unordered_map<string,GeneClass*> geneClasses;
+		GeneClass* getGeneClass(string geneClass);
 	public:
 		GeneType(string geneName, string geneSequence);
-		GeneClass* getGeneClass(string geneClass);
 		Gene* getGene(string geneName);
-		void addGeneClass(string geneName, string geneSequence, int delimiterIndexBeforeClass);
+		void addGene(string geneName, string geneSequence, int delimiter2);
 };
 
 GeneType::GeneType(string geneName, string geneSequence)
 {
-	int firstDelimiterIndex = geneName.find('|');
-	int nextDelimiterIndex = geneName.substr(firstDelimiterIndex + 1).find('|');
-	geneType = geneName.substr(firstDelimiterIndex + 1, nextDelimiterIndex - firstDelimiterIndex - 1);
-	addGeneClass(geneName, geneSequence, nextDelimiterIndex);
-}
-
-void GeneType::addGeneClass(string geneName, string geneSequence, int delimiterIndexBeforeClass)
-{
-	int nextDelimiterIndex = geneName.substr(delimiterIndexBeforeClass + 1).find('|');
-	string geneClass = geneName.substr(delimiterIndexBeforeClass + 1, nextDelimiterIndex - delimiterIndexBeforeClass - 1);
-	geneClasses.emplace(geneClass, new GeneClass(geneName, geneSequence, delimiterIndexBeforeClass));
-	geneClasses[geneClass]->setGeneType(this);
+	int delimiter1 = geneName.find('|');
+	int delimiter2 = geneName.substr(delimiter1 + 1).find('|');
+	geneType = geneName.substr(delimiter1 + 1, delimiter2 - delimiter1 - 1);
+	addGene(geneName, geneSequence, delimiter2);
 }
 
 GeneClass* GeneType::getGeneClass(string geneClass)
 {
-	return geneClasses[geneClass];
+	try 
+	{
+		return geneClasses.at(geneClass);
+	}
+	catch (const out_of_range& oor)
+	{
+		return nullptr;
+	}
 }
 
 Gene* GeneType::getGene(string geneName)
 {
-	int firstDelimiterIndex = geneName.find('|');
-	int delimiterIndexBeforeClass = geneName.substr(firstDelimiterIndex + 1).find('|');
-	int nextDelimiterIndex = geneName.substr(delimiterIndexBeforeClass + 1).find('|');
-	string geneClass = geneName.substr(delimiterIndexBeforeClass + 1, nextDelimiterIndex - delimiterIndexBeforeClass - 1);
-	return getGeneClass(geneClass)->getGene(geneName);
+	int delimiter1 = geneName.find('|');
+	int delimiter2 = geneName.substr(delimiter1 + 1).find('|');
+	int delimiter3 = geneName.substr(delimiter2 + 1).find('|');
+	string geneClass = geneName.substr(delimiter2 + 1, delimiter3 - delimiter2 - 1);
+	return getGeneClass(geneClass)->getGene(geneName, delimiter3);
+}
+
+void GeneType::addGene(string geneName, string geneSequence, int delimiter2)
+{
+	int delimiter3 = geneName.substr(delimiter2 + 1).find('|');
+	string geneClass = geneName.substr(delimiter2 + 1, delimiter3 - delimiter2 - 1);
+	if (!getGeneClass(geneClass))
+	{
+		geneClasses.emplace(geneClass, new GeneClass(geneName, geneSequence, delimiter2, delimiter3));
+	}
+	else
+	{
+		getGeneClass(geneClass)->addGene(geneName, geneSequence, delimiter3);
+	}
 }
