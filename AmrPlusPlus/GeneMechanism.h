@@ -37,14 +37,14 @@ GeneGroup* GeneMechanism::getGeneGroup(string geneGroup)
 
 Gene* GeneMechanism::getGene(string geneName, int delimiter4)
 {
-	int delimiter5 = geneName.substr(delimiter4 + 1).find('|');
+	int delimiter5 = geneName.substr(delimiter4 + 1).find('|') + delimiter4 + 1;
 	string geneGroup= geneName.substr(delimiter4 + 1, delimiter5 - delimiter4 - 1);
 	return getGeneGroup(geneGroup)->getGene(geneName);
 }
 
 void GeneMechanism::addGene(string geneName, string geneSequence, int delimiter4)
 {
-	int delimiter5 = geneName.substr(delimiter4 + 1).find('|');
+	int delimiter5 = geneName.substr(delimiter4 + 1).find('|') + delimiter4 + 1;
 	string geneGroup = geneName.substr(delimiter4 + 1, delimiter5 - delimiter4 - 1);
 	if (!getGeneGroup(geneMechanism))
 	{

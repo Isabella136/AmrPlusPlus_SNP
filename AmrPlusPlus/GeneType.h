@@ -20,7 +20,7 @@ class GeneType
 GeneType::GeneType(string geneName, string geneSequence)
 {
 	int delimiter1 = geneName.find('|');
-	int delimiter2 = geneName.substr(delimiter1 + 1).find('|');
+	int delimiter2 = geneName.substr(delimiter1 + 1).find('|') + delimiter1 + 1;
 	geneType = geneName.substr(delimiter1 + 1, delimiter2 - delimiter1 - 1);
 	addGene(geneName, geneSequence, delimiter2);
 }
@@ -40,15 +40,15 @@ GeneClass* GeneType::getGeneClass(string geneClass)
 Gene* GeneType::getGene(string geneName)
 {
 	int delimiter1 = geneName.find('|');
-	int delimiter2 = geneName.substr(delimiter1 + 1).find('|');
-	int delimiter3 = geneName.substr(delimiter2 + 1).find('|');
+	int delimiter2 = geneName.substr(delimiter1 + 1).find('|') + delimiter1 + 1;
+	int delimiter3 = geneName.substr(delimiter2 + 1).find('|') + delimiter2 + 1;
 	string geneClass = geneName.substr(delimiter2 + 1, delimiter3 - delimiter2 - 1);
 	return getGeneClass(geneClass)->getGene(geneName, delimiter3);
 }
 
 void GeneType::addGene(string geneName, string geneSequence, int delimiter2)
 {
-	int delimiter3 = geneName.substr(delimiter2 + 1).find('|');
+	int delimiter3 = geneName.substr(delimiter2 + 1).find('|') + delimiter2 + 1;
 	string geneClass = geneName.substr(delimiter2 + 1, delimiter3 - delimiter2 - 1);
 	if (!getGeneClass(geneClass))
 	{

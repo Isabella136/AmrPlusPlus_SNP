@@ -38,7 +38,7 @@ void GeneGroup::addGene(string geneName, string geneSequence)
 {
 	if (!getGene(geneName))
 	{
-		genes.emplace(geneGroup, new Gene(geneName, geneSequence));
+		genes.emplace(geneName, new Gene(geneName, geneSequence));
 	}
 	else
 	{

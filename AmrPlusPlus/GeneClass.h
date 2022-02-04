@@ -37,14 +37,14 @@ GeneMechanism* GeneClass::getGeneMechanism(string geneMechanism)
 
 Gene* GeneClass::getGene(string geneName, int delimiter3)
 {
-	int delimiter4 = geneName.substr(delimiter3 + 1).find('|');
+	int delimiter4 = geneName.substr(delimiter3 + 1).find('|') + delimiter3 + 1;
 	string geneMechanism = geneName.substr(delimiter3 + 1, delimiter4 - delimiter3 - 1);
 	return getGeneMechanism(geneMechanism)->getGene(geneName, delimiter4);
 }
 
 void GeneClass::addGene(string geneName, string geneSequence, int delimiter3)
 {
-	int delimiter4 = geneName.substr(delimiter3 + 1).find('|');
+	int delimiter4 = geneName.substr(delimiter3 + 1).find('|') + delimiter3 + 1;
 	string geneMechanism = geneName.substr(delimiter3 + 1, delimiter4 - delimiter3 - 1);
 	if (!getGeneMechanism(geneMechanism))
 	{
