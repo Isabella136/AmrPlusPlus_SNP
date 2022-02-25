@@ -7,18 +7,34 @@ class Gene
 {
 	private:
 		string geneName;
-		string* geneSequence;
+		string geneType;
+		string geneClass;
+		string geneMechanism;
+		string geneGroup;
+		string geneSequence;
+		bool ofInterest = false;
+
 	public:
-		Gene(string gName, string gSequence);
-		string* getSequence();
+		Gene(string _geneName, string _geneType, string _geneClass, string _geneMechanism, string _geneGroup, string _geneSequence);
+		string getSequence();
+		string getName();
 };
 
-Gene::Gene(string gName, string gSequence)
+Gene::Gene(string _geneName, string _geneType, string _geneClass, string _geneMechanism, string _geneGroup, string _geneSequence)
 {
-	geneName = gName;
-	geneSequence = &gSequence;
+	geneName = _geneName;
+	geneType = _geneType;
+	geneClass = _geneClass;
+	geneMechanism = _geneMechanism;
+	geneGroup = _geneGroup;
+	geneSequence = _geneSequence;
 }
-string* Gene::getSequence()
+string Gene::getSequence()
 {
 	return geneSequence;
+}
+
+string Gene::getName()
+{
+	return geneName;
 }

@@ -10,18 +10,19 @@ class GeneGroup
 {
 	private:
 		string geneGroup;
-		unordered_map<string, Gene*> genes;
+		unordered_map<string,Gene*> genes;
 	public:
-		GeneGroup(string geneName, string geneSequence, int delimiter4, int delimiter5);
+		GeneGroup(string _geneGroup, Gene& gene);
 		Gene* getGene(string geneName);
-		void addGene(string geneName, string geneSequence);
+		void addGene(Gene& gene);
 };
 
-GeneGroup::GeneGroup(string geneName, string geneSequence, int delimiter4, int delimiter5)
+GeneGroup::GeneGroup(string _geneGroup, Gene& gene)
 {
-	geneGroup = geneName.substr(delimiter4 + 1, delimiter5 - delimiter4 - 1);
-	addGene(geneName, geneSequence);
+	geneGroup = _geneGroup;
+	addGene(gene);
 }
+
 Gene* GeneGroup::getGene(string geneName)
 {
 	try 
@@ -32,16 +33,9 @@ Gene* GeneGroup::getGene(string geneName)
 	{
 		return nullptr;
 	}
-	
 }
-void GeneGroup::addGene(string geneName, string geneSequence)
+
+void GeneGroup::addGene(Gene& gene)
 {
-	if (!getGene(geneName))
-	{
-		genes.emplace(geneName, new Gene(geneName, geneSequence));
-	}
-	else
-	{
-		cout << "Gene name \"" << geneName << "\" already exists";
-	}
+	genes.emplace(gene.getName(), gene);
 }

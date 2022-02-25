@@ -1,0 +1,10 @@
+#pragma once
+#include <fstream>
+#include <string>
+#include <unordered_map>
+#include <iostream>
+#include "GeneType.h"
+#include "GeneClass.h"
+#include "GeneMechanism.h"
+#include "GeneGroup.h"
+#include "Gene.h"
