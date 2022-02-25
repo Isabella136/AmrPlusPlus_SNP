@@ -18,6 +18,7 @@ class Gene
 		Gene(string _geneName, string _geneType, string _geneClass, string _geneMechanism, string _geneGroup, string _geneSequence);
 		string getSequence();
 		string getName();
+		string getFASTA();
 };
 
 Gene::Gene(string _geneName, string _geneType, string _geneClass, string _geneMechanism, string _geneGroup, string _geneSequence)
@@ -37,4 +38,9 @@ string Gene::getSequence()
 string Gene::getName()
 {
 	return geneName;
+}
+
+string Gene::getFASTA()
+{
+	return "";
 }
