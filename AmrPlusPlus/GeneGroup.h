@@ -12,12 +12,12 @@ class GeneGroup
 		string geneGroup;
 		unordered_map<string,Gene*> genes;
 	public:
-		GeneGroup(string _geneGroup, Gene& gene);
+		GeneGroup(string _geneGroup, Gene* gene);
 		Gene* getGene(string geneName);
-		void addGene(Gene& gene);
+		void addGene(Gene* gene);
 };
 
-GeneGroup::GeneGroup(string _geneGroup, Gene& gene)
+GeneGroup::GeneGroup(string _geneGroup, Gene* gene)
 {
 	geneGroup = _geneGroup;
 	addGene(gene);
@@ -35,7 +35,7 @@ Gene* GeneGroup::getGene(string geneName)
 	}
 }
 
-void GeneGroup::addGene(Gene& gene)
+void GeneGroup::addGene(Gene* gene)
 {
-	genes.emplace(gene.getName(), gene);
+	genes.emplace(gene->getName(), gene);
 }

@@ -11,12 +11,12 @@ class GeneMechanism
 		string geneMechanism;
 		unordered_map<string,Gene*> genes;
 	public:
-		GeneMechanism(string _geneMechanism, Gene& gene);
+		GeneMechanism(string _geneMechanism, Gene* gene);
 		Gene* getGene(string geneName);
-		void addGene(Gene& gene);
+		void addGene(Gene* gene);
 };
 
-GeneMechanism::GeneMechanism(string _geneMechanism, Gene& gene)
+GeneMechanism::GeneMechanism(string _geneMechanism, Gene* gene)
 {
 	geneMechanism = _geneMechanism;
 	addGene(gene);
@@ -34,7 +34,7 @@ Gene* GeneMechanism::getGene(string geneName)
 	}
 }
 
-void GeneMechanism::addGene(Gene& gene)
+void GeneMechanism::addGene(Gene* gene)
 {
-	genes.emplace(gene.getName(), gene);
+	genes.emplace(gene->getName(), gene);
 }

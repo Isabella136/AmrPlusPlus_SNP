@@ -19,6 +19,7 @@ class Gene
 		string getSequence();
 		string getName();
 		string getFASTA();
+		void makeOfInterest();
 };
 
 Gene::Gene(string _geneName, string _geneType, string _geneClass, string _geneMechanism, string _geneGroup, string _geneSequence)
@@ -30,6 +31,12 @@ Gene::Gene(string _geneName, string _geneType, string _geneClass, string _geneMe
 	geneGroup = _geneGroup;
 	geneSequence = _geneSequence;
 }
+
+void Gene::makeOfInterest()
+{
+	ofInterest = true;
+}
+
 string Gene::getSequence()
 {
 	return geneSequence;
@@ -42,5 +49,6 @@ string Gene::getName()
 
 string Gene::getFASTA()
 {
-	return "";
+	if (ofInterest)
+		return ">" + geneName + "|" + geneType + "|" + geneClass + "|" + geneMechanism + "|" + geneGroup + "|" + "\n" + geneSequence + "\n";
 }
