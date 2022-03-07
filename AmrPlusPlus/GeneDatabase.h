@@ -62,6 +62,7 @@ void GeneDatabase::isItOfInterest(string category, fstream file, string ofIntere
     string _geneMechanism;
     string _geneGroup;
     string SNP;
+    string restOfLine;
     std::getline(file, header);
     while (file.is_open())
     {
@@ -76,10 +77,19 @@ void GeneDatabase::isItOfInterest(string category, fstream file, string ofIntere
             file.close();
         else {
             if (category == "type" && _geneType == ofInterest)
-            {
-                geneTypes[ofInterest];
-            }
+                geneTypes[ofInterest]->getGene(_geneName)->makeOfInterest();
+            else if (category == "class" && _geneClass == ofInterest)
+                geneClasses[ofInterest]->getGene(_geneName)->makeOfInterest();
+            else if (category == "mechanism" && _geneMechanism == ofInterest)
+                geneMechanisms[ofInterest]->getGene(_geneName)->makeOfInterest();
+            else if (category == "group" && _geneGroup == ofInterest)
+                geneGroups[ofInterest]->getGene(_geneName)->makeOfInterest();
+            else if (category == "all")
+                genes[_geneName]->makeOfInterest();
+            else if (_geneName == ofInterest)
+                genes[_geneName]->makeOfInterest();
         }
+        std::getline(file, restOfLine);
     }
 }
 void GeneDatabase::SNPInfo(fstream file)
