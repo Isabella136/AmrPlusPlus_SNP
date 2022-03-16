@@ -18,9 +18,11 @@ class GeneDatabase{
         unordered_map<string, GeneMechanism*>  geneMechanisms;
         unordered_map<string, GeneGroup*>  geneGroups;
         unordered_map<string, Gene*>  genes;
+        unordered_map<string, pair<pair<char, int>, list<char>>> snpInfoDatabase;
     public:
         GeneDatabase(string _geneName, string _geneType, string _geneClass, string _geneMechanism, string _geneGroup, string _geneSequence);
         void addGene(string _geneName, string _geneType, string _geneClass, string _geneMechanism, string _geneGroup, string _geneSequence);
+        void makeAllOfInterest();
         void isItOfInterest(string category, fstream file, string ofInterest = "");
         void SNPInfo(fstream file);
         void print(string fileName);
@@ -90,6 +92,13 @@ void GeneDatabase::isItOfInterest(string category, fstream file, string ofIntere
                 genes[_geneName]->makeOfInterest();
         }
         std::getline(file, restOfLine);
+    }
+}
+void GeneDatabase::makeAllOfInterest()
+{
+    for (auto iter = genes.begin(); iter != genes.end(); ++iter)
+    {
+        iter->second->makeOfInterest();
     }
 }
 void GeneDatabase::SNPInfo(fstream file)
