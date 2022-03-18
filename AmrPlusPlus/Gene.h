@@ -62,14 +62,19 @@ string Gene::getName()
 string Gene::getFASTA()
 {
 	string SNPinfo = "";
-	for (auto iter = listOfSNPs.begin(); iter != listOfSNPs.end(); ++iter)
-	{
-		SNPinfo = SNPinfo + "|";
-		SNPinfo = SNPinfo + iter->first.first + to_string(iter->first.second);
-		for (int i = 0; i < iter->second.size(); i++) 
+	if (listOfSNPs.empty())
+		SNPinfo = "|NA";
+	else
+	{	
+		for (auto iter = listOfSNPs.begin(); iter != listOfSNPs.end(); ++iter)
 		{
-			SNPinfo = SNPinfo + iter->second.front();
-			iter->second.pop_front();
+			SNPinfo = SNPinfo + "|";
+			SNPinfo = SNPinfo + iter->first.first + to_string(iter->first.second);
+			for (int i = 0; i < iter->second.size(); i++) 
+			{
+				SNPinfo = SNPinfo + iter->second.front();
+				iter->second.pop_front();
+			}
 		}
 	}
 	return ">" + geneName + "|" + geneType + "|" + geneClass + "|" + geneMechanism + "|" + geneGroup + SNPinfo + "\n" + geneSequence + "\n";

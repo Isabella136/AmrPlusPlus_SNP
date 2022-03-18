@@ -13,22 +13,30 @@ class GeneDatabase{
         unordered_map<string, Gene*>  genes;
         unordered_map<string, list<MmarcModel*>> snpInfoDatabase;
     public:
-        GeneDatabase(string _geneName, string _geneType, string _geneClass, string _geneMechanism, string _geneGroup, string _geneSequence);
+        GeneDatabase();
         void addGene(string _geneName, string _geneType, string _geneClass, string _geneMechanism, string _geneGroup, string _geneSequence);
         void SNPInfo();
         void print(string fileName);
 };
 
-GeneDatabase::GeneDatabase(string _geneName, string _geneType, string _geneClass, string _geneMechanism, string _geneGroup, string _geneSequence)
+GeneDatabase::GeneDatabase()
 {
     SNPInfo();
-    addGene(_geneName, _geneType, _geneClass, _geneMechanism, _geneGroup, _geneSequence);
 }
+
 void GeneDatabase::addGene(string _geneName, string _geneType, string _geneClass, string _geneMechanism, string _geneGroup, string _geneSequence)
 {
     Gene* toAdd = new Gene(_geneName, _geneType, _geneClass, _geneMechanism, _geneGroup, _geneSequence);
+    try 
+    {
+        list<MmarcModel*> allSNPs = snpInfoDatabase.at(_geneName);
+        for (auto iter = allSNPs.begin(); iter != allSNPs.end(); ++iter)
+        {
+            toAdd->addSNP((*iter)->condensedSNPinfo().first, (*iter)->condensedSNPinfo().second);
+        }
+    }
+    catch (const out_of_range& oor) {}
     genes.emplace(_geneName, toAdd);
-
 }
 void GeneDatabase::SNPInfo()
 {
