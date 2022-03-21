@@ -1,0 +1,76 @@
+﻿  Source.cpp
+D:\GitHub\AmrPlusPlus_SNP\SNPInfoExtraction\MmarcModel.h(35,23): warning C4018: '<': signed/unsigned mismatch
+D:\GitHub\AmrPlusPlus_SNP\SNPInfoExtraction\MmarcModel.h(43,23): warning C4018: '<': signed/unsigned mismatch
+D:\GitHub\AmrPlusPlus_SNP\SNPInfoExtraction\MmarcModel.h(47,23): warning C4018: '<': signed/unsigned mismatch
+D:\GitHub\AmrPlusPlus_SNP\SNPInfoExtraction\Gene.h(73,22): warning C4018: '<': signed/unsigned mismatch
+D:\GitHub\AmrPlusPlus_SNP\SNPInfoExtraction\GeneDatabase.h(38,33): warning C4101: 'oor': unreferenced local variable
+D:\GitHub\AmrPlusPlus_SNP\SNPInfoExtraction\GeneDatabase.h(52,37): warning C4101: 'oor': unreferenced local variable
+D:\GitHub\AmrPlusPlus_SNP\SNPInfoExtraction\GeneDatabase.h(74,37): warning C4101: 'oor': unreferenced local variable
+D:\GitHub\AmrPlusPlus_SNP\SNPInfoExtraction\GeneDatabase.h(96,37): warning C4101: 'oor': unreferenced local variable
+D:\GitHub\AmrPlusPlus_SNP\SNPInfoExtraction\GeneDatabase.h(116,37): warning C4101: 'oor': unreferenced local variable
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.24.28314\include\xmemory(671,82): error C2664: 'std::pair<const std::string,std::list<MmarcModel *,std::allocator<MmarcModel *>>>::pair(std::pair<const std::string,std::list<MmarcModel *,std::allocator<MmarcModel *>>> &&)': cannot convert argument 2 from '_Ty' to 'const _Ty2 &'
+          with
+          [
+              _Ty=MmarcModel *
+          ]
+          and
+          [
+              _Ty2=std::list<MmarcModel *,std::allocator<MmarcModel *>>
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.24.28314\include\xmemory(670,1): message : Reason: cannot convert from '_Ty' to 'const _Ty2'
+          with
+          [
+              _Ty=MmarcModel *
+          ]
+          and
+          [
+              _Ty2=std::list<MmarcModel *,std::allocator<MmarcModel *>>
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.24.28314\include\xmemory(670,1): message : No constructor could take the source type, or constructor overload resolution was ambiguous
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.24.28314\include\utility(118,5): message : see declaration of 'std::pair<const std::string,std::list<MmarcModel *,std::allocator<MmarcModel *>>>::pair'
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.24.28314\include\list(586): message : see reference to function template instantiation 'void std::_Default_allocator_traits<_Alloc>::construct<_Ty,std::string&,MmarcModel*>(_Alloc &,_Objty *const ,std::string &,MmarcModel *&&)' being compiled
+          with
+          [
+              _Alloc=std::allocator<std::_List_node<std::pair<const std::string,std::list<MmarcModel *,std::allocator<MmarcModel *>>>,std::_Default_allocator_traits<std::allocator<std::pair<const std::string,std::list<MmarcModel *,std::allocator<MmarcModel *>>>>>::void_pointer>>,
+              _Ty=std::pair<const std::string,std::list<MmarcModel *,std::allocator<MmarcModel *>>>,
+              _Objty=std::pair<const std::string,std::list<MmarcModel *,std::allocator<MmarcModel *>>>
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.24.28314\include\list(588): message : see reference to function template instantiation 'void std::_Default_allocator_traits<_Alloc>::construct<_Ty,std::string&,MmarcModel*>(_Alloc &,_Objty *const ,std::string &,MmarcModel *&&)' being compiled
+          with
+          [
+              _Alloc=std::allocator<std::_List_node<std::pair<const std::string,std::list<MmarcModel *,std::allocator<MmarcModel *>>>,std::_Default_allocator_traits<std::allocator<std::pair<const std::string,std::list<MmarcModel *,std::allocator<MmarcModel *>>>>>::void_pointer>>,
+              _Ty=std::pair<const std::string,std::list<MmarcModel *,std::allocator<MmarcModel *>>>,
+              _Objty=std::pair<const std::string,std::list<MmarcModel *,std::allocator<MmarcModel *>>>
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.24.28314\include\xhash(611): message : see reference to function template instantiation 'std::_List_node_emplace_op2<std::allocator<std::_List_node<_Ty,std::_Default_allocator_traits<_Alloc>::void_pointer>>>::_List_node_emplace_op2<std::string&,MmarcModel*>(_Alnode &,std::string &,MmarcModel *&&)' being compiled
+          with
+          [
+              _Ty=std::pair<const std::string,std::list<MmarcModel *,std::allocator<MmarcModel *>>>,
+              _Alloc=std::allocator<std::pair<const std::string,std::list<MmarcModel *,std::allocator<MmarcModel *>>>>,
+              _Alnode=std::allocator<std::_List_node<std::pair<const std::string,std::list<MmarcModel *,std::allocator<MmarcModel *>>>,std::_Default_allocator_traits<std::allocator<std::pair<const std::string,std::list<MmarcModel *,std::allocator<MmarcModel *>>>>>::void_pointer>>
+          ]
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.24.28314\include\xhash(635): message : see reference to function template instantiation 'std::_List_node_emplace_op2<std::allocator<std::_List_node<_Ty,std::_Default_allocator_traits<_Alloc>::void_pointer>>>::_List_node_emplace_op2<std::string&,MmarcModel*>(_Alnode &,std::string &,MmarcModel *&&)' being compiled
+          with
+          [
+              _Ty=std::pair<const std::string,std::list<MmarcModel *,std::allocator<MmarcModel *>>>,
+              _Alloc=std::allocator<std::pair<const std::string,std::list<MmarcModel *,std::allocator<MmarcModel *>>>>,
+              _Alnode=std::allocator<std::_List_node<std::pair<const std::string,std::list<MmarcModel *,std::allocator<MmarcModel *>>>,std::_Default_allocator_traits<std::allocator<std::pair<const std::string,std::list<MmarcModel *,std::allocator<MmarcModel *>>>>>::void_pointer>>
+          ]
+D:\GitHub\AmrPlusPlus_SNP\SNPInfoExtraction\GeneDatabase.h(52): message : see reference to function template instantiation 'std::pair<std::_List_iterator<std::_List_val<std::_List_simple_types<_Ty>>>,bool> std::_Hash<std::_Umap_traits<_Kty,std::list<MmarcModel *,std::allocator<MmarcModel *>>,std::_Uhash_compare<_Kty,_Hasher,_Keyeq>,_Alloc,false>>::emplace<std::string&,MmarcModel*>(std::string &,MmarcModel *&&)' being compiled
+          with
+          [
+              _Ty=std::pair<const std::string,std::list<MmarcModel *,std::allocator<MmarcModel *>>>,
+              _Kty=std::string,
+              _Hasher=std::hash<std::string>,
+              _Keyeq=std::equal_to<std::string>,
+              _Alloc=std::allocator<std::pair<const std::string,std::list<MmarcModel *,std::allocator<MmarcModel *>>>>
+          ]
+D:\GitHub\AmrPlusPlus_SNP\SNPInfoExtraction\GeneDatabase.h(52): message : see reference to function template instantiation 'std::pair<std::_List_iterator<std::_List_val<std::_List_simple_types<_Ty>>>,bool> std::_Hash<std::_Umap_traits<_Kty,std::list<MmarcModel *,std::allocator<MmarcModel *>>,std::_Uhash_compare<_Kty,_Hasher,_Keyeq>,_Alloc,false>>::emplace<std::string&,MmarcModel*>(std::string &,MmarcModel *&&)' being compiled
+          with
+          [
+              _Ty=std::pair<const std::string,std::list<MmarcModel *,std::allocator<MmarcModel *>>>,
+              _Kty=std::string,
+              _Hasher=std::hash<std::string>,
+              _Keyeq=std::equal_to<std::string>,
+              _Alloc=std::allocator<std::pair<const std::string,std::list<MmarcModel *,std::allocator<MmarcModel *>>>>
+          ]
