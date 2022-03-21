@@ -77,6 +77,6 @@ string Gene::getFASTA()
 			}
 		}
 	}
-	return ">" + geneName + "|" + geneType + "|" + geneClass + "|" + geneMechanism + "|" + geneGroup + SNPinfo + "\n" + geneSequence + "\n";
+	return ">" + geneName + "|" + geneType + "|" + geneClass + "|" + geneMechanism + "|" + geneGroup + SNPinfo + "\t" + geneSequence + "\n";
 
 }

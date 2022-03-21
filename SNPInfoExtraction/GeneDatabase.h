@@ -41,7 +41,7 @@ void GeneDatabase::addGene(string _geneName, string _geneType, string _geneClass
 void GeneDatabase::SNPInfo()
 {
     ifstream snpsearch;
-    snpsearch.open("mmarc_snpsearch_metadata2.txt");
+    snpsearch.open("mmarc_snpsearch_metadata2_modified.txt");
     unordered_map<string, list<MmarcModel*>> name_model;
     string line;
     std::getline(snpsearch, line);
@@ -49,7 +49,11 @@ void GeneDatabase::SNPInfo()
     {
         string modelName = line.substr(0, line.find(','));
         try { name_model.at(modelName).push_back(new MmarcModel(line)); }
-        catch (const out_of_range & oor) { name_model.emplace(modelName, (new MmarcModel(line))); }
+        catch (const out_of_range & oor) { 
+			list<MmarcModel*> temp;
+			temp.push_back(new MmarcModel(line));
+			name_model.emplace(modelName, temp);
+			}
     }
     snpsearch.close();
     ifstream model_members;
@@ -58,20 +62,25 @@ void GeneDatabase::SNPInfo()
     std::getline(model_members, line);
     while (std::getline(model_members, line))
     {
-        string modelName = line.substr(0, line.find(','));
-        while (line.find(','))
+        string modelName = line.substr(0, line.find('\t'));
+        line = line.substr(line.find('\t') + 1);
+            header_name.emplace(line.substr(0, line.find(',')), modelName);
+        while (line.find(',') != -1)
         {
             line = line.substr(line.find(',') + 1);
             header_name.emplace(line.substr(0, line.find(',')), modelName);
+            
         }
-
     }
     model_members.close();
     unordered_map<string, list<MmarcModel*>> header_model;
     for (auto iter = header_name.begin(); iter != header_name.end(); ++iter)
     {
-        try { header_model.emplace(iter->first, name_model.at(iter->second)); }
-        catch (const out_of_range & oor) {}
+        try { 
+            header_model.emplace(iter->first, name_model.at(iter->second)); 
+            }
+        catch (const out_of_range & oor) {
+        }
     }
     ifstream v1;
     v1.open("megaresv1_to_external_header_mappings_v1.01.csv");
@@ -82,7 +91,12 @@ void GeneDatabase::SNPInfo()
     {
         line = line.substr(line.find(',') + 1);
         string header = line.substr(0, line.find(','));
-        while (line.find(' '))
+        line = line.substr(line.find(',') + 1);
+        int lastDelimiter = header.find_last_of('|');
+        if (lastDelimiter != -1 && header.substr(lastDelimiter + 1) == "RequiresSNPConfirmation")
+            header = header.substr(0, lastDelimiter);
+        source_to_header.emplace(line.substr(0, line.find(' ')), header);
+        while (line.find(' ') != -1)
         {
             line = line.substr(line.find(' ') + 1);
             source_to_header.emplace(line.substr(0, line.find(' ')), header);
@@ -90,13 +104,31 @@ void GeneDatabase::SNPInfo()
     }
     model_members.close();
     unordered_map<string, list<MmarcModel*>> source_model;
+    ofstream test1;
+    test1.open("test1.csv");
     for (auto iter = source_to_header.begin(); iter != source_to_header.end(); ++iter)
     {
-        try { source_model.emplace(iter->first, header_model.at(iter->second)); }
-        catch (const out_of_range & oor) {}
+        test1 << iter->first << ',' << iter->second << '\n';
+    }
+    test1.close();
+    ofstream test2;
+    test2.open("test2.csv");
+    for (auto iter = header_model.begin(); iter != header_model.end(); ++iter)
+    {
+        test2 << iter->first << '\n';
+    }
+    test2.close();
+    for (auto iter = source_to_header.begin(); iter != source_to_header.end(); ++iter)
+    {
+        try {
+            list<MmarcModel*> temp = header_model.at(iter->second);
+            source_model.emplace(iter->first, temp); 
+            }
+        catch (const out_of_range & oor) {
+        }
     }
     ifstream v2;
-    v2.open("megaresv1_to_external_header_mappings_v1.01.csv");
+    v2.open("megaresv2_to_external_header_mappings_v2.00.csv");
     unordered_map<string, string> header2_source;
     std::getline(v2, line);
     std::getline(v2, line);
@@ -109,7 +141,7 @@ void GeneDatabase::SNPInfo()
         header2_source.emplace(header2, source);
         std::getline(v2, line);
     }
-    model_members.close();
+    v2.close();
     for (auto iter = header2_source.begin(); iter != header2_source.end(); ++iter)
     {
         try { snpInfoDatabase.emplace(iter->first, source_model.at(iter->second)); }
