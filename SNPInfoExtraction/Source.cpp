@@ -32,6 +32,6 @@ int main()
 		}
 	}
 	database.close();
-	megaresSNP.print("metamarcSNPinfo.fasta");
+	megaresSNP.print("metamarcSNPinfo.xlsx");
 	return 0;
 }

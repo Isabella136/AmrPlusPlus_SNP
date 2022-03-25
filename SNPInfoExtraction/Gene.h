@@ -33,7 +33,6 @@ public:
 	string getName();
 	string getFASTA();
 	void addSNP(pair<char, int> wt_pos, list<char> mutants);
-
 };
 
 Gene::Gene(string _geneName, string _geneType, string _geneClass, string _geneMechanism, string _geneGroup, string _geneSequence)
@@ -63,20 +62,20 @@ string Gene::getFASTA()
 {
 	string SNPinfo = "";
 	if (listOfSNPs.empty())
-		SNPinfo = "|NA";
+		SNPinfo = "\tNA";
 	else
 	{
 		for (auto iter = listOfSNPs.begin(); iter != listOfSNPs.end(); ++iter)
 		{
-			SNPinfo = SNPinfo + "|";
+			SNPinfo = SNPinfo + "\t";
 			SNPinfo = SNPinfo + iter->first.first + to_string(iter->first.second);
-			for (int i = 0; i < iter->second.size(); i++)
+			while (iter->second.size() > 0)
 			{
 				SNPinfo = SNPinfo + iter->second.front();
 				iter->second.pop_front();
 			}
 		}
 	}
-	return ">" + geneName + "|" + geneType + "|" + geneClass + "|" + geneMechanism + "|" + geneGroup + SNPinfo + "\t" + geneSequence + "\n";
+	return ">" + geneName + "\t" + geneType + "\t" + geneClass + "\t" + geneMechanism + "\t" + geneGroup + SNPinfo + "\n";
 
 }

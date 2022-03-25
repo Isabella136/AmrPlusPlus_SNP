@@ -95,12 +95,7 @@ void GeneDatabase::SNPInfo()
         int lastDelimiter = header.find_last_of('|');
         if (lastDelimiter != -1 && header.substr(lastDelimiter + 1) == "RequiresSNPConfirmation")
             header = header.substr(0, lastDelimiter);
-        source_to_header.emplace(line.substr(0, line.find(' ')), header);
-        while (line.find(' ') != -1)
-        {
-            line = line.substr(line.find(' ') + 1);
-            source_to_header.emplace(line.substr(0, line.find(' ')), header);
-        }
+        source_to_header.emplace(line, header);
     }
     model_members.close();
     unordered_map<string, list<MmarcModel*>> source_model;
