@@ -99,20 +99,6 @@ void GeneDatabase::SNPInfo()
     }
     model_members.close();
     unordered_map<string, list<MmarcModel*>> source_model;
-    ofstream test1;
-    test1.open("test1.csv");
-    for (auto iter = source_to_header.begin(); iter != source_to_header.end(); ++iter)
-    {
-        test1 << iter->first << ',' << iter->second << '\n';
-    }
-    test1.close();
-    ofstream test2;
-    test2.open("test2.csv");
-    for (auto iter = header_model.begin(); iter != header_model.end(); ++iter)
-    {
-        test2 << iter->first << '\n';
-    }
-    test2.close();
     for (auto iter = source_to_header.begin(); iter != source_to_header.end(); ++iter)
     {
         try {
