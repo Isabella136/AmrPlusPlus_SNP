@@ -1,6 +1,6 @@
 from . import Gene
 class SNP:
-    def __init__(this, sequence, snpString):
+    def __init__(this, sequence, snpString, name):
         this.wtOG = snpString[:1]
         snpString = snpString[1:]
         i = 0
@@ -55,42 +55,45 @@ class SNP:
                     temp.append(x)
         this.wtACT = ""
         this.posACT = -1
-        if sequence[this.posOG - 1] != this.wtOG:
-            begin = 0
-            end = len(sequence)
-            if this.posOG - 1 > 30:
-                begin = this.posOG - 31
-            if this.posOG + 20 < len(sequence):
-                end = this.posOG + 20
-            i = begin
-            temp = sequence[begin:end]
-            for x in sequence[begin:end]:
-                for laa0 in this.leftContext[0]:
-                    if laa0 == x:
-                        for laa1 in this.leftContext[1]:
-                            if laa1 == sequence[i+1]:
-                                for laa2 in this.leftContext[2]:
-                                    if laa2 == sequence[i+2]:
-                                        for laa3 in this.leftContext[3]:
-                                            if laa3 == sequence[i+3]:
-                                                for laa4 in this.leftContext[4]:
-                                                    if laa4 == sequence[i+4]:
-                                                        for raa0 in this.rightContext[0]:
-                                                            if raa0 == sequence[i+6]:
-                                                                for raa1 in this.rightContext[1]:
-                                                                    if raa1 == sequence[i+7]:
-                                                                        for raa2 in this.rightContext[2]:
-                                                                            if raa2 == sequence[i+8]:
-                                                                                for raa3 in this.rightContext[3]:
-                                                                                    if raa3 == sequence[i+9]:
-                                                                                        for raa4 in this.rightContext[4]:
-                                                                                            if raa4 == sequence[i+10]:
-                                                                                                this.wtACT = sequence[i+5]
-                                                                                                this.posACT = i+5
-                                                                                                break
+        if (len(sequence) < this.posOG) or (sequence[this.posOG - 1] != this.wtOG):
+            i = 0
+            for x in sequence[:0 - 1 - len(this.rightContext) - len(this.leftContext)]:
+                if this.checkLeft(0, i, sequence, 0):
+                    this.wtACT = sequence[i+5]
+                    this.posACT = i+5
+                    break
                 i += 1
             if this.posACT == -1:
-                print("error")
+                print(name)
+                print(this.posOG)
         else:
             this.wtACT = this.wtOG
             this.posACT = this.posOG
+    def checkLeft(this, index, currentPos, sequence, errorMargin):
+        for aa in this.leftContext[index]:
+            if aa == sequence[currentPos]:
+                if index == len(this.leftContext) - 1:
+                    return this.checkRight(0, currentPos + 2, sequence, errorMargin)
+                else:
+                    return this.checkLeft(index + 1, currentPos + 1, sequence, errorMargin)
+        if errorMargin < 3:
+            if index == len(this.leftContext) - 1:
+                return this.checkRight(0, currentPos + 2, sequence, errorMargin + 1)
+            else:
+                return this.checkLeft(index + 1, currentPos + 1, sequence, errorMargin + 1)
+        else:
+            return False
+    def checkRight(this, index, currentPos, sequence, errorMargin):
+        for aa in this.rightContext[index]:
+            if aa == sequence[currentPos]:
+                if index == len(this.rightContext) - 1:
+                    return True
+                else:
+                    return this.checkRight(index + 1, currentPos + 1, sequence, errorMargin)
+        if errorMargin < 3:
+            if index == len(this.rightContext) - 1:
+                return True
+            else:
+                return this.checkRight(index + 1, currentPos + 1, sequence, errorMargin + 1)
+        else:
+            return False

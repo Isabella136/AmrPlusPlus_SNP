@@ -8,9 +8,9 @@ class Gene:
         this.listOfSNPs = []
         while(snps.find('|') != -1):
             temp = snps[:snps.find('|')]
-            this.listOfSNPs.append(SNP.SNP(this.translated, temp))
+            this.listOfSNPs.append(SNP.SNP(this.translated, temp, name))
             snps = snps[snps.find('|')+1:]
-        this.listOfSNPs.append(SNP.SNP(this.translated, snps))
+        this.listOfSNPs.append(SNP.SNP(this.translated, snps, name))
     def aaSequence(this):
         return this.translated
 
