@@ -1,6 +1,6 @@
 from . import Gene
 class SNP:
-    def __init__(this, sequence, snpString, name):
+    def __init__(this, sequence, snpString):
         this.wtOG = snpString[:1]
         snpString = snpString[1:]
         i = 0
@@ -55,17 +55,23 @@ class SNP:
                     temp.append(x)
         this.wtACT = ""
         this.posACT = -1
-        if (len(sequence) < this.posOG) or (sequence[this.posOG - 1] != this.wtOG):
-            i = 0
-            for x in sequence[:0 - 1 - len(this.rightContext) - len(this.leftContext)]:
+        if (len(sequence)-1 < this.posOG) or (sequence[this.posOG - 1] != this.wtOG):
+            begin = this.posOG - 35
+            end = this.posOG + 26
+            if end > len(sequence)-1:
+                end = len(sequence) - 1 - len(this.rightContext) - len(this.leftContext)
+                begin = end - 61
+            elif begin < 0:
+                begin = 0
+                end = 61
+            i = begin
+            temp = sequence[begin:end+10]
+            for x in sequence[begin:end]:
                 if this.checkLeft(0, i, sequence, 0):
                     this.wtACT = sequence[i+5]
-                    this.posACT = i+5
+                    this.posACT = i+5+1
                     break
                 i += 1
-            if this.posACT == -1:
-                print(name)
-                print(this.posOG)
         else:
             this.wtACT = this.wtOG
             this.posACT = this.posOG
@@ -97,3 +103,10 @@ class SNP:
                 return this.checkRight(index + 1, currentPos + 1, sequence, errorMargin + 1)
         else:
             return False
+    def isSnpValid(this):
+        return this.posACT > -1
+    def condensedInfo(this):
+        wt = this.wtOG
+        if (this.wtOG != this.wtACT):
+            wt += this.wtACT
+        return (wt, this.posACT, this.mtList)
