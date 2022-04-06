@@ -1,3 +1,4 @@
+from multiprocessing.dummy import Value
 from . import Gene
 class SNP:
     def __init__(this, sequence, snpString):
@@ -68,8 +69,13 @@ class SNP:
             temp = sequence[begin:end+10]
             for x in sequence[begin:end]:
                 if this.checkLeft(0, i, sequence, 0):
-                    this.wtACT = sequence[i+5]
-                    this.posACT = i+5+1
+                    try:
+                        this.mtList.index(sequence[i+5])
+                        this.wtACT = this.wtOG
+                        this.posACT = i+5+1
+                    except ValueError:
+                        this.wtACT = sequence[i+5]
+                        this.posACT = i+5+1
                     break
                 i += 1
         else:

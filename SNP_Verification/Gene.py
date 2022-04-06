@@ -2,7 +2,7 @@ from . import SNP
 from . import dnaTranslate
 class Gene:
     def __init__(this, name, sequence, snps):
-        this.name = name + "|RequiresSNPConfirmation"
+        this.name = name[:name.find('|')]
         this.sequence = sequence.upper()
         this.translated = dnaTranslate(this.sequence)
         this.listOfSNPs = []
@@ -22,4 +22,7 @@ class Gene:
         for snp in this.listOfSNPs :
             condensedInfoList.append(snp.condensedInfo())
         return condensedInfoList
-
+    def getName(this):
+        return this.name
+    def ntSeqLength(this):
+        return len(this.sequence)

@@ -20,5 +20,8 @@ aa = {
 def dnaTranslate(dna):
     toReturn = ""
     for i in range(0, len(dna), 3):
-        toReturn += aa[dna[i:i+3]]
+        if dna[i:i+3].find('N') == -1:
+            toReturn += aa[dna[i:i+3]]
+        else:
+            toReturn += 'N'
     return toReturn
