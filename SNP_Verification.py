@@ -41,7 +41,6 @@ def extendCigar(cigar):
 
 def mapCigarToAlignment(cigar, aligned_pair):
     alignment_map = []
-    refLength = 0
     queryLength = 0
     index = 0
     shift = 0
@@ -55,37 +54,83 @@ def mapCigarToAlignment(cigar, aligned_pair):
                     index += 1
                 else:
                     translatable = True
-                    refLength += 1
                     queryLength += 1
-                    alignment_map.append((op, aligned_pair[index][0], aligned_pair[index][1], shift))
+                    alignment_map.append((op, aligned_pair[index][0], aligned_pair[index][1]), shift)
                     index += 1
             else:
-                refLength += 1
                 queryLength += 1
-                alignment_map.append((op, aligned_pair[index][0], aligned_pair[index][1], shift))
+                alignment_map.append((op, aligned_pair[index][0], aligned_pair[index][1]), shift)
                 index += 1
         elif op == "I":
-            queryLength += 1
             shift += 1
-            alignment_map.append((op, aligned_pair[index][0], aligned_pair[index][1], shift))
-            index += 1
+            if not(translatable):
+                if ((aligned_pair[index-1][1] + 1) % 3) != 0:
+                    index += 1
+                else:
+                    translatable = True
+                    queryLength += 1
+                    alignment_map.append((op, aligned_pair[index][0], aligned_pair[index-1][1]+1), shift)
+                    index += 1
+            else:
+                queryLength += 1
+                alignment_map.append((op, aligned_pair[index][0], aligned_pair[index-1][1]+1), shift)
+                index += 1
         elif op == "D":
-            refLength += 1
             shift -= 1
-            alignment_map.append((op, aligned_pair[index][0], aligned_pair[index][1]))
-            index += 1
+            if not(translatable):
+                if (aligned_pair[index][1] % 3) != 0:
+                    index += 1
+                else:
+                    translatable = True
+                    alignment_map.append((op, aligned_pair[index-1][0]+1, aligned_pair[index][1]), shift)
+                    index += 1
+            else:
+                alignment_map.append((op, aligned_pair[index-1][0]+1, aligned_pair[index][1]), shift)
+                index += 1
         else:
             continue
-    while ((refLength % 3) != 0) &  ((queryLength % 3) != 0):
-        poped = alignment_map.pop()
-        if poped[0] == "D" :
-            refLength -= 1
-        elif poped[0] == "I" :
-            queryLength -= 1
-        else:
-            refLength -= 1
-            queryLength -= 1
+    while (len(alignment_map) % 3) != 0:
+        alignment_map.pop()
     return alignment_map
+
+def aaAlignment(nt_alignment_map):
+    aa_alignment_map = {
+
+    }
+    ntIndex = 0
+    aaIndex = 0
+    lastShift = 0
+    previousQuery = []
+    nextQuery = []
+    disregard = False
+    for nt in nt_alignment_map:
+        if (ntIndex % 3) == 2:
+            if nt[0] == "M":
+                if nt[3] == 0:
+                    disregard = False
+                    if lastShift >= 0:
+                        previousQuery.clear()
+                        previousQuery.append(int(nt[2]/3))
+                        aa_alignment_map[aaIndex] = (previousQuery.copy(), disregard)
+                        lastShift = nt[3]
+                        aaIndex += 1
+                    else:
+                        previousQuery.append(int(nt[2]/3))
+                        aa_alignment_map[aaIndex] = (previousQuery.copy(), disregard)
+                        previousQuery.clear()
+                        previousQuery.append(int(nt[2]/3))
+                        lastShift = nt[3]
+                        aaIndex += 1
+                else :
+                    disregard = ((nt[3] % 3) == 0)
+                    if lastShift < 0:
+                        
+            elif (nt[0] == "I"):
+                lastShift = nt[3]
+            else:
+
+        ntIndex += 1
+
 
 def verify(read, gene):
     name = gene.getName()
@@ -93,11 +138,11 @@ def verify(read, gene):
     #if insertions != deletions, disregard
     if cigarOpCount[1] != cigarOpCount[2]: disregard(name) 
     else :
-        querySeq = read.query_sequence
         cigar = extendCigar(read.cigarstring)
         aligned_pair = read.get_aligned_pairs()
         alignment_map = mapCigarToAlignment(cigar, aligned_pair)
-        trimmedQuerySequence = querySeq[alignment_map[0][1]:alignment_map[len(alignment_map)][1]]
+        querySeq = read.query_sequence
+        trimmedQuerySequence = querySeq[alignment_map[0][1]:alignment_map[len(alignment_map)-1][1]+1]
         aaQuerySequence = dnaTranslate(trimmedQuerySequence)
         stopLocation = aaQuerySequence.find('*') 
         #if missense mutations, disregard
@@ -106,7 +151,7 @@ def verify(read, gene):
             SNPInfo = gene.condensedInfo()
             res = False
             for snp in SNPInfo:
-                if ((snp[1]-1)*3 < (read.reference_start)) | ((snp[1]-1)*3 >= read.reference_end):
+                if ((snp[1]-1)*3 < alignment_map[0][1]) | ((snp[1]-1)*3 >= alignment_map[len(alignment_map)-1][1]):
                     continue
                 for mt in snp[2]: 
                     queryIndex = findQueryIndex(read.get_aligned_pairs(),(snp[1]-1)*3)
@@ -138,7 +183,6 @@ for line in metamarcSNPinfo:
 metamarcSNPinfo.close()
 output = open("test_SNP_Verification_Sorted_Fluro_P_BPW_10_3_filtered.txt", "w")
 samfile = pysam.AlignmentFile("SAM_files/Sorted_Fluro_P_BPW_10_3_filtered.sam", "r")
-test = open("test.txt", "w")
 
 iter = samfile.fetch()
 for read in iter:
@@ -148,8 +192,7 @@ for read in iter:
     elif (read.cigarstring == None) :
         continue
     verify(read, gene)
-samfile.close()
-test.close()   
+samfile.close() 
 for name in argInfoDict:
     output.write(snpInfoPrint(name, str(argInfoDict[name][0]), str(argInfoDict[name][1])))
 output.close()
