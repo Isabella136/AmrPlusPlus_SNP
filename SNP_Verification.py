@@ -42,8 +42,10 @@ def extendCigar(cigar):
 def mapCigarToAlignment(cigar, aligned_pair):
     alignment_map = []
     queryLength = 0
+    refLength = 0
     index = 0
     shift = 0
+    prevShift = 0
     translatable = False
     for op in cigar:
         if op == "S":
@@ -55,81 +57,80 @@ def mapCigarToAlignment(cigar, aligned_pair):
                 else:
                     translatable = True
                     queryLength += 1
-                    alignment_map.append((op, aligned_pair[index][0], aligned_pair[index][1]), shift)
+                    refLength += 1
+                    alignment_map.append(("M", aligned_pair[index][0], aligned_pair[index][1]), shift, prevShift)
                     index += 1
             else:
                 queryLength += 1
-                alignment_map.append((op, aligned_pair[index][0], aligned_pair[index][1]), shift)
+                refLength += 1
+                alignment_map.append(("M", aligned_pair[index][0], aligned_pair[index][1]), shift, prevShift)
                 index += 1
         elif op == "I":
+            prevShift = shift
             shift += 1
             if not(translatable):
-                if ((aligned_pair[index-1][1] + 1) % 3) != 0:
-                    index += 1
-                else:
-                    translatable = True
-                    queryLength += 1
-                    alignment_map.append((op, aligned_pair[index][0], aligned_pair[index-1][1]+1), shift)
-                    index += 1
+                index += 1
             else:
                 queryLength += 1
-                alignment_map.append((op, aligned_pair[index][0], aligned_pair[index-1][1]+1), shift)
+                alignment_map.append((op, aligned_pair[index][0], aligned_pair[index][1]), shift, prevShift)
                 index += 1
         elif op == "D":
+            prevShift = shift
             shift -= 1
             if not(translatable):
-                if (aligned_pair[index][1] % 3) != 0:
-                    index += 1
-                else:
-                    translatable = True
-                    alignment_map.append((op, aligned_pair[index-1][0]+1, aligned_pair[index][1]), shift)
-                    index += 1
+                index += 1
             else:
-                alignment_map.append((op, aligned_pair[index-1][0]+1, aligned_pair[index][1]), shift)
+                refLength += 1
+                alignment_map.append((op, aligned_pair[index][0], aligned_pair[index][1]), shift, prevShift)
                 index += 1
         else:
             continue
-    while (len(alignment_map) % 3) != 0:
-        alignment_map.pop()
+    while (refLength % 3) != 0:
+        poped = alignment_map.pop()
+        if poped[0] != "I" : refLength -= 1
     return alignment_map
 
 def aaAlignment(nt_alignment_map):
     aa_alignment_map = {
 
     }
-    ntIndex = 0
-    aaIndex = 0
-    lastShift = 0
-    previousQuery = []
-    nextQuery = []
-    disregard = False
+    insertCount = 0
+    ntRefIndex = 0
+    ntQueryIndex = 0
+    aaQueryIndex = 0
+    prevAaShift = None    
+    firstAlignment = None
+    mapIndex = 0
     for nt in nt_alignment_map:
-        if (ntIndex % 3) == 2:
-            if nt[0] == "M":
-                if nt[3] == 0:
-                    disregard = False
-                    if lastShift >= 0:
-                        previousQuery.clear()
-                        previousQuery.append(int(nt[2]/3))
-                        aa_alignment_map[aaIndex] = (previousQuery.copy(), disregard)
-                        lastShift = nt[3]
-                        aaIndex += 1
+        if (ntRefIndex % 3) == 0:
+            if nt[0] == "I":
+                if insertCount == 3: 
+                    if firstAlignment == None: insertCount = 0 #Can only happen if inserts are consecutive
                     else:
-                        previousQuery.append(int(nt[2]/3))
-                        aa_alignment_map[aaIndex] = (previousQuery.copy(), disregard)
-                        previousQuery.clear()
-                        previousQuery.append(int(nt[2]/3))
-                        lastShift = nt[3]
-                        aaIndex += 1
-                else :
-                    disregard = ((nt[3] % 3) == 0)
-                    if lastShift < 0:
-                        
-            elif (nt[0] == "I"):
-                lastShift = nt[3]
-            else:
+                        aa = aa_alignment_map.get(int(ntRefIndex/3)-1, False)
+                        if aa == False:
+                            aa_alignment_map.update({int(ntRefIndex/3)-1:firstAlignment})
+                if prevAaShift == None:
+                    prevAaShift = nt[4]
+            elif nt[0] == "D":
+                ntRefIndex += 1
+            else: #nt[0] == "M"
+                ntQueryIndex += 1
+                ntRefIndex += 1
+                prevAaShift = nt[4]
+                firstAlignment = aaQueryIndex
+        elif (ntRefIndex % 3) == 1:
+            if nt[0] == "I":
+                ntQueryIndex += 1
+            elif nt[0] == "D":
+                ntRefIndex += 1
+            elif 
+        aaQueryIndex = int (ntQueryIndex / 3)
+        mapIndex += 1
+        
 
-        ntIndex += 1
+
+
 
 
 def verify(read, gene):
