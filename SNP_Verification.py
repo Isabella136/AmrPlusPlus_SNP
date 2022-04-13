@@ -196,18 +196,18 @@ def verify(read, gene):
         else :
             aa_alignment_map = aaAlignment(nt_alignment_map)
             SNPInfo = gene.condensedInfo()
-            res = False
+            res = 0
             for snp in SNPInfo:
                 if (aa_alignment_map.get(snp[1]-1,False)) == False:
                     continue
                 for mt in snp[2]: 
                     for queryIndex in tuple(aa_alignment_map[snp[1]-1]):
                         if mt == aaQuerySequence[queryIndex]:
-                            res = True
-                            resistant(name, 1)
+                            res = 1
                             break
-                    if res: break
-                if res: break
+                    if res == 1: break
+                if res == 1: break
+            resistant(name, res)
 
 
 metamarcSNPinfo = open("SNPInfoExtraction/metamarcSNPinfo.fasta", "rt")
@@ -238,7 +238,6 @@ for read in iter:
     if (gene == False):
         continue
     elif (read.cigarstring == None):
-        disregard(gene.getName())
         continue
     verify(read, gene)
 samfile.close() 
