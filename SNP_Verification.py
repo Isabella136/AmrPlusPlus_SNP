@@ -51,6 +51,7 @@ def mapCigarToAlignment(cigar, aligned_pair):
         if op == "S":
             index += 1
         elif (op == "M") | (op == "X") | (op == "="):
+            prevShift = shift
             if not(translatable):
                 if (aligned_pair[index][1] % 3) != 0:
                     index += 1
@@ -58,12 +59,12 @@ def mapCigarToAlignment(cigar, aligned_pair):
                     translatable = True
                     queryLength += 1
                     refLength += 1
-                    alignment_map.append(("M", aligned_pair[index][0], aligned_pair[index][1]), shift, prevShift)
+                    alignment_map.append(("M", aligned_pair[index][0], aligned_pair[index][1], shift, prevShift))
                     index += 1
             else:
                 queryLength += 1
                 refLength += 1
-                alignment_map.append(("M", aligned_pair[index][0], aligned_pair[index][1]), shift, prevShift)
+                alignment_map.append(("M", aligned_pair[index][0], aligned_pair[index][1], shift, prevShift))
                 index += 1
         elif op == "I":
             prevShift = shift
@@ -72,7 +73,7 @@ def mapCigarToAlignment(cigar, aligned_pair):
                 index += 1
             else:
                 queryLength += 1
-                alignment_map.append((op, aligned_pair[index][0], aligned_pair[index][1]), shift, prevShift)
+                alignment_map.append((op, aligned_pair[index][0], aligned_pair[index][1], shift, prevShift))
                 index += 1
         elif op == "D":
             prevShift = shift
@@ -81,7 +82,7 @@ def mapCigarToAlignment(cigar, aligned_pair):
                 index += 1
             else:
                 refLength += 1
-                alignment_map.append((op, aligned_pair[index][0], aligned_pair[index][1]), shift, prevShift)
+                alignment_map.append((op, aligned_pair[index][0], aligned_pair[index][1], shift, prevShift))
                 index += 1
         else:
             continue
@@ -95,42 +96,86 @@ def aaAlignment(nt_alignment_map):
 
     }
     insertCount = 0
-    ntRefIndex = 0
+    ntRefIndex = nt_alignment_map[0][2]
     ntQueryIndex = 0
     aaQueryIndex = 0
     prevAaShift = None    
     firstAlignment = None
+    thirdAlignment = 0
     mapIndex = 0
     for nt in nt_alignment_map:
         if (ntRefIndex % 3) == 0:
             if nt[0] == "I":
-                if insertCount == 3: 
-                    if firstAlignment == None: insertCount = 0 #Can only happen if inserts are consecutive
+                insertCount += 1
+                if (nt[3] % 3) == 0: 
+                    if insertCount == 3: insertCount = 0 #Can only happen if inserts are consecutive
                     else:
-                        aa = aa_alignment_map.get(int(ntRefIndex/3)-1, False)
+                        aa = aa_alignment_map.get(int(ntRefIndex/3-1), False)
                         if aa == False:
-                            aa_alignment_map.update({int(ntRefIndex/3)-1:firstAlignment})
+                            aa_alignment_map.update({int(ntRefIndex/3)-1:(thirdAlignment,)})
+                        else:
+                            temp = list(aa)
+                            temp.append(thirdAlignment)
+                            aa = tuple(temp)
+                            aa_alignment_map.update({int(ntRefIndex/3)-1:aa})
+                        insertCount = 0
                 if prevAaShift == None:
                     prevAaShift = nt[4]
+                ntQueryIndex += 1
             elif nt[0] == "D":
+                insertCount = 0
+                firstAlignment = aaQueryIndex
                 ntRefIndex += 1
             else: #nt[0] == "M"
+                insertCount = 0
                 ntQueryIndex += 1
                 ntRefIndex += 1
-                prevAaShift = nt[4]
+                if prevAaShift == None:
+                    prevAaShift = nt[4]
                 firstAlignment = aaQueryIndex
         elif (ntRefIndex % 3) == 1:
             if nt[0] == "I":
                 ntQueryIndex += 1
             elif nt[0] == "D":
                 ntRefIndex += 1
-            elif 
-        aaQueryIndex = int (ntQueryIndex / 3)
+            else: #nt[0] == "M"
+                ntQueryIndex += 1
+                ntRefIndex += 1
+                if prevAaShift == None: #preceded by "D"
+                    prevAaShift = nt[4]
+                    firstAlignment = aaQueryIndex
+        else: #(ntRefIndex % 3) == 2
+            if nt[0] == "I":
+                ntQueryIndex += 1
+            elif nt[0] == "D":
+                ntRefIndex += 1
+                if prevAaShift != None:
+                    if (prevAaShift % 3) == 0: #1M2D, 2M1D
+                        aa_alignment_map.update({int(nt[2]/3):(thirdAlignment,)})
+                prevAaShift = None
+                firstAlignment = None
+            else: #nt[0] == "M"
+                ntQueryIndex += 1
+                ntRefIndex += 1
+                thirdAlignment = aaQueryIndex
+                if prevAaShift == None: #preceded by 2 "D"
+                    prevAaShift = nt[4]
+                    firstAlignment = aaQueryIndex
+                if firstAlignment == thirdAlignment:
+                    if (prevAaShift % 3) == 0: #3M, 1D1I2M, 1D/2I...2D1M, 2D/1I...1D2M
+                        aa_alignment_map.update({int(nt[2]/3):(thirdAlignment,)})
+                elif (prevAaShift % 3) == 0:
+                    if (nt[4] % 3) == 0: #3Mand3xI
+                        aa_alignment_map.update({int(nt[2]/3):(firstAlignment, thirdAlignment)})
+                    else: #3Mand1/2I
+                        aa_alignment_map.update({int(nt[2]/3):(firstAlignment,)})
+                elif (nt[4] % 3) == 0: #2D/1I...1M1D1M
+                    aa_alignment_map.update({int(nt[2]/3):(thirdAlignment,)})    
+                prevAaShift = None
+                firstAlignment = None
+        aaQueryIndex = int(ntQueryIndex / 3)
         mapIndex += 1
-        
-
-
-
+    return aa_alignment_map    
 
 
 def verify(read, gene):
@@ -141,27 +186,28 @@ def verify(read, gene):
     else :
         cigar = extendCigar(read.cigarstring)
         aligned_pair = read.get_aligned_pairs()
-        alignment_map = mapCigarToAlignment(cigar, aligned_pair)
+        nt_alignment_map = mapCigarToAlignment(cigar, aligned_pair)
         querySeq = read.query_sequence
-        trimmedQuerySequence = querySeq[alignment_map[0][1]:alignment_map[len(alignment_map)-1][1]+1]
+        trimmedQuerySequence = querySeq[nt_alignment_map[0][1]:nt_alignment_map[len(nt_alignment_map)-1][1]+1]
         aaQuerySequence = dnaTranslate(trimmedQuerySequence)
         stopLocation = aaQuerySequence.find('*') 
         #if missense mutations, disregard
         if (stopLocation != -1) & ((stopLocation < len(aaQuerySequence)-1) | (read.reference_end < gene.ntSeqLength())-1): disregard(name)
         else :
+            aa_alignment_map = aaAlignment(nt_alignment_map)
             SNPInfo = gene.condensedInfo()
             res = False
             for snp in SNPInfo:
-                if ((snp[1]-1)*3 < alignment_map[0][1]) | ((snp[1]-1)*3 >= alignment_map[len(alignment_map)-1][1]):
+                if (aa_alignment_map.get(snp[1]-1,False)) == False:
                     continue
                 for mt in snp[2]: 
-                    queryIndex = findQueryIndex(read.get_aligned_pairs(),(snp[1]-1)*3)
-                    if (queryIndex != -1) & (mt == aaQuerySequence[int((queryIndex - (queryIndex%3))/3)-1]):
-                        res = True
-                        resistant(name, 1)
-                        break
-                if res:
-                    break
+                    for queryIndex in tuple(aa_alignment_map[snp[1]-1]):
+                        if mt == aaQuerySequence[queryIndex]:
+                            res = True
+                            resistant(name, 1)
+                            break
+                    if res: break
+                if res: break
 
 
 metamarcSNPinfo = open("SNPInfoExtraction/metamarcSNPinfo.fasta", "rt")
@@ -182,15 +228,17 @@ for line in metamarcSNPinfo:
         snp = line[temp+1:len(line)-1]
         isSequence = True
 metamarcSNPinfo.close()
-output = open("test_SNP_Verification_Sorted_Fluro_P_BPW_10_3_filtered.txt", "w")
-samfile = pysam.AlignmentFile("SAM_files/Sorted_Fluro_P_BPW_10_3_filtered.sam", "r")
+pysam.sort("-o", "SAM_files/Sorted_Filtered_out_P_BPW_50_2_R.amr.alignment.sam", "SAM_files/Filtered_out_P_BPW_50_2_R.amr.alignment.sam")
+output = open("test_Sorted_Filtered_out_P_BPW_50_2_R.amr.alignment.txt", "w")
+samfile = pysam.AlignmentFile("SAM_files/Sorted_Filtered_out_P_BPW_50_2_R.amr.alignment.sam", "r")
 
 iter = samfile.fetch()
 for read in iter:
     gene = geneDict.get(read.reference_name, False)
     if (gene == False):
         continue
-    elif (read.cigarstring == None) :
+    elif (read.cigarstring == None):
+        disregard(gene.getName())
         continue
     verify(read, gene)
 samfile.close() 

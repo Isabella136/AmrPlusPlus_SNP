@@ -6,9 +6,9 @@ MEG_3218: 0 resitant reads out of 2 total reads
 MEG_3220: 0 resitant reads out of 4 total reads
 MEG_3227: 0 resitant reads out of 5 total reads
 MEG_3234: 0 resitant reads out of 2 total reads
-MEG_5334: 0 resitant reads out of 17 total reads
-MEG_5342: 0 resitant reads out of 10 total reads
+MEG_5334: 2 resitant reads out of 19 total reads
+MEG_5342: 7 resitant reads out of 17 total reads
 MEG_5348: 0 resitant reads out of 5 total reads
-MEG_5353: 0 resitant reads out of 3 total reads
+MEG_5353: 1 resitant reads out of 4 total reads
 MEG_5361: 0 resitant reads out of 6 total reads
 MEG_5363: 0 resitant reads out of 7 total reads
