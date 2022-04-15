@@ -210,7 +210,7 @@ def verify(read, gene):
             resistant(name, res)
 
 
-metamarcSNPinfo = open("SNPInfoExtraction/metamarcSNPinfo.fasta", "rt")
+metamarcSNPinfo = open("extracted_SNP_files/metamarcSNPinfo.fasta", "rt")
 isSequence = False
 name = ""
 snp = ""
@@ -229,7 +229,7 @@ for line in metamarcSNPinfo:
         isSequence = True
 metamarcSNPinfo.close()
 pysam.sort("-o", "SAM_files/Sorted_Filtered_out_P_BPW_50_2_R.amr.alignment.sam", "SAM_files/Filtered_out_P_BPW_50_2_R.amr.alignment.sam")
-output = open("test_Sorted_Filtered_out_P_BPW_50_2_R.amr.alignment.txt", "w")
+output = open("Test/test_Sorted_Filtered_out_P_BPW_50_2_R.amr.alignment.txt", "w")
 samfile = pysam.AlignmentFile("SAM_files/Sorted_Filtered_out_P_BPW_50_2_R.amr.alignment.sam", "r")
 
 iter = samfile.fetch()

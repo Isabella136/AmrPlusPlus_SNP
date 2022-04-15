@@ -49,10 +49,10 @@ MmarcModel::MmarcModel(string line)
 pair<pair<char, int>, list<char>> MmarcModel::condensedSNPinfo()
 {
     list<char> toReturn = mutant_aa;
-    toReturn.push_back('|');
+    toReturn.push_back('_');
     for (int i = 0; i < context_left_aa.length(); i++)
         toReturn.push_back(context_left_aa[i]);
-    toReturn.push_back('|');
+    toReturn.push_back('_');
     for (int i = 0; i < context_right_aa.length(); i++)
         toReturn.push_back(context_right_aa[i]);
     return make_pair(make_pair(wt_aa, pos), toReturn);
