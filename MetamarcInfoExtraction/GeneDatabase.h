@@ -41,7 +41,7 @@ void GeneDatabase::addGene(string _geneName, string _geneType, string _geneClass
 void GeneDatabase::SNPInfo()
 {
     ifstream snpsearch;
-    snpsearch.open("mmarc_snpsearch_metadata2_modified.txt");
+    snpsearch.open("./metamarc_files/mmarc_snpsearch_metadata2_modified.txt");
     unordered_map<string, list<MmarcModel*>> name_model;
     string line;
     std::getline(snpsearch, line);
@@ -57,7 +57,7 @@ void GeneDatabase::SNPInfo()
     }
     snpsearch.close();
     ifstream model_members;
-    model_members.open("mmarc_model_members.csv");
+    model_members.open("./metamarc_files/mmarc_model_members.csv");
     unordered_map<string, string> header_name;
     std::getline(model_members, line);
     while (std::getline(model_members, line))
@@ -83,7 +83,7 @@ void GeneDatabase::SNPInfo()
         }
     }
     ifstream v1;
-    v1.open("megaresv1_to_external_header_mappings_v1.01.csv");
+    v1.open("../mapping_files/megaresv1_to_external_header_mappings_v1.01.csv");
     unordered_map<string, string> source_to_header;
     std::getline(v1, line);
     std::getline(v1, line);
@@ -109,7 +109,7 @@ void GeneDatabase::SNPInfo()
         }
     }
     ifstream v2;
-    v2.open("megaresv2_to_external_header_mappings_v2.00.csv");
+    v2.open("../mapping_files/megaresv2_to_external_header_mappings_v2.00.csv");
     unordered_map<string, string> header2_source;
     std::getline(v2, line);
     std::getline(v2, line);

@@ -62,12 +62,12 @@ string Gene::getFASTA()
 {
 	string SNPinfo = "";
 	if (listOfSNPs.empty())
-		SNPinfo = "\tNA";
+		return "";
 	else
 	{
 		for (auto iter = listOfSNPs.begin(); iter != listOfSNPs.end(); ++iter)
 		{
-			SNPinfo = SNPinfo + "\t";
+			SNPinfo = SNPinfo + "|";
 			SNPinfo = SNPinfo + iter->first.first + to_string(iter->first.second);
 			while (iter->second.size() > 0)
 			{
@@ -76,6 +76,6 @@ string Gene::getFASTA()
 			}
 		}
 	}
-	return ">" + geneName + "\t" + geneType + "\t" + geneClass + "\t" + geneMechanism + "\t" + geneGroup + SNPinfo + "\n";
+	return ">" + geneName + "|" + geneType + "|" + geneClass + "|" + geneMechanism + "|" + geneGroup + SNPinfo + "\n" + geneSequence + "\n";
 
 }
