@@ -3,42 +3,24 @@
 #include <string>
 #include <unordered_map>
 #include <iostream>
-#include "Gene.h"
 #include "MmarcModel.h"
+#include "../ModelDatabase.h"
 
 using namespace std;
 
-class GeneDatabase {
-private:
-    unordered_map<string, Gene*>  genes;
-    unordered_map<string, list<MmarcModel*>> snpInfoDatabase;
-public:
-    GeneDatabase();
-    void addGene(string _geneName, string _geneType, string _geneClass, string _geneMechanism, string _geneGroup, string _geneSequence);
-    void SNPInfo();
-    void print(string fileName);
+class MmarcDatabase : public ModelDatabase{
+    
+    public:
+        MmarcDatabase();
+        void SNPInfo();
 };
 
-GeneDatabase::GeneDatabase()
+MmarcDatabase::MmarcDatabase()
 {
     SNPInfo();
 }
 
-void GeneDatabase::addGene(string _geneName, string _geneType, string _geneClass, string _geneMechanism, string _geneGroup, string _geneSequence)
-{
-    Gene* toAdd = new Gene(_geneName, _geneType, _geneClass, _geneMechanism, _geneGroup, _geneSequence);
-    try
-    {
-        list<MmarcModel*> allSNPs = snpInfoDatabase.at(_geneName);
-        for (auto iter = allSNPs.begin(); iter != allSNPs.end(); ++iter)
-        {
-            toAdd->addSNP((*iter)->condensedSNPinfo().first, (*iter)->condensedSNPinfo().second);
-        }
-    }
-    catch (const out_of_range & oor) {}
-    genes.emplace(_geneName, toAdd);
-}
-void GeneDatabase::SNPInfo()
+void MmarcDatabase::SNPInfo()
 {
     ifstream snpsearch;
     snpsearch.open("./metamarc_files/mmarc_snpsearch_metadata2_modified.txt");
@@ -128,14 +110,4 @@ void GeneDatabase::SNPInfo()
         try { snpInfoDatabase.emplace(iter->first, source_model.at(iter->second)); }
         catch (const out_of_range & oor) {}
     }
-}
-void GeneDatabase::print(string fileName)
-{
-    ofstream output;
-    output.open(fileName);
-    for (auto iter = genes.begin(); iter != genes.end(); ++iter)
-    {
-        output << iter->second->getFASTA();
-    }
-    output.close();
 }

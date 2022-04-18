@@ -1,25 +1,26 @@
 #pragma once
 #include <string>
 #include <list>
+#include "../Model.h"
 
 using namespace std;
 
-class MmarcModel
-{
-private:
-    int pos;
-    char wt_aa;
-    list<char> mutant_aa;
-    int mmarc_codon_start;
-    int mmarc_codon_end;
-    string context_left_aa = "";
-    string context_right_aa = "";
-public:
-    MmarcModel(string line);
-    pair<pair<char, int>, list<char>> condensedSNPinfo();
-    pair<int, int> codonStartAndEnd();
+class MmarcModel: virtual public Model {
+    private:
+        int mmarc_codon_start;
+        int mmarc_codon_end;
+        string context_left_aa = "";
+        string context_right_aa = "";
+        void makeModel(string line);
+    public:
+        MmarcModel(string line);
+        pair<pair<char, int>, list<char>> condensedSNPinfo();
 };
 MmarcModel::MmarcModel(string line)
+{
+    makeModel(line);
+}
+void MmarcModel::makeModel(string line)
 {
     line = line.substr(line.find(',') + 1);
     line = line.substr(line.find(',') + 1);
@@ -56,8 +57,4 @@ pair<pair<char, int>, list<char>> MmarcModel::condensedSNPinfo()
     for (int i = 0; i < context_right_aa.length(); i++)
         toReturn.push_back(context_right_aa[i]);
     return make_pair(make_pair(wt_aa, pos), toReturn);
-}
-pair<int, int> MmarcModel::codonStartAndEnd()
-{
-    return make_pair(mmarc_codon_start, mmarc_codon_end);
 }
