@@ -1,6 +1,8 @@
 {
     "files.associations": {
         "fstream": "cpp",
-        "string": "cpp"
+        "string": "cpp",
+        "deque": "cpp",
+        "vector": "cpp"
     }
 }

@@ -9,7 +9,6 @@
 using namespace std;
 
 class MmarcDatabase : public ModelDatabase{
-    
     public:
         MmarcDatabase();
         void SNPInfo();
@@ -24,16 +23,17 @@ void MmarcDatabase::SNPInfo()
 {
     ifstream snpsearch;
     snpsearch.open("./metamarc_files/mmarc_snpsearch_metadata2_modified.txt");
-    unordered_map<string, list<MmarcModel*>> name_model;
+    unordered_map<string, list<Model*>> name_model;
     string line;
     std::getline(snpsearch, line);
     while (std::getline(snpsearch, line))
     {
         string modelName = line.substr(0, line.find(','));
-        try { name_model.at(modelName).push_back(new MmarcModel(line)); }
+        Model* model = new MmarcModel(line);
+        try { name_model.at(modelName).push_back(model); }
         catch (const out_of_range & oor) { 
-			list<MmarcModel*> temp;
-			temp.push_back(new MmarcModel(line));
+			list<Model*> temp;
+			temp.push_back(model);
 			name_model.emplace(modelName, temp);
 			}
     }
@@ -55,7 +55,7 @@ void MmarcDatabase::SNPInfo()
         }
     }
     model_members.close();
-    unordered_map<string, list<MmarcModel*>> header_model;
+    unordered_map<string, list<Model*>> header_model;
     for (auto iter = header_name.begin(); iter != header_name.end(); ++iter)
     {
         try { 
@@ -65,7 +65,7 @@ void MmarcDatabase::SNPInfo()
         }
     }
     ifstream v1;
-    v1.open("../mapping_files/megaresv1_to_external_header_mappings_v1.01.csv");
+    v1.open("../../mapping_files/megaresv1_to_external_header_mappings_v1.01.csv");
     unordered_map<string, string> source_to_header;
     std::getline(v1, line);
     std::getline(v1, line);
@@ -80,18 +80,18 @@ void MmarcDatabase::SNPInfo()
         source_to_header.emplace(line, header);
     }
     model_members.close();
-    unordered_map<string, list<MmarcModel*>> source_model;
+    unordered_map<string, list<Model*>> source_model;
     for (auto iter = source_to_header.begin(); iter != source_to_header.end(); ++iter)
     {
         try {
-            list<MmarcModel*> temp = header_model.at(iter->second);
+            list<Model*> temp = header_model.at(iter->second);
             source_model.emplace(iter->first, temp); 
             }
         catch (const out_of_range & oor) {
         }
     }
     ifstream v2;
-    v2.open("../mapping_files/megaresv2_to_external_header_mappings_v2.00.csv");
+    v2.open("../../mapping_files/megaresv2_to_external_header_mappings_v2.00.csv");
     unordered_map<string, string> header2_source;
     std::getline(v2, line);
     std::getline(v2, line);

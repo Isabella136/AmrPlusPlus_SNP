@@ -18,9 +18,8 @@ class ModelDatabase{
 
 ModelDatabase::ModelDatabase()
 {
-    
-}
 
+}
 unordered_map<string, list<Model*>> ModelDatabase::getDatabase()
 {
     return snpInfoDatabase;

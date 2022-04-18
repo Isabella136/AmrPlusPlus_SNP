@@ -5,7 +5,7 @@
 
 using namespace std;
 
-class MmarcModel: virtual public Model {
+class MmarcModel: public Model {
     private:
         int mmarc_codon_start;
         int mmarc_codon_end;
