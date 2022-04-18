@@ -14,19 +14,22 @@ All SNP information extracted from **MetaMARC** in `MetamarcInfoExtraction` and 
 Contains the `fluro_filter` program that filters SAM files for Fluoroquinolones ARGs.  
 Is currently deprecated.
 
-### *KargvaInfoExtraction* Folder
+### *InfoExtraction* Folder
+Contains the following two folders:
+
+#### *KargvaInfoExtraction* Folder
 Contains the `KargvaInfoExtracion` program that extracts SNP information retrieved from the database in the [KARGVA](https://github.com/DataIntellSystLab/KARGVA) repository.  
 Currently only contains a copy of the database.
 
-### *mapping_files* Folder
-Contains two csv files: the first file is used to map the MEGARes v1 database headers (used by **MetaMARC**) to headers used by external databases, and the second file is used to map the MEGARes v2 database headers (used by **AMRPlusPlus_SNP**) to headers used by external databases.
-
-### *MetamarcInfoExtraction* Folder
+#### *MetamarcInfoExtraction* Folder
 Contains the `MetamarcInfoExtraction` program that extracts SNP information retrieved from the database in the [MetaMARC](https://github.com/lakinsm/meta-marc) repository and saves it in the *extracted_SNP_files* folder.  
 Also contains the *metamarc_files* folder which includes the folowing files: 
 - "mmarc_model_members.csv": lists mmarc models and corresponding ARGs; ARGs are represented by their MEGARes v1 database header
 - "mmarc_snpsearch_metadata2.txt": lists of SNP information for each mmarc model 
 - "mmarc_snpsearch_metadata2_modified.txt": another version of the previous text file that has been modified for use by the `MetamarcInfoExtraction` program
+
+### *mapping_files* Folder
+Contains two csv files: the first file is used to map the MEGARes v1 database headers (used by **MetaMARC**) to headers used by external databases, and the second file is used to map the MEGARes v2 database headers (used by **AMRPlusPlus_SNP**) to headers used by external databases.
 
 ### *SAM_files* Folder
 All SAM files provided by the FDA for SNP verification
