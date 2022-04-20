@@ -30,12 +30,13 @@ void MmarcDatabase::SNPInfo()
     {
         string modelName = line.substr(0, line.find(','));
         Model* model = new MmarcModel(line);
-        try { name_model.at(modelName).push_back(model); }
-        catch (const out_of_range & oor) { 
+        if (name_model.find(modelName) != name_model.end())
+            name_model.at(modelName).push_back(model);
+        else { 
 			list<Model*> temp;
 			temp.push_back(model);
 			name_model.emplace(modelName, temp);
-			}
+		}
     }
     snpsearch.close();
     ifstream model_members;
@@ -58,10 +59,8 @@ void MmarcDatabase::SNPInfo()
     unordered_map<string, list<Model*>> header_model;
     for (auto iter = header_name.begin(); iter != header_name.end(); ++iter)
     {
-        try { 
+        if (name_model.find(iter->second) != name_model.end()) {
             header_model.emplace(iter->first, name_model.at(iter->second)); 
-            }
-        catch (const out_of_range & oor) {
         }
     }
     ifstream v1;
@@ -83,11 +82,9 @@ void MmarcDatabase::SNPInfo()
     unordered_map<string, list<Model*>> source_model;
     for (auto iter = source_to_header.begin(); iter != source_to_header.end(); ++iter)
     {
-        try {
+        if (header_model.find(iter->second) != header_model.end()) {
             list<Model*> temp = header_model.at(iter->second);
             source_model.emplace(iter->first, temp); 
-            }
-        catch (const out_of_range & oor) {
         }
     }
     ifstream v2;
@@ -107,7 +104,8 @@ void MmarcDatabase::SNPInfo()
     v2.close();
     for (auto iter = header2_source.begin(); iter != header2_source.end(); ++iter)
     {
-        try { snpInfoDatabase.emplace(iter->first, source_model.at(iter->second)); }
-        catch (const out_of_range & oor) {}
+        if (source_model.find(iter->second) != source_model.end()) {
+            snpInfoDatabase.emplace(iter->first, source_model.at(iter->second)); 
+        }
     }
 }

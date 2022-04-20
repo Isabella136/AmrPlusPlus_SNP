@@ -3,6 +3,7 @@
 #include <string>
 #include <unordered_map>
 #include "MetamarcInfoExtraction/MmarcDatabase.h"
+#include "KargvaInfoExtracion/KargvaDatabase.h"
 #include "GeneDatabase.h"
 
 using namespace std;
@@ -10,7 +11,9 @@ using namespace std;
 int main()
 {
 	MmarcDatabase mmarc;
+	KargvaDatabase kargva;
 	GeneDatabase megaresSNP(mmarc);
+	megaresSNP.combineDatabases(kargva);
 	fstream database;
 	database.open("../MEGARes_database.fasta");
 	string header;

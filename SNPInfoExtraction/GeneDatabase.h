@@ -27,8 +27,8 @@ void GeneDatabase::combineDatabases(ModelDatabase& models)
 {
     unordered_map<string, list<Model*>> temp = models.getDatabase();
     for (auto iter = temp.begin(); iter != temp.end(); ++iter) {
-        try {snpInfoDatabase.at(iter->first);}
-        catch (const out_of_range & oor) {snpInfoDatabase.emplace(iter->first, iter->second);}
+        if (snpInfoDatabase.find(iter->first) == snpInfoDatabase.end())
+            snpInfoDatabase.emplace(iter->first, iter->second);
     }
 }
 void GeneDatabase::addGene(string _geneName, string _geneType, string _geneClass, string _geneMechanism, string _geneGroup, string _geneSequence)
