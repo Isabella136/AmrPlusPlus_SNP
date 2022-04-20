@@ -2,8 +2,8 @@
 #include <iostream>
 #include <string>
 #include <unordered_map>
-#include "MmarcDatabase.h"
-#include "../GeneDatabase.h"
+#include "MetamarcInfoExtraction/MmarcDatabase.h"
+#include "GeneDatabase.h"
 
 using namespace std;
 
@@ -12,7 +12,7 @@ int main()
 	MmarcDatabase mmarc;
 	GeneDatabase megaresSNP(mmarc);
 	fstream database;
-	database.open("../../MEGARes_database.fasta");
+	database.open("../MEGARes_database.fasta");
 	string header;
 	string sequence;
 	while (std::getline(database, header))
@@ -34,6 +34,6 @@ int main()
 		}
 	}
 	database.close();
-	megaresSNP.print("../../extracted_SNP_files/metamarcSNPinfo.fasta");
+	megaresSNP.print("../extracted_SNP_files/metamarcSNPinfo.fasta");
 	return 0;
 }
