@@ -1,8 +1,0 @@
-{
-    "files.associations": {
-        "stdexcept": "cpp",
-        "iostream": "cpp",
-        "iosfwd": "cpp",
-        "*.tcc": "cpp"
-    }
-}
