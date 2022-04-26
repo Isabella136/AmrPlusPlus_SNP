@@ -26,9 +26,6 @@
     <ClInclude Include="GeneDatabase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Model.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ModelDatabase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -36,6 +33,45 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MetamarcInfoExtraction\MmarcModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KargvaInfoExtracion\KargvaDatabase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelReg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelDeletion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelNonsense.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KargvaInfoExtracion\KargvaModelReg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KargvaInfoExtracion\KargvaModelInsertion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelInsertion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KargvaInfoExtracion\KargvaModelDeletion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KargvaInfoExtracion\KargvaModelNonsense.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KargvaInfoExtracion\KargvaMultipleModels.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelSingle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KargvaInfoExtracion\KargvaModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -53,6 +89,9 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="..\mapping_files\megaresv2_to_external_header_mappings_v2.00.csv">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\CARD\card-data\protein_fasta_protein_variant_model.fasta">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

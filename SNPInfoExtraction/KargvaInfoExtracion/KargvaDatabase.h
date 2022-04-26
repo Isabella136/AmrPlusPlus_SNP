@@ -34,9 +34,9 @@ void KargvaDatabase::SNPInfo(){
             bool included = false;
             if (snpInfoDatabase.find(header[4]) != snpInfoDatabase.end()) {
                 for (auto iter = snpInfoDatabase.at(header[4]).begin(); iter != snpInfoDatabase.at(header[4]).end(); ++iter) {
-                    included = included || ((KargvaModel *)(*iter))->includes(header[1]);
+                    included = included || (dynamic_cast<KargvaModel *>(*iter))->includes(header[1]);
                     if (included) {
-                        ((KargvaModel *)(*iter))->addToModel(header[1]);
+                        (dynamic_cast<KargvaModel*>(*iter))->addToModel(header[1]);
                         break;
                     }
                 }

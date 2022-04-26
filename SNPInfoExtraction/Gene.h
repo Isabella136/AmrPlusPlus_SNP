@@ -5,16 +5,6 @@
 
 using namespace std;
 
-struct hash_pair {
-	template <class T1, class T2>
-	size_t operator()(const pair<T1, T2>& p) const
-	{
-		auto hash1 = hash<T1>{}(p.first);
-		auto hash2 = hash<T2>{}(p.second);
-		return hash1 ^ hash2;
-	}
-};
-
 class Gene
 {
 private:
@@ -24,14 +14,14 @@ private:
 	string geneMechanism;
 	string geneGroup;
 	string geneSequence;
-	unordered_map<pair<char, int>, list<char>, hash_pair> listOfSNPs;
+	vector<string> listOfSNPs;
 
 public:
 	Gene(string _geneName, string _geneType, string _geneClass, string _geneMechanism, string _geneGroup, string _geneSequence);
 	string getSequence();
 	string getName();
 	string getFASTA();
-	void addSNP(pair<char, int> wt_pos, list<char> mutants);
+	void addSNP(string SNP);
 };
 
 Gene::Gene(string _geneName, string _geneType, string _geneClass, string _geneMechanism, string _geneGroup, string _geneSequence)
@@ -43,9 +33,9 @@ Gene::Gene(string _geneName, string _geneType, string _geneClass, string _geneMe
 	geneGroup = _geneGroup;
 	geneSequence = _geneSequence;
 }
-void Gene::addSNP(pair<char, int> wt_pos, list<char> mutants)
+void Gene::addSNP(string SNP)
 {
-	listOfSNPs.emplace(wt_pos, mutants);
+	listOfSNPs.push_back(SNP);
 }
 string Gene::getSequence()
 {
@@ -66,13 +56,7 @@ string Gene::getFASTA()
 	{
 		for (auto iter = listOfSNPs.begin(); iter != listOfSNPs.end(); ++iter)
 		{
-			SNPinfo = SNPinfo + "|";
-			SNPinfo = SNPinfo + iter->first.first + to_string(iter->first.second);
-			while (iter->second.size() > 0)
-			{
-				SNPinfo = SNPinfo + iter->second.front();
-				iter->second.pop_front();
-			}
+			SNPinfo = SNPinfo + "|" + *iter;
 		}
 	}
 	return ">" + geneName + "|" + geneType + "|" + geneClass + "|" + geneMechanism + "|" + geneGroup + SNPinfo + "\n" + geneSequence + "\n";

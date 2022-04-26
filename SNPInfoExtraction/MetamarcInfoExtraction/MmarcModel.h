@@ -1,11 +1,11 @@
 #pragma once
 #include <string>
 #include <list>
-#include "../Model.h"
+#include "../ModelReg.h"
 
 using namespace std;
 
-class MmarcModel: public Model {
+class MmarcModel: public ModelReg {
     private:
         int mmarc_codon_start;
         int mmarc_codon_end;
@@ -14,7 +14,7 @@ class MmarcModel: public Model {
         void makeModel(string line);
     public:
         MmarcModel(string line);
-        pair<pair<char, int>, list<char>> condensedSNPinfo();
+        string condensedSNPinfo();
 };
 MmarcModel::MmarcModel(string line)
 {
@@ -47,14 +47,21 @@ void MmarcModel::makeModel(string line)
     for (int i = 0; i < aaList.size(); i++)
         context_right_aa += aaList[i];
 }
-pair<pair<char, int>, list<char>> MmarcModel::condensedSNPinfo()
+string MmarcModel::condensedSNPinfo()
 {
-    list<char> toReturn = mutant_aa;
-    toReturn.push_back('_');
+    string toReturn = "";
+    toReturn += wt_aa;
+    toReturn += pos;
+    list<char> copy = mutant_aa;
+    while (!(copy.empty())) {
+        toReturn += copy.front();
+        copy.pop_front();
+    }
+    toReturn += '_';
     for (int i = 0; i < context_left_aa.length(); i++)
-        toReturn.push_back(context_left_aa[i]);
-    toReturn.push_back('_');
+        toReturn += context_left_aa[i];
+    toReturn += '_';
     for (int i = 0; i < context_right_aa.length(); i++)
-        toReturn.push_back(context_right_aa[i]);
-    return make_pair(make_pair(wt_aa, pos), toReturn);
+        toReturn += context_right_aa[i];
+    return toReturn;
 }

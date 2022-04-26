@@ -143,12 +143,25 @@
   <ItemGroup>
     <ClInclude Include="Gene.h" />
     <ClInclude Include="GeneDatabase.h" />
+    <ClInclude Include="KargvaInfoExtracion\KargvaDatabase.h" />
+    <ClInclude Include="KargvaInfoExtracion\KargvaModel.h" />
+    <ClInclude Include="KargvaInfoExtracion\KargvaModelDeletion.h" />
+    <ClInclude Include="KargvaInfoExtracion\KargvaModelInsertion.h" />
+    <ClInclude Include="KargvaInfoExtracion\KargvaModelNonsense.h" />
+    <ClInclude Include="KargvaInfoExtracion\KargvaModelReg.h" />
+    <ClInclude Include="KargvaInfoExtracion\KargvaMultipleModels.h" />
     <ClInclude Include="MetamarcInfoExtraction\MmarcDatabase.h" />
     <ClInclude Include="MetamarcInfoExtraction\MmarcModel.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="ModelDeletion.h" />
+    <ClInclude Include="ModelInsertion.h" />
+    <ClInclude Include="ModelNonsense.h" />
+    <ClInclude Include="ModelReg.h" />
     <ClInclude Include="ModelDatabase.h" />
+    <ClInclude Include="ModelSingle.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\CARD\card-data\protein_fasta_protein_variant_model.fasta" />
     <None Include="..\mapping_files\megaresv1_to_external_header_mappings_v1.01.csv" />
     <None Include="..\mapping_files\megaresv2_to_external_header_mappings_v2.00.csv" />
     <None Include="..\MEGARes_database.fasta" />

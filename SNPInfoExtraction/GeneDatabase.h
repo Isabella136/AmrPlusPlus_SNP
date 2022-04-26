@@ -38,7 +38,7 @@ void GeneDatabase::addGene(string _geneName, string _geneType, string _geneClass
     {
         list<Model*> allSNPs = snpInfoDatabase.at(_geneName);
         for (auto iter = allSNPs.begin(); iter != allSNPs.end(); ++iter)
-            toAdd->addSNP((*iter)->condensedSNPinfo().first, (*iter)->condensedSNPinfo().second);
+            toAdd->addSNP((*iter)->condensedSNPinfo());
     }
     catch (const out_of_range & oor) {}
     genes.emplace(_geneName, toAdd);
