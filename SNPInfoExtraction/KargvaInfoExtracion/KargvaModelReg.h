@@ -1,6 +1,4 @@
 #pragma once
-#include <string>
-#include <list>
 #include "../ModelReg.h"
 #include "KargvaModel.h"
 
@@ -9,15 +7,14 @@ using namespace std;
 class KargvaModelReg : public ModelReg, public KargvaModel {
 private:
     void makeModel(string line);
-    string addContext();
 public:
-    KargvaModelReg(string line);
+    KargvaModelReg(string line, string id);
     void addToModel(string line);
     bool includes(string line);
     string condensedSNPinfo();
 };
 
-KargvaModelReg::KargvaModelReg(string line) {
+KargvaModelReg::KargvaModelReg(string line, string id):KargvaModel(id) {
     makeModel(line);
 }
 void KargvaModelReg::addToModel(string line) {
@@ -30,7 +27,13 @@ bool KargvaModelReg::includes(string line) {
     return temp == line.substr(0, line.size() - 1);
 }
 string KargvaModelReg::condensedSNPinfo() {
-    return make_pair(make_pair(wt_aa, pos), mutant_aa);
+    string toReturn = "Reg:";
+    toReturn += wt_aa;
+    toReturn += pos;
+    for (int i = 0; i < mutant_aa.size; i++)
+        toReturn += mutant_aa[i];
+    toReturn += addContext(pos - 2, pos);
+    return toReturn;
 }
 void KargvaModelReg::makeModel(string line) {
     wt_aa = line.at(0);

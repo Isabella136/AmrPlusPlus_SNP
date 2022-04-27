@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include <list>
+#include <vector>
 #include "ModelSingle.h"
 
 using namespace std;
@@ -8,7 +8,7 @@ using namespace std;
 class ModelReg : public virtual ModelSingle {
     protected:
         char wt_aa = 0;
-        list<char> mutant_aa;
+        vector<char> mutant_aa;
         virtual void makeModel(string line) = 0;
     public:
         ModelReg();

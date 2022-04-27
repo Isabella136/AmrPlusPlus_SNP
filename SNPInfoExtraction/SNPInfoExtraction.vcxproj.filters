@@ -74,6 +74,9 @@
     <ClInclude Include="KargvaInfoExtracion\KargvaModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CARD_database.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="MetamarcInfoExtraction\metamarc_files\mmarc_model_members.csv">

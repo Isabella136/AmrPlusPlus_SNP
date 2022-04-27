@@ -49,19 +49,14 @@ void MmarcModel::makeModel(string line)
 }
 string MmarcModel::condensedSNPinfo()
 {
-    string toReturn = "";
+    string toReturn = "Reg:";
     toReturn += wt_aa;
     toReturn += pos;
-    list<char> copy = mutant_aa;
-    while (!(copy.empty())) {
-        toReturn += copy.front();
-        copy.pop_front();
-    }
+    for (int i = 0; i < mutant_aa.size; i++)
+        toReturn += mutant_aa[i];
     toReturn += '_';
-    for (int i = 0; i < context_left_aa.length(); i++)
-        toReturn += context_left_aa[i];
+    toReturn += context_left_aa;
     toReturn += '_';
-    for (int i = 0; i < context_right_aa.length(); i++)
-        toReturn += context_right_aa[i];
+    toReturn += context_right_aa;
     return toReturn;
 }

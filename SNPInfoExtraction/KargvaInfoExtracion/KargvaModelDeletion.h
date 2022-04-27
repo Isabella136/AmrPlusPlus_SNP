@@ -1,36 +1,37 @@
 #pragma once
-#include <string>
-#include <list>
 #include "../ModelDeletion.h"
 #include "KargvaModel.h"
 
 using namespace std;
 
-class KargvaModel : public ModelDeletion, public KargvaModel {
+class KargvaModelDeletion : public ModelDeletion, public KargvaModel {
 private:
     void makeModel(string line);
-    string addContext();
 public:
-    KargvaModel(string line);
+    KargvaModelDeletion(string line, string id);
     void addToModel(string line);
     bool includes(string line);
     string condensedSNPinfo();
 };
 
-KargvaModel::KargvaModel(string line) {
+KargvaModelDeletion::KargvaModelDeletion(string line, string id) :KargvaModel(id) {
     makeModel(line);
 }
-void KargvaModel::addToModel(string line) {
+void KargvaModelDeletion::addToModel(string line) {
     throw std::exception("should not have been called: model type is deletion");
 }
-bool KargvaModel::includes(string line) {
+bool KargvaModelDeletion::includes(string line) {
     return false;
 }
-string KargvaModel::condensedSNPinfo() {
-    return make_pair(make_pair(wt_aa, pos), mutant_aa);
+string KargvaModelDeletion::condensedSNPinfo() {
+    string toReturn = "Del:";
+    toReturn += wt_aa;
+    toReturn += pos;
+    toReturn += '-';
+    toReturn += addContext(pos - 2, pos);
+    return toReturn;
 }
-void KargvaModel::makeModel(string line) {
-    wt_aa = line.at(0);
-    pos = stoi(line.substr(1, line.size() - 2));
-    mutant_aa.push_back(line.at(line.size() - 1));
+void KargvaModelDeletion::makeModel(string line) {
+    wt_aa = line.at(1);
+    pos = stoi(line.substr(2));
 }

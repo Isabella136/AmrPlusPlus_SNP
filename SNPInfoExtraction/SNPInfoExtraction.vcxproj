@@ -141,6 +141,7 @@
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CARD_database.h" />
     <ClInclude Include="Gene.h" />
     <ClInclude Include="GeneDatabase.h" />
     <ClInclude Include="KargvaInfoExtracion\KargvaDatabase.h" />

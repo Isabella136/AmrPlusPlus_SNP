@@ -4,7 +4,11 @@
 #include <vector>
 #include <unordered_map>
 #include <iostream>
-#include "KargvaModel.h"
+#include "KargvaModelDeletion.h"
+#include "KargvaModelInsertion.h"
+#include "KargvaModelNonsense.h"
+#include "KargvaModelReg.h"
+#include "KargvaMultipleModels.h"
 #include "../ModelDatabase.h"
 
 using namespace std;
@@ -33,20 +37,42 @@ void KargvaDatabase::SNPInfo(){
         if (header[4] != "NA") {
             bool included = false;
             if (snpInfoDatabase.find(header[4]) != snpInfoDatabase.end()) {
-                for (auto iter = snpInfoDatabase.at(header[4]).begin(); iter != snpInfoDatabase.at(header[4]).end(); ++iter) {
-                    included = included || (dynamic_cast<KargvaModel *>(*iter))->includes(header[1]);
-                    if (included) {
-                        (dynamic_cast<KargvaModel*>(*iter))->addToModel(header[1]);
-                        break;
+                if (header[1].find(";") == -1 && header[1].find("STOP") != -1 && !(header[1].at(0) == '-' && isalpha(header[1].at(1)))) {
+                    for (auto iter = snpInfoDatabase.at(header[4]).begin(); iter != snpInfoDatabase.at(header[4]).end(); ++iter) {
+                        included = included || (dynamic_cast<KargvaModel*>(*iter))->includes(header[1]);
+                        if (included) {
+                            (dynamic_cast<KargvaModel*>(*iter))->addToModel(header[1]);
+                            break;
+                        }
                     }
                 }
                 if (!included){
-                    Model* model = new KargvaModel(header[1]);
+                    Model* model;
+                    if (header[1].at(0) == '-' && isalpha(header[1].at(1)))
+                        model = new KargvaModelDeletion(header[1], header[2]);
+                    else if (header[1].at(0) == '-')
+                        model = new KargvaModelInsertion(header[1], header[2]);
+                    else if (header[1].find("STOP") != -1)
+                        model = new KargvaModelNonsense(header[1], header[2]);
+                    else if (header[1].find(";") == -1)
+                        model = new KargvaMultipleModels(header[1], header[2]);
+                    else
+                        model = new KargvaModelReg(header[1], header[2]);
                     snpInfoDatabase.at(header[4]).push_back(model);
                 }
             }
             else {
-                Model* model = new KargvaModel(header[1]);
+                Model* model;
+                if (header[1].at(0) == '-' && isalpha(header[1].at(1)))
+                    model = new KargvaModelDeletion(header[1], header[2]);
+                else if (header[1].at(0) == '-')
+                    model = new KargvaModelInsertion(header[1], header[2]);
+                else if (header[1].find("STOP") != -1)
+                    model = new KargvaModelNonsense(header[1], header[2]);
+                else if (header[1].find(";") == -1)
+                    model = new KargvaMultipleModels(header[1], header[2]);
+                else
+                    model = new KargvaModelReg(header[1], header[2]);
                 list<Model*> temp;
                 temp.push_back(model);
                 snpInfoDatabase.emplace(header[4], temp);
