@@ -13,12 +13,15 @@
 
 using namespace std;
 class KargvaDatabase : public ModelDatabase {
+    private:
+        CARD_database* databaseSequences;
     public:
         KargvaDatabase();
         void SNPInfo();
 };
 
 KargvaDatabase::KargvaDatabase(){
+    databaseSequences = new CARD_database();
     SNPInfo();
 }
 void KargvaDatabase::SNPInfo(){
@@ -49,30 +52,30 @@ void KargvaDatabase::SNPInfo(){
                 if (!included){
                     Model* model;
                     if (header[1].at(0) == '-' && isalpha(header[1].at(1)))
-                        model = new KargvaModelDeletion(header[1], header[2]);
+                        model = new KargvaModelDeletion(header[1], header[2], databaseSequences);
                     else if (header[1].at(0) == '-')
-                        model = new KargvaModelInsertion(header[1], header[2]);
+                        model = new KargvaModelInsertion(header[1], header[2], databaseSequences);
                     else if (header[1].find("STOP") != -1)
-                        model = new KargvaModelNonsense(header[1], header[2]);
-                    else if (header[1].find(";") == -1)
-                        model = new KargvaMultipleModels(header[1], header[2]);
+                        model = new KargvaModelNonsense(header[1], header[2], databaseSequences);
+                    else if (header[1].find(";") != -1)
+                        model = new KargvaMultipleModels(header[1], header[2], databaseSequences);
                     else
-                        model = new KargvaModelReg(header[1], header[2]);
+                        model = new KargvaModelReg(header[1], header[2], databaseSequences);
                     snpInfoDatabase.at(header[4]).push_back(model);
                 }
             }
             else {
                 Model* model;
                 if (header[1].at(0) == '-' && isalpha(header[1].at(1)))
-                    model = new KargvaModelDeletion(header[1], header[2]);
+                    model = new KargvaModelDeletion(header[1], header[2], databaseSequences);
                 else if (header[1].at(0) == '-')
-                    model = new KargvaModelInsertion(header[1], header[2]);
+                    model = new KargvaModelInsertion(header[1], header[2], databaseSequences);
                 else if (header[1].find("STOP") != -1)
-                    model = new KargvaModelNonsense(header[1], header[2]);
-                else if (header[1].find(";") == -1)
-                    model = new KargvaMultipleModels(header[1], header[2]);
+                    model = new KargvaModelNonsense(header[1], header[2], databaseSequences);
+                else if (header[1].find(";") != -1)
+                    model = new KargvaMultipleModels(header[1], header[2], databaseSequences);
                 else
-                    model = new KargvaModelReg(header[1], header[2]);
+                    model = new KargvaModelReg(header[1], header[2], databaseSequences);
                 list<Model*> temp;
                 temp.push_back(model);
                 snpInfoDatabase.emplace(header[4], temp);

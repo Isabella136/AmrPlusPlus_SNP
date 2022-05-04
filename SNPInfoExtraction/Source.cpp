@@ -10,10 +10,11 @@ using namespace std;
 
 int main()
 {
-	MmarcDatabase mmarc;
+	//MmarcDatabase mmarc;
 	KargvaDatabase kargva;
-	GeneDatabase megaresSNP(mmarc);
-	megaresSNP.combineDatabases(kargva);
+	//GeneDatabase megaresSNP(mmarc);
+	//megaresSNP.combineDatabases(kargva);
+	GeneDatabase megaresSNP(kargva);
 	fstream database;
 	database.open("../MEGARes_database.fasta");
 	string header;
@@ -37,6 +38,7 @@ int main()
 		}
 	}
 	database.close();
-	megaresSNP.print("../extracted_SNP_files/metamarcSNPinfo.fasta");
+	//megaresSNP.print("../extracted_SNP_files/metamarcSNPinfo.fasta");
+	megaresSNP.print("temp.fasta");
 	return 0;
 }

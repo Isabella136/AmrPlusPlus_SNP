@@ -8,13 +8,13 @@ class KargvaModelDeletion : public ModelDeletion, public KargvaModel {
 private:
     void makeModel(string line);
 public:
-    KargvaModelDeletion(string line, string id);
+    KargvaModelDeletion(string line, string id, CARD_database* dbSeq);
     void addToModel(string line);
     bool includes(string line);
     string condensedSNPinfo();
 };
 
-KargvaModelDeletion::KargvaModelDeletion(string line, string id) :KargvaModel(id) {
+KargvaModelDeletion::KargvaModelDeletion(string line, string id, CARD_database* dbSeq) :KargvaModel(id, dbSeq) {
     makeModel(line);
 }
 void KargvaModelDeletion::addToModel(string line) {
@@ -26,9 +26,9 @@ bool KargvaModelDeletion::includes(string line) {
 string KargvaModelDeletion::condensedSNPinfo() {
     string toReturn = "Del:";
     toReturn += wt_aa;
-    toReturn += pos;
+    toReturn += to_string(pos);
     toReturn += '-';
-    toReturn += addContext(pos - 2, pos);
+    toReturn += addContext(pos - 2, pos, wt_aa);
     return toReturn;
 }
 void KargvaModelDeletion::makeModel(string line) {

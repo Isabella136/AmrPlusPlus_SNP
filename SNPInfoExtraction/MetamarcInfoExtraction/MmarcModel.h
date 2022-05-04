@@ -51,8 +51,8 @@ string MmarcModel::condensedSNPinfo()
 {
     string toReturn = "Reg:";
     toReturn += wt_aa;
-    toReturn += pos;
-    for (int i = 0; i < mutant_aa.size; i++)
+    toReturn += to_string(pos);
+    for (int i = 0; i < mutant_aa.size(); i++)
         toReturn += mutant_aa[i];
     toReturn += '_';
     toReturn += context_left_aa;

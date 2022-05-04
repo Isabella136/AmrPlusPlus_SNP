@@ -8,13 +8,13 @@ class KargvaModelInsertion : public ModelInsertion, public KargvaModel {
 private:
     void makeModel(string line);
 public:
-    KargvaModelInsertion(string line, string id);
+    KargvaModelInsertion(string line, string id, CARD_database* dbSeq);
     void addToModel(string line);
     bool includes(string line);
     string condensedSNPinfo();
 };
 
-KargvaModelInsertion::KargvaModelInsertion(string line, string id) :KargvaModel(id) {
+KargvaModelInsertion::KargvaModelInsertion(string line, string id, CARD_database* dbSeq) :KargvaModel(id, dbSeq) {
     makeModel(line);
 }
 void KargvaModelInsertion::addToModel(string line) {
@@ -22,16 +22,16 @@ void KargvaModelInsertion::addToModel(string line) {
 }
 bool KargvaModelInsertion::includes(string line) {
     string temp = "-";
-    temp += pos;
+    temp += to_string(pos);
     return temp == line.substr(0, line.size() - 1);
 }
 string KargvaModelInsertion::condensedSNPinfo() {
     string toReturn = "Ins:";
     toReturn += '-';
-    toReturn += pos;
-    for (int i = 0; i < mutant_aa.size; i++)
+    toReturn += to_string(pos);
+    for (int i = 0; i < mutant_aa.size(); i++)
         toReturn += mutant_aa[i];
-    toReturn += addContext(pos - 2, pos - 1);
+    toReturn += addContext(pos - 2, pos - 1, '_');
     return toReturn;
 }
 void KargvaModelInsertion::makeModel(string line) {

@@ -7,24 +7,31 @@ using namespace std;
 
 class KargvaModel : public virtual Model {
     protected:
-        static CARD_database databaseSequences;
+        CARD_database* databaseSequences;
         string cardID = "";
-        string addContext(int lastLeftIndex, int firstRightIndex);
+        string addContext(int lastLeftIndex, int firstRightIndex, char wt);
     public:
-        KargvaModel(string id);
+        KargvaModel();
+        KargvaModel(string id, CARD_database* dbSeq);
         virtual void addToModel(string line) = 0;
         virtual bool includes(string line) = 0;
         virtual string condensedSNPinfo() = 0;
 };
+KargvaModel::KargvaModel() {}
 
-KargvaModel::KargvaModel(string id){
+KargvaModel::KargvaModel(string id, CARD_database* dbSeq){
     cardID = id;
+    databaseSequences = dbSeq;
 }
 
-string KargvaModel::addContext(int lastLeftIndex, int firstRightIndex) {
-    string sequence = databaseSequences.getSequence(cardID);
+string KargvaModel::addContext(int lastLeftIndex, int firstRightIndex, char wt) {
+    string sequence = databaseSequences->getSequence(cardID);
     if (sequence == "none")
         return "__";
+    if (wt != '-') {
+        if (sequence.at(lastLeftIndex + 1) != wt)
+            cout << cardID << "\n";
+    }
     string toReturn = "_";
     int firstLeftIndex = lastLeftIndex - 4;
     if (lastLeftIndex < 4)

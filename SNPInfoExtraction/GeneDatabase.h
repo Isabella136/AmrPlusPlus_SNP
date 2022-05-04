@@ -13,13 +13,13 @@ class GeneDatabase {
         unordered_map<string, Gene*>  genes;
         unordered_map<string, list<Model*>> snpInfoDatabase;
     public:
-        GeneDatabase(MmarcDatabase& models);
+        GeneDatabase(ModelDatabase& models);
         void combineDatabases(ModelDatabase& models);
         void print(string fileName);
         void addGene(string _geneName, string _geneType, string _geneClass, string _geneMechanism, string _geneGroup, string _geneSequence);
     
 };
-GeneDatabase::GeneDatabase(MmarcDatabase& models)
+GeneDatabase::GeneDatabase(ModelDatabase& models)
 {
     snpInfoDatabase = models.getDatabase();
 }

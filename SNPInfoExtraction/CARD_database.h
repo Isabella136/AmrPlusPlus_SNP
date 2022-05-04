@@ -5,20 +5,9 @@
 
 using namespace std;
 
-struct hash_pair {
-	template <class T1, class T2>
-	size_t operator()(const pair<T1, T2>& p) const
-	{
-		auto hash1 = hash<T1>{}(p.first);
-		auto hash2 = hash<T2>{}(p.second);
-		return hash1 ^ hash2;
-	}
-};
-
-using namespace std;
 class CARD_database {
 	private:
-		unordered_map<string, string, hash_pair> databaseSequences;
+		unordered_map<string, string> databaseSequences;
 	public:
 		CARD_database();
 		string getSequence(string id);

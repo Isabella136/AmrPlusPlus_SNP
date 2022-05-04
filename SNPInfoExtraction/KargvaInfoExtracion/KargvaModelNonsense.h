@@ -8,13 +8,13 @@ class KargvaModelNonsense : public ModelNonsense, public KargvaModel {
 private:
     void makeModel(string line);
 public:
-    KargvaModelNonsense(string line, string id);
+    KargvaModelNonsense(string line, string id, CARD_database* dbSeq);
     void addToModel(string line);
     bool includes(string line);
     string condensedSNPinfo();
 };
 
-KargvaModelNonsense::KargvaModelNonsense(string line, string id) :KargvaModel(id) {
+KargvaModelNonsense::KargvaModelNonsense(string line, string id, CARD_database* dbSeq) :KargvaModel(id, dbSeq) {
     makeModel(line);
 }
 void KargvaModelNonsense::addToModel(string line) {
@@ -26,9 +26,9 @@ bool KargvaModelNonsense::includes(string line) {
 string KargvaModelNonsense::condensedSNPinfo() {
     string toReturn = "Non:";
     toReturn += wt_aa;
-    toReturn += pos;
+    toReturn += to_string(pos);
     toReturn += '*';
-    toReturn += addContext(pos - 2, pos);
+    toReturn += addContext(pos - 2, pos, wt_aa);
     return toReturn;
 }
 void KargvaModelNonsense::makeModel(string line) {
