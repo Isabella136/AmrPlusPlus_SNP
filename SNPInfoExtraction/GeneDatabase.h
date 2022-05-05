@@ -16,6 +16,7 @@ class GeneDatabase {
         GeneDatabase(ModelDatabase& models);
         void combineDatabases(ModelDatabase& models);
         void print(string fileName);
+        void printIfNoSNP(string fileName);
         void addGene(string _geneName, string _geneType, string _geneClass, string _geneMechanism, string _geneGroup, string _geneSequence);
     
 };
@@ -49,5 +50,13 @@ void GeneDatabase::print(string fileName)
     output.open(fileName);
     for (auto iter = genes.begin(); iter != genes.end(); ++iter)
         output << iter->second->getFASTA();
+    output.close();
+}
+void GeneDatabase::printIfNoSNP(string fileName)
+{
+    ofstream output;
+    output.open(fileName);
+    for (auto iter = genes.begin(); iter != genes.end(); ++iter)
+        output << iter->second->getFASTA2();
     output.close();
 }

@@ -21,6 +21,7 @@ public:
 	string getSequence();
 	string getName();
 	string getFASTA();
+	string getFASTA2();
 	void addSNP(string SNP);
 };
 
@@ -60,5 +61,13 @@ string Gene::getFASTA()
 		}
 	}
 	return ">" + geneName + "|" + geneType + "|" + geneClass + "|" + geneMechanism + "|" + geneGroup + SNPinfo + "\n" + geneSequence + "\n";
+
+}
+
+string Gene::getFASTA2()
+{
+	if (!(listOfSNPs.empty()))
+		return "";
+	return geneName + "," + geneType + "," + geneClass + "," + geneMechanism + "," + geneGroup + "," + "RequiresSNPConfirmation" + "\n";
 
 }

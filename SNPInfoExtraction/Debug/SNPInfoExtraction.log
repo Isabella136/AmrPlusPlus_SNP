@@ -9,5 +9,5 @@ D:\GitHub\AmrPlusPlus_SNP\SNPInfoExtraction\KargvaInfoExtracion\KargvaModelReg.h
 D:\GitHub\AmrPlusPlus_SNP\SNPInfoExtraction\KargvaInfoExtracion\KargvaMultipleModels.h(29,20): warning C4018: '<': signed/unsigned mismatch
 D:\GitHub\AmrPlusPlus_SNP\SNPInfoExtraction\KargvaInfoExtracion\KargvaMultipleModels.h(51,20): warning C4018: '<': signed/unsigned mismatch
 D:\GitHub\AmrPlusPlus_SNP\SNPInfoExtraction\KargvaInfoExtracion\KargvaMultipleModels.h(53,13): warning C4018: '<': signed/unsigned mismatch
-D:\GitHub\AmrPlusPlus_SNP\SNPInfoExtraction\GeneDatabase.h(43,33): warning C4101: 'oor': unreferenced local variable
+D:\GitHub\AmrPlusPlus_SNP\SNPInfoExtraction\GeneDatabase.h(44,33): warning C4101: 'oor': unreferenced local variable
   SNPInfoExtraction.vcxproj -> D:\GitHub\AmrPlusPlus_SNP\SNPInfoExtraction\Debug\SNPInfoExtraction.exe
