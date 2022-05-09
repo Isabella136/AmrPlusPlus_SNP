@@ -1,4 +1,4 @@
-#pragma once
+/*#pragma once
 #include <string>
 #include <vector>
 #include "ModelSingle.h"
@@ -14,4 +14,4 @@ public:
     virtual string condensedSNPinfo() = 0;
 };
 
-ModelInsertion::ModelInsertion() {}
+ModelInsertion::ModelInsertion() {}*/

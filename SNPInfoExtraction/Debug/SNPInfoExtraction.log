@@ -4,10 +4,9 @@ D:\GitHub\AmrPlusPlus_SNP\SNPInfoExtraction\MetamarcInfoExtraction\MmarcModel.h(
 D:\GitHub\AmrPlusPlus_SNP\SNPInfoExtraction\MetamarcInfoExtraction\MmarcModel.h(47,23): warning C4018: '<': signed/unsigned mismatch
 D:\GitHub\AmrPlusPlus_SNP\SNPInfoExtraction\MetamarcInfoExtraction\MmarcModel.h(55,23): warning C4018: '<': signed/unsigned mismatch
 D:\GitHub\AmrPlusPlus_SNP\SNPInfoExtraction\KargvaInfoExtracion\KargvaModel.h(44,24): warning C4018: '>': signed/unsigned mismatch
-D:\GitHub\AmrPlusPlus_SNP\SNPInfoExtraction\KargvaInfoExtracion\KargvaModelInsertion.h(32,23): warning C4018: '<': signed/unsigned mismatch
 D:\GitHub\AmrPlusPlus_SNP\SNPInfoExtraction\KargvaInfoExtracion\KargvaModelReg.h(33,23): warning C4018: '<': signed/unsigned mismatch
 D:\GitHub\AmrPlusPlus_SNP\SNPInfoExtraction\KargvaInfoExtracion\KargvaMultipleModels.h(29,20): warning C4018: '<': signed/unsigned mismatch
-D:\GitHub\AmrPlusPlus_SNP\SNPInfoExtraction\KargvaInfoExtracion\KargvaMultipleModels.h(51,20): warning C4018: '<': signed/unsigned mismatch
-D:\GitHub\AmrPlusPlus_SNP\SNPInfoExtraction\KargvaInfoExtracion\KargvaMultipleModels.h(53,13): warning C4018: '<': signed/unsigned mismatch
+D:\GitHub\AmrPlusPlus_SNP\SNPInfoExtraction\KargvaInfoExtracion\KargvaMultipleModels.h(49,20): warning C4018: '<': signed/unsigned mismatch
+D:\GitHub\AmrPlusPlus_SNP\SNPInfoExtraction\KargvaInfoExtracion\KargvaMultipleModels.h(51,13): warning C4018: '<': signed/unsigned mismatch
 D:\GitHub\AmrPlusPlus_SNP\SNPInfoExtraction\GeneDatabase.h(44,33): warning C4101: 'oor': unreferenced local variable
   SNPInfoExtraction.vcxproj -> D:\GitHub\AmrPlusPlus_SNP\SNPInfoExtraction\Debug\SNPInfoExtraction.exe

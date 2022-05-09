@@ -1,4 +1,4 @@
-#pragma once
+/*#pragma once
 #include "../ModelInsertion.h"
 #include "KargvaModel.h"
 
@@ -37,4 +37,4 @@ string KargvaModelInsertion::condensedSNPinfo() {
 void KargvaModelInsertion::makeModel(string line) {
     pos = stoi(line.substr(1, line.size() - 2));
     mutant_aa.push_back(line.at(line.size() - 1));
-}
+}*/

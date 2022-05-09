@@ -97,6 +97,9 @@
     <None Include="..\CARD\card-data\protein_fasta_protein_variant_model.fasta">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="KargvaInfoExtracion\correctSequences.fasta">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="MetamarcInfoExtraction\metamarc_files\mmarc_snpsearch_metadata2_modified.txt">

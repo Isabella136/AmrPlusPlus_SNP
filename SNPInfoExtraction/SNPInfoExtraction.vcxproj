@@ -166,6 +166,7 @@
     <None Include="..\mapping_files\megaresv1_to_external_header_mappings_v1.01.csv" />
     <None Include="..\mapping_files\megaresv2_to_external_header_mappings_v2.00.csv" />
     <None Include="..\MEGARes_database.fasta" />
+    <None Include="KargvaInfoExtracion\correctSequences.fasta" />
     <None Include="KargvaInfoExtracion\kargva_db_v5.fasta" />
     <None Include="MetamarcInfoExtraction\metamarc_files\mmarc_model_members.csv" />
   </ItemGroup>

@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 #include "KargvaModelDeletion.h"
-#include "KargvaModelInsertion.h"
+//#include "KargvaModelInsertion.h"
 #include "KargvaModelNonsense.h"
 #include "KargvaModelReg.h"
 
@@ -28,10 +28,8 @@ KargvaMultipleModels::KargvaMultipleModels(string line, string id, CARD_database
 	}
 	for (int i = 0; i < snp.size(); i++) {
 		KargvaModel* model;
-		if (snp[i].at(0) == '-' && isalpha(snp[i].at(1)))
+		if (snp[i].at(0) == '-')
 			model = new KargvaModelDeletion(snp[i], id, dbSeq);
-		else if (snp[i].at(0) == '-')
-			model = new KargvaModelInsertion(snp[i], id, dbSeq);
 		else if (snp[i].find("STOP") != -1)
 			model = new KargvaModelNonsense(snp[i], id, dbSeq);
 		else

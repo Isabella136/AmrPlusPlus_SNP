@@ -39,7 +39,7 @@ int main()
 	}
 	database.close();
 	//megaresSNP.print("../extracted_SNP_files/metamarcSNPinfo.fasta");
-	//megaresSNP.print("temp2.fasta");
-	megaresSNP.printIfNoSNP("temp3.csv");
+	megaresSNP.print("temp2.fasta");
+	//megaresSNP.printIfNoSNP("temp3.csv");
 	return 0;
 }
