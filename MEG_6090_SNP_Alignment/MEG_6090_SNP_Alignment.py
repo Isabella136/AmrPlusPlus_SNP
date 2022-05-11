@@ -1,73 +1,117 @@
+from Bio import Align
 from Bio import pairwise2
+from Bio.Align import substitution_matrices
 
-SNP = {
+E_coli_pos_SNP = {
     }
-sortedSNP = {
+M_tuberculosis_MEG_6090_SNP = []
+E_coli_MEG_6090_SNP = []
+E_coli_to_M_tuber = {
+    }
+E_coli_to_M_tuber_SNP = {
     }
 
 def makeSNPdict(snp):
     pos = 0
     wt = ""
-    if snp == "L525S": snp = "L524S"
-    elif snp[:4] == "D515":
-        temp = snp[4:]
-        snp = "D516" + temp
-    elif snp == "T516I": snp = "T525I"
-    elif snp == "D525Y": snp = "D516Y"
-    elif snp == "D518H": snp = "N518H"
-    if snp[0] == '-':
-        snp = snp[1:]
-        if snp[0].isnumeric():
-            pos = (int) (snp[:-1])
-            wt = snp[-1:]
-        else:
-            wt = snp[0]
-            pos = (int) (snp[1:])
+    wt = snp[0]
+    snp = snp[1:]
+    if snp[-2].isnumeric() :
+        pos = (int) (snp[:-1])
     else:
-        wt = snp[0]
-        snp = snp[1:]
-        if snp[-2].isnumeric() :
-            pos = (int) (snp[:-1])
-        else:
-            pos = (int) (snp[:-5])
-    dictEntry = SNP.get(pos, False)
+        pos = (int) (snp[:-4])
+    dictEntry = E_coli_pos_SNP.get(pos, False)
     if (dictEntry == False):
-        SNP.update({pos:wt})
+        E_coli_pos_SNP.update({pos:wt})
     elif (dictEntry.find(wt) == -1):
-        SNP[pos] += wt
+        E_coli_pos_SNP[pos] += wt
 
+def changePos(snp):
+    pos = 0
+    mt = ""
+    wt = snp[0]
+    snp = snp[1:]
+    if snp[-2].isnumeric() :
+        pos = (int) (snp[:-1])
+        mt = snp[-1:]
+    else:
+        pos = (int) (snp[:-4])
+        mt = snp[-4:]
+    newPos = E_coli_to_M_tuber_SNP.get(pos, "null")
+    toAdd = wt + str(newPos) + mt
+    return toAdd
+    
 MEG_6090_sequence = open("MEG_6090_sequence.fasta", "r")
 MEG_6090_sequence.readline()
-seq = MEG_6090_sequence.readline()
+M_tuber_seq = MEG_6090_sequence.readline()
 MEG_6090_sequence.close()
-MEG_6090_kargva = open("MEG_6090_kargva.txt", "r")
-for line in MEG_6090_kargva:
-    headerList = line.split("|")
-    if (headerList[1].find(";") != -1):
-        snpList = headerList[1].split(";")
-        for snp in snpList:
-            makeSNPdict(snp)
+MEG_6090_sequence = open("MEG_6090_E_coli_sequence.fasta", "r")
+MEG_6090_sequence.readline()
+E_coli_seq = MEG_6090_sequence.readline()
+MEG_6090_sequence.close()
+MEG_6090_SNP = open("MEG_6090_SNP_list.txt", "r")
+E_coli = True
+for line in MEG_6090_SNP:
+    if E_coli:
+        if (line.find("/") != -1):
+            E_coli = False
+        else:
+            if line[-1] == "\n":
+                line = line[:-1]
+            E_coli_MEG_6090_SNP.append(line)
+            if (line.find(",") != -1):
+                snpList = line.split(",")
+                for snp in snpList:
+                    makeSNPdict(snp)
+            else:
+                makeSNPdict(line)
     else:
-        makeSNPdict(headerList[1])
-MEG_6090_kargva.close()
-posList = []
-for pos in SNP:
-    posList.append(pos)
-posList.sort()
-for pos in posList:
-    sortedSNP.update({pos:SNP[pos]})
-begin = 1
-SNPsequence = ""
-for pos, wt in sortedSNP.items():
-    for i in range (begin,pos):
-        SNPsequence += "X"
-    SNPsequence += wt
-    begin = pos+1
-for i in range(begin, len(seq) + 1):
-    SNPsequence += "X"
+        if line[-1] == "\n":
+            line = line[:-1]
+        M_tuberculosis_MEG_6090_SNP.append(line)
+MEG_6090_SNP.close()
+aligner = Align.PairwiseAligner()
+aligner.substitution_matrix = substitution_matrices.load("BLOSUM62")
+aligner.mode = "global"
+aligner.open_gap_score = -.5
+aligner.extend_gap_score = -.1
+alignments = aligner.align(E_coli_seq[:-1], M_tuber_seq[:-1])
+alignString = alignments[0].__str__()
 toReturn = open("alignment.txt", "w")
-for a in pairwise2.align.globalxs(SNPsequence, seq, -.5, -.1):
-    toReturn.write(pairwise2.format_alignment(*a))
+toReturn.write(alignString)
+toReturn.write(alignments[0].score.__str__())
+toReturn.close()
+alignLines = alignString.split("\n")
+index = 0
+e_pos = 0
+m_pos = 0
+for i in alignLines[1]:
+    e = alignLines[0][index]
+    m = alignLines[2][index]
+    if e != '-': e_pos += 1
+    if m != '-': m_pos += 1
+    if i == '|':
+        E_coli_to_M_tuber.update({e_pos:m_pos})
+    index += 1
+for e, m in E_coli_to_M_tuber.items():
+    dictEntry = E_coli_pos_SNP.get(e, False)
+    if (dictEntry != False):
+        E_coli_to_M_tuber_SNP.update({e:m})
+for line in E_coli_MEG_6090_SNP:
+    toAdd = ""
+    if (line.find(",") != -1):
+        snpList = line.split(",")
+        for snp in snpList:
+            toAdd = toAdd + changePos(snp) + ","
+        toAdd = toAdd[:-1]
+    else:
+        toAdd = changePos(line)
+    if M_tuberculosis_MEG_6090_SNP.count(toAdd) == 0:
+        M_tuberculosis_MEG_6090_SNP.append(toAdd)
+toReturn = open("MEG_6090_SNP_list_update.txt", "w")
+for line in M_tuberculosis_MEG_6090_SNP:
+    toReturn.write(line)
+    toReturn.write("\n")
 toReturn.close()
 
         
