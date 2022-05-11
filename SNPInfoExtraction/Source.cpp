@@ -38,6 +38,6 @@ int main()
 		}
 	}
 	database.close();
-	megaresSNP.print("../extracted_SNP_files/metamarcSNPinfo.csv", "../extracted_SNP_files/metamarcSNPinfo.fasta");
+	megaresSNP.print("../extracted_SNP_files/SNPinfo.csv", "../extracted_SNP_files/SNPinfo.fasta");
 	return 0;
 }
