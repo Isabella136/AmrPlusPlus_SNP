@@ -28,26 +28,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -151,6 +151,7 @@
     <ClInclude Include="KargvaInfoExtracion\KargvaModelNonsense.h" />
     <ClInclude Include="KargvaInfoExtracion\KargvaModelReg.h" />
     <ClInclude Include="KargvaInfoExtracion\KargvaMultipleModels.h" />
+    <ClInclude Include="KargvaInfoExtracion\MEG_6090MultipleModels.h" />
     <ClInclude Include="MetamarcInfoExtraction\MmarcDatabase.h" />
     <ClInclude Include="MetamarcInfoExtraction\MmarcModel.h" />
     <ClInclude Include="Model.h" />
@@ -171,6 +172,7 @@
     <None Include="MetamarcInfoExtraction\metamarc_files\mmarc_model_members.csv" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="KargvaInfoExtracion\MEG_6090_SNP_list_update2.txt" />
     <Text Include="MetamarcInfoExtraction\metamarc_files\mmarc_snpsearch_metadata2_modified.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

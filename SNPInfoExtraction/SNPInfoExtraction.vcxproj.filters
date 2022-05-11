@@ -77,6 +77,9 @@
     <ClInclude Include="CARD_database.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="KargvaInfoExtracion\MEG_6090MultipleModels.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="MetamarcInfoExtraction\metamarc_files\mmarc_model_members.csv">
@@ -103,6 +106,9 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="MetamarcInfoExtraction\metamarc_files\mmarc_snpsearch_metadata2_modified.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="KargvaInfoExtracion\MEG_6090_SNP_list_update2.txt">
       <Filter>Resource Files</Filter>
     </Text>
   </ItemGroup>

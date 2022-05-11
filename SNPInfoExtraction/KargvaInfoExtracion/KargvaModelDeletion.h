@@ -32,7 +32,11 @@ string KargvaModelDeletion::condensedSNPinfo() {
     return toReturn;
 }
 void KargvaModelDeletion::makeModel(string line) {
-    if (isalpha(line.at(1))) {
+    if (isalpha(line.at(0))) {
+        wt_aa = line.at(0);
+        pos = stoi(line.substr(1, line.size() - 2));
+    }
+    else if (isalpha(line.at(1))) {
         wt_aa = line.at(1);
         pos = stoi(line.substr(2));
     }

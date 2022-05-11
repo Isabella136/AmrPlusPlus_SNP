@@ -28,10 +28,6 @@ string KargvaModel::addContext(int lastLeftIndex, int firstRightIndex, char wt) 
     string sequence = databaseSequences->getSequence(cardID);
     if (sequence == "none")
         return "__";
-    if (wt != '-') {
-        if (sequence.at(lastLeftIndex + 1) != wt)
-            cout << cardID << "\n";
-    }
     string toReturn = "_";
     int firstLeftIndex = lastLeftIndex - 4;
     if (lastLeftIndex < 4)

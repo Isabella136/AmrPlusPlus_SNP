@@ -22,6 +22,7 @@ public:
 	string getName();
 	string getFASTA();
 	string getFASTA2();
+	string getHeader();
 	void addSNP(string SNP);
 };
 
@@ -61,6 +62,22 @@ string Gene::getFASTA()
 		}
 	}
 	return ">" + geneName + "|" + geneType + "|" + geneClass + "|" + geneMechanism + "|" + geneGroup + SNPinfo + "\n" + geneSequence + "\n";
+
+}
+
+string Gene::getHeader()
+{
+	string SNPinfo = "";
+	if (listOfSNPs.empty())
+		return "";
+	else
+	{
+		for (auto iter = listOfSNPs.begin(); iter != listOfSNPs.end(); ++iter)
+		{
+			SNPinfo = SNPinfo + "," + *iter;
+		}
+	}
+	return geneName + "," + geneType + "," + geneClass + "," + geneMechanism + "," + geneGroup + SNPinfo + "\n";
 
 }
 

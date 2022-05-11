@@ -12,12 +12,14 @@ class KargvaMultipleModels : public virtual KargvaModel {
 	protected:
 		vector<KargvaModel*> models;
 	public:
+		KargvaMultipleModels();
 		KargvaMultipleModels(string line, string id, CARD_database* dbSeq);
 		void addToModel(string line);
 		bool includes(string line);
 		string condensedSNPinfo();
 
 };
+KargvaMultipleModels::KargvaMultipleModels() {}
 KargvaMultipleModels::KargvaMultipleModels(string line, string id, CARD_database* dbSeq) {
 	string temp = line;
 	vector<string> snp;
