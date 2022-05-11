@@ -154,7 +154,7 @@ void KargvaDatabase::SNPInfo(){
             else
                 Q142X = true;
             if (header[1] == "Q142X")
-                header[1] == "Q142STOP";
+                header[1] = "Q142STOP";
         }
         else if (header[2] == "ARO:3003042") {
             if (header[1] == "T488A")

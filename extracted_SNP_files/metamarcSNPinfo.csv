@@ -130,7 +130,7 @@ MEG_5352,Drugs,Fluoroquinolones,Fluoroquinolone-resistant_DNA_topoisomerases,PAR
 MEG_5353,Drugs,Fluoroquinolones,Fluoroquinolone-resistant_DNA_topoisomerases,PARC,Reg:S80IR_HPHGD_ACYEA,Reg:E84K_DSACY_AMVLM
 MEG_3207,Drugs,Fluoroquinolones,Fluoroquinolone-resistant_DNA_topoisomerases,GYRA,Reg:S85P_PHGDL_IYEAM,Reg:E88AK_DLSIY_AMVRM,Reg:S84L_HPHGD_SIYEA
 MEG_7305,Drugs,Elfamycins,EF-Tu_inhibition,TUFAB,Reg:G261S_TTTVT_IEMFN,Reg:V295C_VERGQ_IIKPG,Reg:G279A_AGDNA_LLLRG,Reg:V278A_HAGDN_ALLLR
-MEG_4296,Drugs,betalactams,Mutant_porin_proteins,OPRD,Reg:Q142X_KWGEM_PTAPV
+MEG_4296,Drugs,betalactams,Mutant_porin_proteins,OPRD,Non:Q142*_KWGEM_PTAPV
 MEG_7304,Drugs,Elfamycins,EF-Tu_inhibition,TUFAB,Reg:G261E_KVVVT_VEMFR
 MEG_3209,Drugs,Fluoroquinolones,Fluoroquinolone-resistant_DNA_topoisomerases,GYRA,Reg:T83IK_HPHGD_AVYDT
 MEG_5344,Drugs,Fluoroquinolones,Fluoroquinolone-resistant_DNA_topoisomerases,PARC,Reg:E84G_DFSVY_AMVRL
