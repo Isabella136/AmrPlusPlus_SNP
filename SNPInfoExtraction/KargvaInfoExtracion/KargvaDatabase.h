@@ -42,14 +42,14 @@ void KargvaDatabase::addSNP(string snp, string id, string meg) {
         }
         if (!included) {
             Model* model;
-            if (snp.find("-") != -1)
-                model = new KargvaModelDeletion(snp, id, databaseSequences);
-            else if (snp.find("STOP") != -1)
-                model = new KargvaModelNonsense(snp, id, databaseSequences);
-            else if (snp.find(";") != -1)
+            if (snp.find(";") != -1)
                 model = new KargvaMultipleModels(snp, id, databaseSequences);
             else if (snp.find(",") != -1)
                 model = new MEG_6090MultipleModels(snp, id, databaseSequences);
+            else if (snp.find("STOP") != -1)
+                model = new KargvaModelNonsense(snp, id, databaseSequences);
+            else if (snp.find("-") != -1)
+                model = new KargvaModelDeletion(snp, id, databaseSequences);
             else
                 model = new KargvaModelReg(snp, id, databaseSequences);
             snpInfoDatabase.at(meg).push_back(model);
@@ -57,14 +57,14 @@ void KargvaDatabase::addSNP(string snp, string id, string meg) {
     }
     else {
         Model* model;
-        if (snp.find("-") != -1)
-            model = new KargvaModelDeletion(snp, id, databaseSequences);
-        else if (snp.find("STOP") != -1)
-            model = new KargvaModelNonsense(snp, id, databaseSequences);
-        else if (snp.find(";") != -1)
+        if (snp.find(";") != -1)
             model = new KargvaMultipleModels(snp, id, databaseSequences);
         else if (snp.find(",") != -1)
             model = new MEG_6090MultipleModels(snp, id, databaseSequences);
+        else if (snp.find("STOP") != -1)
+            model = new KargvaModelNonsense(snp, id, databaseSequences);
+        else if (snp.find("-") != -1)
+            model = new KargvaModelDeletion(snp, id, databaseSequences);
         else
             model = new KargvaModelReg(snp, id, databaseSequences);
         list<Model*> temp;
