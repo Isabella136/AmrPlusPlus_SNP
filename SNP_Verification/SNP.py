@@ -184,7 +184,7 @@ class SNP_Mult:
     def condensedInfo(this):
         toReturn = []
         for snp in this.listOfSNPs:
-            toReturn.append(snp.condensedInfo)
+            toReturn.append(snp.condensedInfo())
         return toReturn
     def isSnpValid(this):
         for snp in this.listOfSNPs:

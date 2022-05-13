@@ -47,12 +47,14 @@ def mapCigarToAlignment(cigar, aligned_pair):
     shift = 0
     prevShift = 0
     translatable = False
+    startDel = False
     for op in cigar:
         if op == "S":
             index += 1
         elif (op == "M") | (op == "X") | (op == "="):
             prevShift = shift
             if not(translatable):
+                startDel = False
                 if (aligned_pair[index][1] % 3) != 0:
                     index += 1
                 else:
@@ -70,6 +72,7 @@ def mapCigarToAlignment(cigar, aligned_pair):
             prevShift = shift
             shift += 1
             if not(translatable):
+                startDel = False
                 index += 1
             else:
                 queryLength += 1
@@ -78,8 +81,19 @@ def mapCigarToAlignment(cigar, aligned_pair):
         elif op == "D":
             prevShift = shift
             shift -= 1
-            if not(translatable):
+            if startDel & ((aligned_pair[index][1] % 3) == 2):
+                translatable = True
+                refLength += 3
+                alignment_map.append((op, aligned_pair[index-2][0], aligned_pair[index-2][1], shift, prevShift+2))
+                alignment_map.append((op, aligned_pair[index-1][0], aligned_pair[index-1][1], shift, prevShift+1))
+                alignment_map.append((op, aligned_pair[index][0], aligned_pair[index][1], shift, prevShift))
                 index += 1
+            if not(translatable):
+                if (aligned_pair[index][1] % 3) != 0:
+                    index += 1
+                else:
+                    index += 1
+                    startDel = True
             else:
                 refLength += 1
                 alignment_map.append((op, aligned_pair[index][0], aligned_pair[index][1], shift, prevShift))
@@ -152,6 +166,10 @@ def aaAlignment(nt_alignment_map):
                 if prevAaShift != None:
                     if (prevAaShift % 3) == 0: #1M2D, 2M1D
                         aa_alignment_map.update({int(nt[2]/3):(thirdAlignment,)})
+                else: #3D
+                    prevAaShift = nt[4] - 2
+                    if (prevAaShift % 3) == 0:
+                        aa_alignment_map.update({int(nt[2]/3):('-',)})
                 prevAaShift = None
                 firstAlignment = None
             else: #nt[0] == "M"
@@ -177,7 +195,39 @@ def aaAlignment(nt_alignment_map):
         mapIndex += 1
     return aa_alignment_map    
 
+def verifyNonsense(stopLocation, aa_alignment_map, gene, name):
+    SNPInfo = gene.condensedNonInfo()
+    if (len(SNPInfo) == 0):
+        disregard(name)
+    res = 0
+    for snp in SNPInfo:
+        stopLocTemp = aa_alignment_map.get(snp[1]-1,False)
+        if stopLocTemp != False:
+            if stopLocTemp == stopLocation:
+                res = 1
+                break
+    resistant(name, res)
 
+def verifyMultiple(aa_alignment_map, gene, name, aaQuerySequence):
+    SNPInfo = gene.condensedMultInfo()
+    if (len(SNPInfo) == 0):
+        disregard(name)
+    else:
+        resBool = True
+        for snpMult in SNPInfo:
+            for snp in snpMult:
+                if (aa_alignment_map.get(snp[1]-1,False)) == False:
+                    resBool = False
+                    continue
+                for mt in snp[2]: 
+                    for queryIndex in tuple(aa_alignment_map[snp[1]-1]):
+                        if mt == aaQuerySequence[queryIndex]:
+                            break
+                        else:
+                            resBool = False
+                    if resBool: break
+                if not(resBool): break
+            if resBool: resistant(name, 1)
 def verify(read, gene):
     name = gene.getName()
     cigarOpCount = read.get_cigar_stats()[0].tolist()
@@ -191,10 +241,11 @@ def verify(read, gene):
         trimmedQuerySequence = querySeq[nt_alignment_map[0][1]:nt_alignment_map[len(nt_alignment_map)-1][1]+1]
         aaQuerySequence = dnaTranslate(trimmedQuerySequence)
         stopLocation = aaQuerySequence.find('*') 
+        aa_alignment_map = aaAlignment(nt_alignment_map)
         #if nonsense mutations
-        if (stopLocation != -1) & ((stopLocation < len(aaQuerySequence)-1) | (read.reference_end < gene.ntSeqLength())-1): disregard(name) #take care of Non
+        if (stopLocation != -1) & ((stopLocation < len(aaQuerySequence)-1) | (read.reference_end < gene.ntSeqLength())-1): 
+            verifyNonsense(stopLocation, aa_alignment_map, gene, name)
         else :
-            aa_alignment_map = aaAlignment(nt_alignment_map)
             SNPInfo = gene.condensedRegDelInfo()
             res = 0
             for snp in SNPInfo:
@@ -207,7 +258,8 @@ def verify(read, gene):
                             break
                     if res == 1: break
                 if res == 1: break
-            if res == 0 : disregard(name) #take care of Mult
+            if res == 0 : #take care of Mult
+                verifyMultiple(aa_alignment_map, gene, name, aaQuerySequence)
             resistant(name, res)
 
 
@@ -229,7 +281,7 @@ for line in metamarcSNPinfo:
         snp = line[temp+1:len(line)-1]
         isSequence = True
 metamarcSNPinfo.close()
-pysam.sort("-o", "SAM_files/Sorted_P_BPW_50_2_filtered.sam", "SAM_files/P_BPW_50_2_filtered.sam")
+#pysam.sort("-o", "SAM_files/Sorted_P_BPW_50_2_filtered.sam", "SAM_files/P_BPW_50_2_filtered.sam")
 output = open("Test/test_Sorted_P_BPW_50_2_filtered.txt", "w")
 samfile = pysam.AlignmentFile("SAM_files/Sorted_P_BPW_50_2_filtered.sam", "r")
 
