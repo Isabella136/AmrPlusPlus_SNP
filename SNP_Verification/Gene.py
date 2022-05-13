@@ -5,21 +5,62 @@ class Gene:
         this.name = name[:name.find('|')]
         this.sequence = sequence.upper()
         this.translated = dnaTranslate(this.sequence)
-        this.listOfSNPs = []
+        this.listOfRegSNPs = []
+        this.listOfDelSNPs = []
+        this.listOfNonSNPs = []
+        this.listOfMultSNPs = []
         while(snps.find('|') != -1):
             temp = snps[:snps.find('|')]
-            snpToAdd = SNP.SNP(this.translated, temp)
-            if(snpToAdd.isSnpValid()):
-                this.listOfSNPs.append(snpToAdd)
+            if temp[:4] == "Mult":
+                snpToAdd = SNP.SNP_Mult(this.translated, temp[5:])
+                if(snpToAdd.isSnpValid()):
+                    this.listOfMultSNPs.append(snpToAdd)
+            elif temp[:3] == "Reg":
+                snpToAdd = SNP.SNP_Reg(this.translated, temp[4:])
+                if(snpToAdd.isSnpValid()):
+                    this.listOfRegSNPs.append(snpToAdd)
+            elif temp[:3] == "Del":
+                snpToAdd = SNP.SNP_Del(this.translated, temp[4:])
+                if(snpToAdd.isSnpValid()):
+                    this.listOfDelSNPs.append(snpToAdd)
+            else: #temp[:3] == "Non" 
+                snpToAdd = SNP.SNP_Non(this.translated, temp[4:])
+                if(snpToAdd.isSnpValid()):
+                    this.listOfNonSNPs.append(snpToAdd)
             snps = snps[snps.find('|')+1:]
-        snpToAdd = SNP.SNP(this.translated, snps)
-        if(snpToAdd.isSnpValid()):
-            this.listOfSNPs.append(snpToAdd)
+        if temp[:4] == "Mult":
+            snpToAdd = SNP.SNP_Mult(this.translated, temp[5:])
+            if(snpToAdd.isSnpValid()):
+                this.listOfMultSNPs.append(snpToAdd)
+        elif temp[:3] == "Reg":
+            snpToAdd = SNP.SNP_Reg(this.translated, temp[4:])
+            if(snpToAdd.isSnpValid()):
+                this.listOfRegSNPs.append(snpToAdd)
+        elif temp[:3] == "Del":
+            snpToAdd = SNP.SNP_Del(this.translated, temp[4:])
+            if(snpToAdd.isSnpValid()):
+                this.listOfDelSNPs.append(snpToAdd)
+        else: #temp[:3] == "Non" 
+            snpToAdd = SNP.SNP_Non(this.translated, temp[4:])
+            if(snpToAdd.isSnpValid()):
+                this.listOfNonSNPs.append(snpToAdd)
     def aaSequence(this):
         return this.translated
-    def condensedInfo(this):
+    def condensedMultInfo(this):
         condensedInfoList = []
-        for snp in this.listOfSNPs :
+        for snp in this.listOfMultSNPs :
+            condensedInfoList.append(snp.condensedInfo())
+        return condensedInfoList
+    def condensedRegDelInfo(this):
+        condensedInfoList = []
+        for snp in this.listOfRegSNPs :
+            condensedInfoList.append(snp.condensedInfo())
+        for snp in this.listOfDelSNPs :
+            condensedInfoList.append(snp.condensedInfo())
+        return condensedInfoList
+    def condensedNonInfo(this):
+        condensedInfoList = []
+        for snp in this.listOfNonSNPs :
             condensedInfoList.append(snp.condensedInfo())
         return condensedInfoList
     def getName(this):

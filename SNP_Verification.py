@@ -181,8 +181,8 @@ def aaAlignment(nt_alignment_map):
 def verify(read, gene):
     name = gene.getName()
     cigarOpCount = read.get_cigar_stats()[0].tolist()
-    #if insertions != deletions, disregard
-    if cigarOpCount[1] != cigarOpCount[2]: disregard(name) 
+    #if (insertions - deletions) %3 != 0, disregard
+    if ((cigarOpCount[1] - cigarOpCount[2]) % 3) != 0: disregard(name) 
     else :
         cigar = extendCigar(read.cigarstring)
         aligned_pair = read.get_aligned_pairs()
@@ -191,11 +191,11 @@ def verify(read, gene):
         trimmedQuerySequence = querySeq[nt_alignment_map[0][1]:nt_alignment_map[len(nt_alignment_map)-1][1]+1]
         aaQuerySequence = dnaTranslate(trimmedQuerySequence)
         stopLocation = aaQuerySequence.find('*') 
-        #if missense mutations, disregard
-        if (stopLocation != -1) & ((stopLocation < len(aaQuerySequence)-1) | (read.reference_end < gene.ntSeqLength())-1): disregard(name)
+        #if nonsense mutations
+        if (stopLocation != -1) & ((stopLocation < len(aaQuerySequence)-1) | (read.reference_end < gene.ntSeqLength())-1): #take care of Non
         else :
             aa_alignment_map = aaAlignment(nt_alignment_map)
-            SNPInfo = gene.condensedInfo()
+            SNPInfo = gene.condensedRegDelInfo()
             res = 0
             for snp in SNPInfo:
                 if (aa_alignment_map.get(snp[1]-1,False)) == False:
@@ -207,6 +207,7 @@ def verify(read, gene):
                             break
                     if res == 1: break
                 if res == 1: break
+            if red == 0 : #take care of Mult
             resistant(name, res)
 
 
@@ -228,9 +229,9 @@ for line in metamarcSNPinfo:
         snp = line[temp+1:len(line)-1]
         isSequence = True
 metamarcSNPinfo.close()
-pysam.sort("-o", "SAM_files/Sorted_Filtered_out_P_BPW_50_2_R.amr.alignment.sam", "SAM_files/Filtered_out_P_BPW_50_2_R.amr.alignment.sam")
-output = open("Test/test_Sorted_Filtered_out_P_BPW_50_2_R.amr.alignment.txt", "w")
-samfile = pysam.AlignmentFile("SAM_files/Sorted_Filtered_out_P_BPW_50_2_R.amr.alignment.sam", "r")
+pysam.sort("-o", "SAM_files/Sorted_P_BPW_50_2_filtered.sam", "SAM_files/P_BPW_50_2_filtered.sam")
+output = open("Test/test_Sorted_P_BPW_50_2_filtered.txt", "w")
+samfile = pysam.AlignmentFile("SAM_files/Sorted_P_BPW_50_2_filtered.sam", "r")
 
 iter = samfile.fetch()
 for read in iter:
