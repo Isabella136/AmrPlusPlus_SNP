@@ -192,7 +192,7 @@ def verify(read, gene):
         aaQuerySequence = dnaTranslate(trimmedQuerySequence)
         stopLocation = aaQuerySequence.find('*') 
         #if nonsense mutations
-        if (stopLocation != -1) & ((stopLocation < len(aaQuerySequence)-1) | (read.reference_end < gene.ntSeqLength())-1): #take care of Non
+        if (stopLocation != -1) & ((stopLocation < len(aaQuerySequence)-1) | (read.reference_end < gene.ntSeqLength())-1): disregard(name) #take care of Non
         else :
             aa_alignment_map = aaAlignment(nt_alignment_map)
             SNPInfo = gene.condensedRegDelInfo()
@@ -207,11 +207,11 @@ def verify(read, gene):
                             break
                     if res == 1: break
                 if res == 1: break
-            if red == 0 : #take care of Mult
+            if res == 0 : disregard(name) #take care of Mult
             resistant(name, res)
 
 
-metamarcSNPinfo = open("extracted_SNP_files/metamarcSNPinfo.fasta", "rt")
+metamarcSNPinfo = open("extracted_SNP_files/SNPinfo.fasta", "rt")
 isSequence = False
 name = ""
 snp = ""

@@ -7,7 +7,7 @@ class SNP:
         snpString = snpString[1:]
         i = 0
         for x in snpString:
-            if x.isalpha():
+            if not(x.isdigit()):
                 break
             i += 1
         this.posOG = int(snpString[:i])
@@ -66,6 +66,7 @@ class SNP:
             for x in sequence[begin:end]:
                 if this.checkLeft(0, i, sequence, 0):
                     this.changeACT(sequence, i)
+                    break
                 i += 1
         else:
             this.wtACT = this.wtOG
@@ -104,7 +105,7 @@ class SNP_Reg(SNP):
     def __init__(this, sequence, snpString):
         snpStringList = [snpString]
         SNP.__init__(this, snpStringList)
-        snpString = snpStringList[]
+        snpString = snpStringList[0]
         this.mtList = []
         i = 1
         for x in snpString:
@@ -128,12 +129,11 @@ class SNP_Reg(SNP):
         except ValueError: 
             this.wtACT = sequence[i+5]
             this.posACT = i+5+1
-        break
 class SNP_Del(SNP):
     def __init__(this, sequence, snpString):
         snpStringList = [snpString]
         SNP.__init__(this, snpStringList)
-        snpString = snpStringList[]
+        snpString = snpStringList[0]
         SNP.establishContext(this, snpString)
         SNP.findACT(this, sequence)
     def condensedInfo(this):
@@ -148,7 +148,7 @@ class SNP_Non(SNP):
     def __init__(this, sequence, snpString):
         snpStringList = [snpString]
         SNP.__init__(this, snpStringList)
-        snpString = snpStringList[]
+        snpString = snpStringList[0]
         SNP.establishContext(this, snpString)
         SNP.findACT(this, sequence)
     def condensedInfo(this):
@@ -173,11 +173,21 @@ class SNP_Mult:
                 if(snpToAdd.isSnpValid()):
                     this.listOfSNPs.append(snpToAdd)
             snpString = snpString[snpString.find(';')+1:]
-        if temp[:3] == "Reg":
-            snpToAdd = SNP_Reg(sequence, temp[4:])
+        if snpString[:3] == "Reg":
+            snpToAdd = SNP_Reg(sequence, snpString[4:])
             if(snpToAdd.isSnpValid()):
                 this.listOfSNPs.append(snpToAdd)
-        else: # temp[:3] == "Del"
-            snpToAdd = SNP_Del(sequence, temp[4:])
+        else: # snpString[:3] == "Del"
+            snpToAdd = SNP_Del(sequence, snpString[4:])
             if(snpToAdd.isSnpValid()):
                 this.listOfSNPs.append(snpToAdd)
+    def condensedInfo(this):
+        toReturn = []
+        for snp in this.listOfSNPs:
+            toReturn.append(snp.condensedInfo)
+        return toReturn
+    def isSnpValid(this):
+        for snp in this.listOfSNPs:
+            if not(snp.isSnpValid()):
+                return False
+        return True
