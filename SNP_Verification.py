@@ -13,6 +13,8 @@ argInfoDict = {
 
 snpInfoPrint = lambda a, b, c : a + ": " + b + " resitant reads out of " + c + " total reads\n"
 
+testOutput = open("Test/testSNPs", "w")
+
 def resistant(name, increment):
     argInfo = argInfoDict.get(name, False)
     if (argInfo == False):
@@ -199,20 +201,25 @@ def verifyNonsense(stopLocation, aa_alignment_map, gene, name):
     SNPInfo = gene.condensedNonInfo()
     if (len(SNPInfo) == 0):
         disregard(name)
-    res = 0
-    for snp in SNPInfo:
-        stopLocTemp = aa_alignment_map.get(snp[1]-1,False)
-        if stopLocTemp != False:
-            if stopLocTemp == stopLocation:
-                res = 1
-                break
-    resistant(name, res)
+    else:
+        testOutput.write(name + "\n")
+        testOutput.write(SNPInfo.__str__() + "\n")
+        res = 0
+        for snp in SNPInfo:
+            stopLocTemp = aa_alignment_map.get(snp[1]-1,False)
+            if stopLocTemp != False:
+                if stopLocTemp == stopLocation:
+                    res = 1
+                    break
+        resistant(name, res)
 
 def verifyMultiple(aa_alignment_map, gene, name, aaQuerySequence):
     SNPInfo = gene.condensedMultInfo()
     if (len(SNPInfo) == 0):
         disregard(name)
     else:
+        testOutput.write(name + "\n")
+        testOutput.write(SNPInfo.__str__() + "\n")
         resBool = True
         for snpMult in SNPInfo:
             for snp in snpMult:
@@ -227,7 +234,11 @@ def verifyMultiple(aa_alignment_map, gene, name, aaQuerySequence):
                             resBool = False
                     if resBool: break
                 if not(resBool): break
-            if resBool: resistant(name, 1)
+            if resBool: 
+                resistant(name, 1)
+                break
+        if not(resBool):
+            disregard(name)
 def verify(read, gene):
     name = gene.getName()
     cigarOpCount = read.get_cigar_stats()[0].tolist()
@@ -247,6 +258,8 @@ def verify(read, gene):
             verifyNonsense(stopLocation, aa_alignment_map, gene, name)
         else :
             SNPInfo = gene.condensedRegDelInfo()
+            testOutput.write(name + "\n")
+            testOutput.write(SNPInfo.__str__() + "\n")
             res = 0
             for snp in SNPInfo:
                 if (aa_alignment_map.get(snp[1]-1,False)) == False:
@@ -260,7 +273,7 @@ def verify(read, gene):
                 if res == 1: break
             if res == 0 : #take care of Mult
                 verifyMultiple(aa_alignment_map, gene, name, aaQuerySequence)
-            resistant(name, res)
+            else: resistant(name, res)
 
 
 metamarcSNPinfo = open("extracted_SNP_files/SNPinfo.fasta", "rt")
@@ -297,3 +310,4 @@ samfile.close()
 for name in argInfoDict:
     output.write(snpInfoPrint(name, str(argInfoDict[name][0]), str(argInfoDict[name][1])))
 output.close()
+testOutput.close()
