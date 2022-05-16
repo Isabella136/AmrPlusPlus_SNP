@@ -32,8 +32,6 @@ KargvaMultipleModels::KargvaMultipleModels(string line, string id, CARD_database
 		KargvaModel* model;
 		if (snp[i].at(0) == '-')
 			model = new KargvaModelDeletion(snp[i], id, dbSeq);
-		else if (snp[i].find("STOP") != -1)
-			model = new KargvaModelNonsense(snp[i], id, dbSeq);
 		else
 			model = new KargvaModelReg(snp[i], id, dbSeq);
 		models.push_back(model);

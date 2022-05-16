@@ -28,13 +28,14 @@ KargvaDatabase::KargvaDatabase(){
 void KargvaDatabase::addSNP(string snp, string id, string meg) {
     bool included = false;
     if (snpInfoDatabase.find(meg) != snpInfoDatabase.end()) {
-        if (snp.find(";") == -1 && snp.find(",") == -1 && snp.find("STOP") == -1 && snp.find("-") == -1) {
+        if (snp.find("STOP") == -1) {
             for (auto iter = snpInfoDatabase.at(meg).begin(); iter != snpInfoDatabase.at(meg).end(); ++iter) {
                 KargvaModelReg* tempReg = dynamic_cast<KargvaModelReg*>(*iter);
                 if (tempReg != nullptr) {
                     included = tempReg->includes(snp);
                     if (included) {
-                        tempReg->addToModel(snp);
+                        if (snp.find(";") == -1 && snp.find(",") == -1)
+                            tempReg->addToModel(snp);
                         break;
                     }
                 }
@@ -46,10 +47,10 @@ void KargvaDatabase::addSNP(string snp, string id, string meg) {
                 model = new KargvaMultipleModels(snp, id, databaseSequences);
             else if (snp.find(",") != -1)
                 model = new MEG_6090MultipleModels(snp, id, databaseSequences);
+            else if (snp.find("-") != -1)
+                throw;
             else if (snp.find("STOP") != -1)
                 model = new KargvaModelNonsense(snp, id, databaseSequences);
-            else if (snp.find("-") != -1)
-                model = new KargvaModelDeletion(snp, id, databaseSequences);
             else
                 model = new KargvaModelReg(snp, id, databaseSequences);
             snpInfoDatabase.at(meg).push_back(model);
@@ -57,14 +58,10 @@ void KargvaDatabase::addSNP(string snp, string id, string meg) {
     }
     else {
         Model* model;
-        if (snp.find(";") != -1)
-            model = new KargvaMultipleModels(snp, id, databaseSequences);
-        else if (snp.find(",") != -1)
-            model = new MEG_6090MultipleModels(snp, id, databaseSequences);
+        if (snp.find(";") != -1 || snp.find(",") != -1 || snp.find("-") != -1)
+            throw;
         else if (snp.find("STOP") != -1)
             model = new KargvaModelNonsense(snp, id, databaseSequences);
-        else if (snp.find("-") != -1)
-            model = new KargvaModelDeletion(snp, id, databaseSequences);
         else
             model = new KargvaModelReg(snp, id, databaseSequences);
         list<Model*> temp;
@@ -73,6 +70,7 @@ void KargvaDatabase::addSNP(string snp, string id, string meg) {
     }
 }
 void KargvaDatabase::SNPInfo(){
+    vector<vector<string>> mult;
     ifstream snpsearch;
     snpsearch.open("KargvaInfoExtracion/kargva_db_v5.fasta");
     string line;
@@ -167,14 +165,27 @@ void KargvaDatabase::SNPInfo(){
         else if (header[2] == "ARO:3003283") {
             continue;
         }
-        if (header[4] != "NA") {
-            this->addSNP(header[1], header[2], header[4]);
+        if (header[4] != "NA" && header[4] != "not corresponding") {
+            if (header[1].find(";") != -1 || header[1].find(",") != -1) {
+                vector<string> temp = { header[1], header[2], header[4] };
+                mult.push_back(temp);
+            }
+            else
+                this->addSNP(header[1], header[2], header[4]);
         }
     }
     snpsearch.close();
     snpsearch.open("KargvaInfoExtracion/MEG_6090_SNP_list_update2.txt");
     while (std::getline(snpsearch, line)) {
-        this->addSNP(line, "ARO:3003283", "MEG_6090");
+        if (line.find(";") != -1 || line.find(",") != -1) {
+            vector<string> temp = { line, "ARO:3003283", "MEG_6090" };
+            mult.push_back(temp);
+        }
+        else
+            this->addSNP(line, "ARO:3003283", "MEG_6090");
     }
     snpsearch.close();
+    for (auto iter = mult.begin(); iter != mult.end(); ++iter) {
+        this->addSNP((* iter)[0], (* iter)[1], (* iter)[2]);
+    }
 }
