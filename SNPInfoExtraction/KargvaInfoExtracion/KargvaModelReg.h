@@ -10,15 +10,29 @@ private:
     bool includesAll(string line);
     bool includesMt(string snp);
 public:
-    KargvaModelReg(string line, string id, CARD_database* dbSeq);
+    KargvaModelReg(string line, string id, shared_ptr<CARD_database> dbSeq);
+    ~KargvaModelReg();
+    KargvaModelReg(const KargvaModelReg& other);
+    Model* Clone();
     void addToModel(string line);
     bool includes(string line);
     string condensedSNPinfo();
 };
 
-KargvaModelReg::KargvaModelReg(string line, string id, CARD_database* dbSeq):KargvaModel(id, dbSeq) {
+KargvaModelReg::KargvaModelReg(string line, string id, shared_ptr<CARD_database> dbSeq):KargvaModel(id, dbSeq) {
     makeModel(line);
 }
+KargvaModelReg::KargvaModelReg(const KargvaModelReg& other) {
+    this->wt_aa = other.wt_aa;
+    this->pos = other.pos;
+    this->mutant_aa = other.mutant_aa;
+    this->cardID = other.cardID;
+    this->databaseSequences = other.databaseSequences;
+}
+Model* KargvaModelReg::Clone() {
+    return new KargvaModelReg(*this);
+}
+KargvaModelReg::~KargvaModelReg() {}
 void KargvaModelReg::addToModel(string line) {
     mutant_aa.push_back(line.at(line.size() - 1));
 }

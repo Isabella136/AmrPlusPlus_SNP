@@ -8,15 +8,29 @@ class KargvaModelNonsense : public ModelNonsense, public KargvaModel {
 private:
     void makeModel(string line);
 public:
-    KargvaModelNonsense(string line, string id, CARD_database* dbSeq);
+    KargvaModelNonsense(string line, string id, shared_ptr<CARD_database> dbSeq);
+    ~KargvaModelNonsense();
+    KargvaModelNonsense(const KargvaModelNonsense& other);
+    Model* Clone();
     void addToModel(string line);
     bool includes(string line);
     string condensedSNPinfo();
 };
 
-KargvaModelNonsense::KargvaModelNonsense(string line, string id, CARD_database* dbSeq) :KargvaModel(id, dbSeq) {
+KargvaModelNonsense::KargvaModelNonsense(string line, string id, shared_ptr<CARD_database> dbSeq) :KargvaModel(id, dbSeq) {
     makeModel(line);
 }
+KargvaModelNonsense::KargvaModelNonsense(const KargvaModelNonsense& other) {
+    this->wt_aa = other.wt_aa;
+    this->pos = other.pos;
+    this->cardID = other.cardID;
+    this->databaseSequences = other.databaseSequences;
+}
+Model* KargvaModelNonsense::Clone() {
+    return new KargvaModelNonsense(*this);
+}
+KargvaModelNonsense::~KargvaModelNonsense() {}
+
 void KargvaModelNonsense::addToModel(string line) {
     throw std::exception("should not have been called: model type is nonsense");
 }

@@ -31,12 +31,13 @@ void MmarcDatabase::SNPInfo()
         string modelName = line.substr(0, line.find(','));
         Model* model = new MmarcModel(line);
         if (name_model.find(modelName) != name_model.end())
-            name_model.at(modelName).push_back(model);
+            name_model.at(modelName).push_back((model->Clone()));
         else { 
 			list<Model*> temp;
-			temp.push_back(model);
+			temp.push_back(model->Clone());
 			name_model.emplace(modelName, temp);
 		}
+        delete model;
     }
     snpsearch.close();
     ifstream model_members;

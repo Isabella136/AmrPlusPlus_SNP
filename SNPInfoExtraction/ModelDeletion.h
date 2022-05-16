@@ -10,7 +10,9 @@ protected:
     virtual void makeModel(string line) = 0;
 public:
     ModelDeletion();
+    virtual ~ModelDeletion();
     virtual string condensedSNPinfo() = 0;
 };
 
 ModelDeletion::ModelDeletion() {}
+ModelDeletion::~ModelDeletion() {}

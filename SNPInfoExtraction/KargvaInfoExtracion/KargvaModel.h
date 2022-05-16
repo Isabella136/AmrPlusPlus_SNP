@@ -7,22 +7,25 @@ using namespace std;
 
 class KargvaModel : public virtual Model {
     protected:
-        CARD_database* databaseSequences;
+        shared_ptr<CARD_database> databaseSequences;
         string cardID = "";
         string addContext(int lastLeftIndex, int firstRightIndex, char wt);
     public:
         KargvaModel();
-        KargvaModel(string id, CARD_database* dbSeq);
+        KargvaModel(string id, shared_ptr<CARD_database> dbSeq);
+        ~KargvaModel();
         virtual void addToModel(string line) = 0;
         virtual bool includes(string line) = 0;
         virtual string condensedSNPinfo() = 0;
 };
 KargvaModel::KargvaModel() {}
 
-KargvaModel::KargvaModel(string id, CARD_database* dbSeq){
+KargvaModel::KargvaModel(string id, shared_ptr<CARD_database> dbSeq){
     cardID = id;
-    databaseSequences = dbSeq;
+    databaseSequences = move(dbSeq);
 }
+
+KargvaModel::~KargvaModel() {}
 
 string KargvaModel::addContext(int lastLeftIndex, int firstRightIndex, char wt) {
     string sequence = databaseSequences->getSequence(cardID);

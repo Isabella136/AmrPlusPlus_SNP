@@ -14,7 +14,7 @@
 using namespace std;
 class KargvaDatabase : public ModelDatabase {
     private:
-        CARD_database* databaseSequences;
+        shared_ptr<CARD_database> databaseSequences;
         void addSNP(string snp, string id, string meg);
     public:
         KargvaDatabase();
@@ -22,7 +22,7 @@ class KargvaDatabase : public ModelDatabase {
 };
 
 KargvaDatabase::KargvaDatabase(){
-    databaseSequences = new CARD_database();
+    databaseSequences = make_shared<CARD_database>();
     SNPInfo();
 }
 void KargvaDatabase::addSNP(string snp, string id, string meg) {
@@ -53,7 +53,8 @@ void KargvaDatabase::addSNP(string snp, string id, string meg) {
                 model = new KargvaModelNonsense(snp, id, databaseSequences);
             else
                 model = new KargvaModelReg(snp, id, databaseSequences);
-            snpInfoDatabase.at(meg).push_back(model);
+            snpInfoDatabase.at(meg).push_back(model->Clone());
+            delete model;
         }
     }
     else {
@@ -65,8 +66,9 @@ void KargvaDatabase::addSNP(string snp, string id, string meg) {
         else
             model = new KargvaModelReg(snp, id, databaseSequences);
         list<Model*> temp;
-        temp.push_back(model);
+        temp.push_back(model->Clone());
         snpInfoDatabase.emplace(meg, temp);
+        delete model;
     }
 }
 void KargvaDatabase::SNPInfo(){

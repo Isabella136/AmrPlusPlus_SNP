@@ -5,7 +5,7 @@
 
 using namespace std;
 
-class MmarcModel: public ModelReg {
+class MmarcModel: public virtual ModelReg {
     private:
         int mmarc_codon_start;
         int mmarc_codon_end;
@@ -14,12 +14,28 @@ class MmarcModel: public ModelReg {
         void makeModel(string line);
     public:
         MmarcModel(string line);
+        ~MmarcModel();
+        MmarcModel(const MmarcModel& other);
+        Model* Clone();
         string condensedSNPinfo();
 };
 MmarcModel::MmarcModel(string line)
 {
     makeModel(line);
 }
+MmarcModel::MmarcModel(const MmarcModel& other) {
+    this->wt_aa = other.wt_aa;
+    this->pos = other.pos;
+    this->mutant_aa = other.mutant_aa;
+    this->context_left_aa = other.context_left_aa;
+    this->context_right_aa = other.context_right_aa;
+    this->mmarc_codon_end = other.mmarc_codon_end;
+    this->mmarc_codon_start = other.mmarc_codon_start;
+}
+Model* MmarcModel::Clone() {
+    return new MmarcModel(*this);
+}
+MmarcModel::~MmarcModel() {}
 void MmarcModel::makeModel(string line)
 {
     line = line.substr(line.find(',') + 1);

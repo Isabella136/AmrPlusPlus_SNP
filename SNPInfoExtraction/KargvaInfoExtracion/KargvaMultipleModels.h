@@ -13,14 +13,17 @@ class KargvaMultipleModels : public virtual KargvaModel {
 		vector<KargvaModel*> models;
 	public:
 		KargvaMultipleModels();
-		KargvaMultipleModels(string line, string id, CARD_database* dbSeq);
+		KargvaMultipleModels(string line, string id, shared_ptr<CARD_database> dbSeq);
+		~KargvaMultipleModels();
+		KargvaMultipleModels(const KargvaMultipleModels& other);
+		Model* Clone();
 		void addToModel(string line);
 		bool includes(string line);
 		string condensedSNPinfo();
 
 };
 KargvaMultipleModels::KargvaMultipleModels() {}
-KargvaMultipleModels::KargvaMultipleModels(string line, string id, CARD_database* dbSeq) {
+KargvaMultipleModels::KargvaMultipleModels(string line, string id, shared_ptr<CARD_database> dbSeq) {
 	string temp = line;
 	vector<string> snp;
 	snp.push_back(temp.substr(0, temp.find(";")));
@@ -36,6 +39,18 @@ KargvaMultipleModels::KargvaMultipleModels(string line, string id, CARD_database
 			model = new KargvaModelReg(snp[i], id, dbSeq);
 		models.push_back(model);
 	}
+}
+KargvaMultipleModels::KargvaMultipleModels(const KargvaMultipleModels& other) {
+	for (auto iter = other.models.begin(); iter != other.models.end(); ++iter) {
+		this->models.push_back(dynamic_cast<KargvaModel*>((*iter)->Clone()));
+	}
+}
+Model* KargvaMultipleModels::Clone() {
+	return new KargvaMultipleModels(*this);
+}
+KargvaMultipleModels::~KargvaMultipleModels() {
+	while (!models.empty())
+		models.pop_back();
 }
 void KargvaMultipleModels::addToModel(string line) {
 	throw std::exception("should not have been called: model type is multiple");

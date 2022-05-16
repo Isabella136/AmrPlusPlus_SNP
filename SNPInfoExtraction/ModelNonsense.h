@@ -10,7 +10,9 @@ protected:
     virtual void makeModel(string line) = 0;
 public:
     ModelNonsense();
+    virtual ~ModelNonsense();
     virtual string condensedSNPinfo() = 0;
 };
 
 ModelNonsense::ModelNonsense() {}
+ModelNonsense::~ModelNonsense() {}

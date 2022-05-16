@@ -12,7 +12,9 @@ class ModelReg : public virtual ModelSingle {
         virtual void makeModel(string line) = 0;
     public:
         ModelReg();
+        virtual ~ModelReg();
         virtual string condensedSNPinfo() = 0;
 };
 
 ModelReg::ModelReg() {}
+ModelReg::~ModelReg() {}

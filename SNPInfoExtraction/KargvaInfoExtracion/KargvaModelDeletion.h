@@ -8,15 +8,28 @@ class KargvaModelDeletion : public ModelDeletion, public KargvaModel {
 private:
     void makeModel(string line);
 public:
-    KargvaModelDeletion(string line, string id, CARD_database* dbSeq);
+    KargvaModelDeletion(string line, string id, shared_ptr<CARD_database> dbSeq);
+    ~KargvaModelDeletion();
+    KargvaModelDeletion(const KargvaModelDeletion& other);
+    Model* Clone();
     void addToModel(string line);
     bool includes(string line);
     string condensedSNPinfo();
 };
 
-KargvaModelDeletion::KargvaModelDeletion(string line, string id, CARD_database* dbSeq) :KargvaModel(id, dbSeq) {
+KargvaModelDeletion::KargvaModelDeletion(string line, string id, shared_ptr<CARD_database> dbSeq) :KargvaModel(id, dbSeq) {
     makeModel(line);
 }
+KargvaModelDeletion::KargvaModelDeletion(const KargvaModelDeletion& other) {
+    this->wt_aa = other.wt_aa;
+    this->pos = other.pos;
+    this->cardID = other.cardID;
+    this->databaseSequences = other.databaseSequences;
+}
+Model* KargvaModelDeletion::Clone() {
+    return new KargvaModelDeletion(*this);
+}
+KargvaModelDeletion::~KargvaModelDeletion() {}
 void KargvaModelDeletion::addToModel(string line) {
     throw std::exception("should not have been called: model type is deletion");
 }

@@ -10,9 +10,13 @@ class CARD_database {
 		unordered_map<string, string> databaseSequences;
 	public:
 		CARD_database();
+		CARD_database(const CARD_database& other);
 		string getSequence(string id);
 };
 	
+CARD_database::CARD_database(const CARD_database& other) {
+	this->databaseSequences = other.databaseSequences;
+}
 CARD_database::CARD_database()
 {
 	unordered_map<string, string> correctSequences;
