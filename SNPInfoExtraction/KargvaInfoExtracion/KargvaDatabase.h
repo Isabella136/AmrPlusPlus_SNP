@@ -99,22 +99,13 @@ void KargvaDatabase::SNPInfo(){
                 continue;
         }
         else if (header[2] == "ARO:3004562") {
-            if (header[1] == "E467V")
-                header[1] = "E466V";
-            else if (header[1] == "E467K")
-                header[1] = "E466K";
-            else if (header[1] == "K444F")
-                header[1] = "L444F";
-            else if (header[1] == "R388P")
-                header[1] = "R389P";
+            continue;
         }
         else if (header[2] == "ARO:3003459") {
-            if (header[1] == "N510D" || header[1] == "E501D" || header[1] == "N499T")
-                continue;
+            continue;
         }
         else if (header[2] == "ARO:3003302") {
-            if (header[1] == "G125S")
-                header[1] = "G124S";
+            continue;
         }
         else if (header[2] == "ARO:3003392") {
             if (header[1] == "A234G" || header[1] == "A431V")
@@ -185,6 +176,36 @@ void KargvaDatabase::SNPInfo(){
         }
         else
             this->addSNP(line, "ARO:3003283", "MEG_6090");
+    }
+    snpsearch.close();
+    snpsearch.open("KargvaInfoExtracion/MEG_3241_SNP_list_update2.txt");
+    while (std::getline(snpsearch, line)) {
+        if (line.find(";") != -1 || line.find(",") != -1) {
+            vector<string> temp = { line, "ARO:3004562", "MEG_3241" };
+            mult.push_back(temp);
+        }
+        else
+            this->addSNP(line, "ARO:3004562", "MEG_3241");
+    }
+    snpsearch.close();
+    snpsearch.open("KargvaInfoExtracion/MEG_3243_SNP_list_update.txt");
+    while (std::getline(snpsearch, line)) {
+        if (line.find(";") != -1 || line.find(",") != -1) {
+            vector<string> temp = { line, "ARO:3003459", "MEG_3243" };
+            mult.push_back(temp);
+        }
+        else
+            this->addSNP(line, "ARO:3003459", "MEG_3243");
+    }
+    snpsearch.close();
+    snpsearch.open("KargvaInfoExtracion/MEG_3246_SNP_list_update.txt");
+    while (std::getline(snpsearch, line)) {
+        if (line.find(";") != -1 || line.find(",") != -1) {
+            vector<string> temp = { line, "ARO:3003302", "MEG_3246" };
+            mult.push_back(temp);
+        }
+        else
+            this->addSNP(line, "ARO:3003302", "MEG_3246");
     }
     snpsearch.close();
     for (auto iter = mult.begin(); iter != mult.end(); ++iter) {
