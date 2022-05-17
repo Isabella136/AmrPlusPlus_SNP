@@ -56,20 +56,6 @@ class SNP:
         if (this.name == "MEG_4057") and (this.posOG == 347):
             this.wtACT = this.wtOG
             this.posACT = this.posOG
-        elif (this.name == "MEG_3241") and ((this.posOG == 464) or (this.posOG == 465) or (this.posOG == 466) or (this.posOG == 416) or (this.posOG == 366) or (this.posOG == 130) or (this.posOG == 139)):
-            if ((this.posOG == 464) or (this.posOG == 465) or (this.posOG == 466) or (this.posOG == 416) or (this.posOG == 366)):
-                this.wtACT = this.wtOG
-                this.posACT = this.posOG + 2
-            else:
-                this.wtACT = this.wtOG
-                this.posACT = this.posOG + 4
-        elif (this.name == "MEG_3246") and ((this.posOG == 214) or (this.posOG == 184) or (this.posOG == 124)):
-            if this.posOG == 124:
-                this.wtACT = this.wtOG
-                this.posACT = this.posOG - 39
-            else:
-                this.wtACT = this.wtOG
-                this.posACT = this.posOG - 40
         else:
             begin = this.posOG - 35
             end = this.posOG + 26
@@ -79,9 +65,6 @@ class SNP:
             elif begin < 0:
                 begin = 0
                 end = 61
-            elif (this.name == "MEG_3243"):
-                begin = this.posOG - 65
-                end = this.posOG + 56
             i = begin
             temp = sequence[begin:end+10]
             for x in sequence[begin:end]:

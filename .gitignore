@@ -29,3 +29,4 @@ SNPInfoExtraction/.vs/SNPInfoExtraction/v17/ipch/AutoPCH/102f8d6b37915e9/KARGVAD
 SNPInfoExtraction/.vs/SNPInfoExtraction/v17/.suo
 SNPInfoExtraction/.vs/SNPInfoExtraction/v17/Browse.VC.db
 SNPInfoExtraction/.vs/SNPInfoExtraction/v17/ipch/AutoPCH/cc28ef9af68bd365/SOURCE.ipch
+*.pyc
