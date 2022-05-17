@@ -1,13 +1,14 @@
 from multiprocessing.dummy import Value
 from . import Gene
 class SNP:
-    def __init__(this, snpStringList):
+    def __init__(this, snpStringList, name):
+        this.name = name
         snpString = snpStringList[0]
         this.wtOG = snpString[:1]
         snpString = snpString[1:]
         i = 0
         for x in snpString:
-            if not(x.isdigit()):
+            if (not(x.isdigit())):
                 break
             i += 1
         this.posOG = int(snpString[:i])
@@ -52,7 +53,24 @@ class SNP:
     def findACT(this, sequence):
         this.wtACT = ""
         this.posACT = -1
-        if (len(sequence)-1 < this.posOG) or (sequence[this.posOG - 1] != this.wtOG):
+        if (this.name == "MEG_4057") and (this.posOG == 347):
+            this.wtACT = this.wtOG
+            this.posACT = this.posOG
+        elif (this.name == "MEG_3241") and ((this.posOG == 464) or (this.posOG == 465) or (this.posOG == 466) or (this.posOG == 416) or (this.posOG == 366) or (this.posOG == 130) or (this.posOG == 139)):
+            if ((this.posOG == 464) or (this.posOG == 465) or (this.posOG == 466) or (this.posOG == 416) or (this.posOG == 366)):
+                this.wtACT = this.wtOG
+                this.posACT = this.posOG + 2
+            else:
+                this.wtACT = this.wtOG
+                this.posACT = this.posOG + 4
+        elif (this.name == "MEG_3246") and ((this.posOG == 214) or (this.posOG == 184) or (this.posOG == 124)):
+            if this.posOG == 124:
+                this.wtACT = this.wtOG
+                this.posACT = this.posOG - 39
+            else:
+                this.wtACT = this.wtOG
+                this.posACT = this.posOG - 40
+        else:
             begin = this.posOG - 35
             end = this.posOG + 26
             if end > len(sequence)-1:
@@ -61,6 +79,9 @@ class SNP:
             elif begin < 0:
                 begin = 0
                 end = 61
+            elif (this.name == "MEG_3243"):
+                begin = this.posOG - 65
+                end = this.posOG + 56
             i = begin
             temp = sequence[begin:end+10]
             for x in sequence[begin:end]:
@@ -68,16 +89,16 @@ class SNP:
                     this.changeACT(sequence, i)
                     break
                 i += 1
-        else:
-            this.wtACT = this.wtOG
-            this.posACT = this.posOG
     def checkLeft(this, index, currentPos, sequence, errorMargin):
-        for aa in this.leftContext[index]:
-            if aa == sequence[currentPos]:
-                if index == len(this.leftContext) - 1:
-                    return this.checkRight(0, currentPos + 2, sequence, errorMargin)
-                else:
-                    return this.checkLeft(index + 1, currentPos + 1, sequence, errorMargin)
+        if (len(this.leftContext) != 0):
+            for aa in this.leftContext[index]:
+                if aa == sequence[currentPos]:
+                    if index == len(this.leftContext) - 1:
+                        return this.checkRight(0, currentPos + 2, sequence, errorMargin)
+                    else:
+                        return this.checkLeft(index + 1, currentPos + 1, sequence, errorMargin)
+        else:
+            return this.checkRight(0, currentPos + 2, sequence, errorMargin)
         if errorMargin < 3:
             if index == len(this.leftContext) - 1:
                 return this.checkRight(0, currentPos + 2, sequence, errorMargin + 1)
@@ -102,9 +123,9 @@ class SNP:
     def isSnpValid(this):
         return this.posACT > -1
 class SNP_Reg(SNP):
-    def __init__(this, sequence, snpString):
+    def __init__(this, sequence, snpString, name):
         snpStringList = [snpString]
-        SNP.__init__(this, snpStringList)
+        SNP.__init__(this, snpStringList, name)
         snpString = snpStringList[0]
         this.mtList = []
         i = 1
@@ -130,10 +151,11 @@ class SNP_Reg(SNP):
             this.wtACT = sequence[i+5]
             this.posACT = i+5+1
 class SNP_Del(SNP):
-    def __init__(this, sequence, snpString):
+    def __init__(this, sequence, snpString, name):
         snpStringList = [snpString]
-        SNP.__init__(this, snpStringList)
+        SNP.__init__(this, snpStringList, name)
         snpString = snpStringList[0]
+        snpString = snpString[2:]
         SNP.establishContext(this, snpString)
         SNP.findACT(this, sequence)
     def condensedInfo(this):
@@ -145,10 +167,11 @@ class SNP_Del(SNP):
         this.wtACT = sequence[i+5]
         this.posACT = i+5+1
 class SNP_Non(SNP):
-    def __init__(this, sequence, snpString):
+    def __init__(this, sequence, snpString, name):
         snpStringList = [snpString]
-        SNP.__init__(this, snpStringList)
+        SNP.__init__(this, snpStringList, name)
         snpString = snpStringList[0]
+        snpString = snpString[2:]
         SNP.establishContext(this, snpString)
         SNP.findACT(this, sequence)
     def condensedInfo(this):
@@ -160,27 +183,23 @@ class SNP_Non(SNP):
         this.wtACT = sequence[i+5]
         this.posACT = i+5+1
 class SNP_Mult:
-    def __init__(this, sequence, snpString):
+    def __init__(this, sequence, snpString, name):
         this.listOfSNPs = []
         while(snpString.find(';') != -1):
             temp = snpString[:snpString.find(';')]
             if temp[:3] == "Reg":
-                snpToAdd = SNP_Reg(sequence, temp[4:])
-                if(snpToAdd.isSnpValid()):
-                    this.listOfSNPs.append(snpToAdd)
+                snpToAdd = SNP_Reg(sequence, temp[4:], name)
+                this.listOfSNPs.append(snpToAdd)
             else: # temp[:3] == "Del"
-                snpToAdd = SNP_Del(sequence, temp[4:])
-                if(snpToAdd.isSnpValid()):
-                    this.listOfSNPs.append(snpToAdd)
+                snpToAdd = SNP_Del(sequence, temp[4:], name)
+                this.listOfSNPs.append(snpToAdd)
             snpString = snpString[snpString.find(';')+1:]
         if snpString[:3] == "Reg":
-            snpToAdd = SNP_Reg(sequence, snpString[4:])
-            if(snpToAdd.isSnpValid()):
-                this.listOfSNPs.append(snpToAdd)
+            snpToAdd = SNP_Reg(sequence, snpString[4:], name)
+            this.listOfSNPs.append(snpToAdd)
         else: # snpString[:3] == "Del"
-            snpToAdd = SNP_Del(sequence, snpString[4:])
-            if(snpToAdd.isSnpValid()):
-                this.listOfSNPs.append(snpToAdd)
+            snpToAdd = SNP_Del(sequence, snpString[4:], name)
+            this.listOfSNPs.append(snpToAdd)
     def condensedInfo(this):
         toReturn = []
         for snp in this.listOfSNPs:
