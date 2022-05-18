@@ -25,3 +25,8 @@ def dnaTranslate(dna):
         else:
             toReturn += 'N'
     return toReturn
+def reverseTranslation(amino_acid):
+    for codon, aAcid in aa.items():
+        if amino_acid == aAcid:
+            return codon
+    return ""

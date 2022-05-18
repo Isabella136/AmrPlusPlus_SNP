@@ -169,7 +169,7 @@ def aaAlignment(nt_alignment_map):
                     if (prevAaShift % 3) == 0: #1M2D, 2M1D
                         aa_alignment_map.update({int(nt[2]/3):(thirdAlignment,)})
                 else: #3D
-                    prevAaShift = nt[4] - 2
+                    prevAaShift = nt[4] + 2
                     if (prevAaShift % 3) == 0:
                         aa_alignment_map.update({int(nt[2]/3):('-',)})
                 prevAaShift = None
@@ -208,7 +208,7 @@ def verifyNonsense(stopLocation, aa_alignment_map, gene, name):
         for snp in SNPInfo:
             stopLocTemp = aa_alignment_map.get(snp[1]-1,False)
             if stopLocTemp != False:
-                if stopLocTemp == stopLocation:
+                if stopLocTemp[0] == stopLocation:
                     res = 1
                     break
         resistant(name, res)
@@ -228,7 +228,12 @@ def verifyMultiple(aa_alignment_map, gene, name, aaQuerySequence):
                     continue
                 for mt in snp[2]: 
                     for queryIndex in tuple(aa_alignment_map[snp[1]-1]):
-                        if mt == aaQuerySequence[queryIndex]:
+                        if queryIndex == '-':
+                            if mt == queryIndex:
+                                resBool = True
+                                break
+                        elif mt == aaQuerySequence[queryIndex]:
+                            resBool = True
                             break
                         else:
                             resBool = False
@@ -254,7 +259,7 @@ def verify(read, gene):
         stopLocation = aaQuerySequence.find('*') 
         aa_alignment_map = aaAlignment(nt_alignment_map)
         #if nonsense mutations
-        if (stopLocation != -1) & ((stopLocation < len(aaQuerySequence)-1) | (read.reference_end < gene.ntSeqLength())-1): 
+        if (stopLocation != -1) & ((stopLocation < len(aaQuerySequence)-1) | (read.reference_end < gene.ntSeqLength())): 
             verifyNonsense(stopLocation, aa_alignment_map, gene, name)
         else :
             SNPInfo = gene.condensedRegDelInfo()
@@ -266,6 +271,7 @@ def verify(read, gene):
                     continue
                 for mt in snp[2]: 
                     for queryIndex in tuple(aa_alignment_map[snp[1]-1]):
+                        if queryIndex == '-': continue
                         if mt == aaQuerySequence[queryIndex]:
                             res = 1
                             break
@@ -276,12 +282,12 @@ def verify(read, gene):
             else: resistant(name, res)
 
 
-metamarcSNPinfo = open("extracted_SNP_files/SNPinfo.fasta", "rt")
+SNPinfo = open("extracted_SNP_files/SNPinfo.fasta", "rt")
 isSequence = False
 name = ""
 snp = ""
 sequence = ""
-for line in metamarcSNPinfo:
+for line in SNPinfo:
     if isSequence:
         sequence = line
         geneDict.update({name + "|RequiresSNPConfirmation":Gene(name, sequence[:-1], snp)})
@@ -293,10 +299,10 @@ for line in metamarcSNPinfo:
         name = line[1:temp]
         snp = line[temp+1:len(line)-1]
         isSequence = True
-metamarcSNPinfo.close()
-#pysam.sort("-o", "SAM_files/Sorted_P_BPW_50_2_filtered.sam", "SAM_files/P_BPW_50_2_filtered.sam")
-output = open("Test/test_Sorted_P_BPW_50_2_filtered.txt", "w")
-samfile = pysam.AlignmentFile("SAM_files/Sorted_P_BPW_50_2_filtered.sam", "r")
+SNPinfo.close()
+pysam.sort("-o", "Test/Sorted_Test2.sam", "Test/Test2.sam")
+output = open("Test/test2_output.txt", "w")
+samfile = pysam.AlignmentFile("Test/Sorted_Test2.sam", "r")
 
 iter = samfile.fetch()
 for read in iter:
