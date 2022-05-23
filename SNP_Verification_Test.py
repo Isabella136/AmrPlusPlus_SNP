@@ -47,7 +47,8 @@ def makeTest(SNP_Num, fullName, aa_seq, cigar, start, end):
     indexStart = (start-1) % 3
     indexEnd = end % 3
     nt_seq = nt_seq[indexStart:]
-    nt_seq = nt_seq[:-1*indexEnd]
+    if indexEnd != 0:
+        nt_seq = nt_seq[:-1*indexEnd]
     return SNPTest(SNP_Num, fullName, start, end, cigar, nt_seq)
 
 def sortSnpInfo(snpInfo):

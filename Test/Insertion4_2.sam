@@ -488,13 +488,13 @@
 @SQ	SN:MEG_7806|Drugs|Lipopeptides|Daptomycin-resistant_mutant|WALK|RequiresSNPConfirmation	LN:1827
 @SQ	SN:MEG_7840|Drugs|Lipopeptides|Defensin-resistant_mutant|YKKCL|RequiresSNPConfirmation	LN:2571
 @SQ	SN:MEG_7843|Drugs|Lipopeptides|Daptomycin-resistant_mutant|YYBT|RequiresSNPConfirmation	LN:1977
-Test_1	99	MEG_4094|Drugs|Fosfomycin|Fosfomycin_target_mutation|MURA|RequiresSNPConfirmation	190	255	20H3M1I6M2I3M20H	=	190	12		*	
-Test_1	147	MEG_4094|Drugs|Fosfomycin|Fosfomycin_target_mutation|MURA|RequiresSNPConfirmation	190	255	20H3M1I6M2I3M20H	=	190	-12		*	
-Test_2	99	MEG_4130|Drugs|Mycobacterium_tuberculosis-specific_Drug|Isoniazid-resistant_mutant|NDH|RequiresSNPConfirmation	49	255	20H3M1I6M2I3M20H	=	49	12		*	
-Test_2	147	MEG_4130|Drugs|Mycobacterium_tuberculosis-specific_Drug|Isoniazid-resistant_mutant|NDH|RequiresSNPConfirmation	49	255	20H3M1I6M2I3M20H	=	49	-12		*	
-Test_3	99	MEG_5328|Drugs|Fluoroquinolones|Fluoroquinolone-resistant_DNA_topoisomerases|PARC|RequiresSNPConfirmation	244	255	20H3M1I6M2I3M20H	=	244	12		*	
-Test_3	147	MEG_5328|Drugs|Fluoroquinolones|Fluoroquinolone-resistant_DNA_topoisomerases|PARC|RequiresSNPConfirmation	244	255	20H3M1I6M2I3M20H	=	244	-12		*	
-Test_4	99	MEG_5331|Drugs|Fluoroquinolones|Fluoroquinolone-resistant_DNA_topoisomerases|PARC|RequiresSNPConfirmation	304	255	20H3M1I6M2I3M20H	=	304	12		*	
-Test_4	147	MEG_5331|Drugs|Fluoroquinolones|Fluoroquinolone-resistant_DNA_topoisomerases|PARC|RequiresSNPConfirmation	304	255	20H3M1I6M2I3M20H	=	304	-12		*	
-Test_5	99	MEG_5401|Drugs|betalactams|Penicillin_binding_protein|PBP2|RequiresSNPConfirmation	943	255	20H3M1I6M2I3M20H	=	943	12		*	
-Test_5	147	MEG_5401|Drugs|betalactams|Penicillin_binding_protein|PBP2|RequiresSNPConfirmation	943	255	20H3M1I6M2I3M20H	=	943	-12		*	
+Test_1	99	MEG_4094|Drugs|Fosfomycin|Fosfomycin_target_mutation|MURA|RequiresSNPConfirmation	190	255	20H3M1I6M2I3M20H	=	190	12	GATGGTTTAACTTTA	*	
+Test_1	147	MEG_4094|Drugs|Fosfomycin|Fosfomycin_target_mutation|MURA|RequiresSNPConfirmation	190	255	20H3M1I6M2I3M20H	=	190	-12	GATGGTTTAACTTTA	*	
+Test_2	99	MEG_4130|Drugs|Mycobacterium_tuberculosis-specific_Drug|Isoniazid-resistant_mutant|NDH|RequiresSNPConfirmation	49	255	20H3M1I6M2I3M20H	=	49	12	GTTGCTTTAATTATT	*	
+Test_2	147	MEG_4130|Drugs|Mycobacterium_tuberculosis-specific_Drug|Isoniazid-resistant_mutant|NDH|RequiresSNPConfirmation	49	255	20H3M1I6M2I3M20H	=	49	-12	GTTGCTTTAATTATT	*	
+Test_3	99	MEG_5328|Drugs|Fluoroquinolones|Fluoroquinolone-resistant_DNA_topoisomerases|PARC|RequiresSNPConfirmation	244	255	20H3M1I6M2I3M20H	=	244	12	GATTGGTGGTCTATT	*	
+Test_3	147	MEG_5328|Drugs|Fluoroquinolones|Fluoroquinolone-resistant_DNA_topoisomerases|PARC|RequiresSNPConfirmation	244	255	20H3M1I6M2I3M20H	=	244	-12	GATTGGTGGTCTATT	*	
+Test_4	99	MEG_5331|Drugs|Fluoroquinolones|Fluoroquinolone-resistant_DNA_topoisomerases|PARC|RequiresSNPConfirmation	304	255	20H3M1I6M2I3M20H	=	304	12	ACTGTTATTAATAAT	*	
+Test_4	147	MEG_5331|Drugs|Fluoroquinolones|Fluoroquinolone-resistant_DNA_topoisomerases|PARC|RequiresSNPConfirmation	304	255	20H3M1I6M2I3M20H	=	304	-12	ACTGTTATTAATAAT	*	
+Test_5	99	MEG_5401|Drugs|betalactams|Penicillin_binding_protein|PBP2|RequiresSNPConfirmation	943	255	20H3M1I6M2I3M20H	=	943	12	TTTACTGTTATTGCT	*	
+Test_5	147	MEG_5401|Drugs|betalactams|Penicillin_binding_protein|PBP2|RequiresSNPConfirmation	943	255	20H3M1I6M2I3M20H	=	943	-12	TTTACTGTTATTGCT	*	
