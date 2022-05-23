@@ -300,20 +300,24 @@ for line in SNPinfo:
         snp = line[temp+1:len(line)-1]
         isSequence = True
 SNPinfo.close()
-pysam.sort("-o", "Test/Sorted_Test2.sam", "Test/Test2.sam")
-output = open("Test/test2_output.txt", "w")
-samfile = pysam.AlignmentFile("Test/Sorted_Test2.sam", "r")
+output = open("Test/insertion_and_deletion_tests_output.txt", "w")
+fileName = ["Insertion1", "Insertion3", "Insertion4_1", "Insertion4_2", "Insertion2_1", "Insertion2_2", "Insertion2_3", "Insertion5", "Deletion1", "Deletion2", "Insertion6", "Deletion3_1", "Deletion3_2", "InsertionDeletion1_1", "InsertionDeletion1_2", "InsertionDeletion2_1", "InsertionDeletion2_2", "InsertionDeletion3", "InsertionDeletion4", "Deletion4", "Deletion5"]
+for name in fileName:
+    output.write(name + "\n")
+    pysam.sort("-o", "Test/Sorted_" + name + ".sam", "Test/" + name + ".sam")
+    
+    samfile = pysam.AlignmentFile("Test/Sorted_" + name + ".sam", "r")
 
-iter = samfile.fetch()
-for read in iter:
-    gene = geneDict.get(read.reference_name, False)
-    if (gene == False):
-        continue
-    elif (read.cigarstring == None):
-        continue
-    verify(read, gene)
-samfile.close() 
-for name in argInfoDict:
-    output.write(snpInfoPrint(name, str(argInfoDict[name][0]), str(argInfoDict[name][1])))
-output.close()
-testOutput.close()
+    iter = samfile.fetch()
+    for read in iter:
+        gene = geneDict.get(read.reference_name, False)
+        if (gene == False):
+            continue
+        elif (read.cigarstring == None):
+            continue
+        verify(read, gene)
+    samfile.close() 
+    for name in argInfoDict:
+        output.write(snpInfoPrint(name, str(argInfoDict[name][0]), str(argInfoDict[name][1])))
+    output.close()
+    testOutput.close()
