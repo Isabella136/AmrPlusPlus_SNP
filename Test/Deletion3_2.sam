@@ -488,5 +488,5 @@
 @SQ	SN:MEG_7806|Drugs|Lipopeptides|Daptomycin-resistant_mutant|WALK|RequiresSNPConfirmation	LN:1827
 @SQ	SN:MEG_7840|Drugs|Lipopeptides|Defensin-resistant_mutant|YKKCL|RequiresSNPConfirmation	LN:2571
 @SQ	SN:MEG_7843|Drugs|Lipopeptides|Daptomycin-resistant_mutant|YYBT|RequiresSNPConfirmation	LN:1977
-Test_1	99	MEG_413|Multi-compound|Drug_and_biocide_resistance|Drug_and_biocide_RND_efflux_regulator|ACRR|RequiresSNPConfirmation	121	255	20H1M1D8M2D3M20H	=	121	15	GCTGGTGTTACT	*	
-Test_1	147	MEG_413|Multi-compound|Drug_and_biocide_resistance|Drug_and_biocide_RND_efflux_regulator|ACRR|RequiresSNPConfirmation	121	255	20H1M1D8M2D3M20H	=	121	-15	GCTGGTGTTACT	*	
+Test_1	99	MEG_413|Multi-compound|Drug_and_biocide_resistance|Drug_and_biocide_RND_efflux_regulator|ACRR|RequiresSNPConfirmation	121	255	20H1M1D8M2D3M20H	=	121	15	GGTGTTACTTGT	*	
+Test_1	147	MEG_413|Multi-compound|Drug_and_biocide_resistance|Drug_and_biocide_RND_efflux_regulator|ACRR|RequiresSNPConfirmation	121	255	20H1M1D8M2D3M20H	=	121	-15	GGTGTTACTTGT	*	
