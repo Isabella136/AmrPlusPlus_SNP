@@ -3,6 +3,8 @@ from SNP_Verification.SNP import SNP
 from SNP_Verification import dnaTranslate
 import pysam
 
+mt_and_wt = True #used in case of insertion leading to presence of both mt and wt; if true, mark as resistant; if false, mark as susceptible
+
 geneDict = {
 
 }
@@ -12,8 +14,6 @@ argInfoDict = {
 }
 
 snpInfoPrint = lambda a, b, c : a + ": " + b + " resitant reads out of " + c + " total reads\n"
-
-testOutput = open("Test/testSNPs", "w")
 
 def resistant(name, increment):
     argInfo = argInfoDict.get(name, False)
@@ -48,16 +48,19 @@ def mapCigarToAlignment(cigar, aligned_pair):
     index = 0
     shift = 0
     prevShift = 0
+    splitIndex = -1
     translatable = False
-    startDel = False
     for op in cigar:
         if op == "S":
             index += 1
         elif (op == "M") | (op == "X") | (op == "="):
             prevShift = shift
             if not(translatable):
-                startDel = False
-                if (aligned_pair[index][1] % 3) != 0:
+                if splitIndex < 0:
+                    splitIndex = aligned_pair[index][1] % 3
+                else:
+                    splitIndex += 1
+                if (splitIndex % 3) != 0:
                     index += 1
                 else:
                     translatable = True
@@ -74,8 +77,22 @@ def mapCigarToAlignment(cigar, aligned_pair):
             prevShift = shift
             shift += 1
             if not(translatable):
-                startDel = False
-                index += 1
+                if splitIndex < 0:
+                    temp = aligned_pair[index][1]
+                    i = 1
+                    while temp == None:
+                        temp = aligned_pair[index+i][1]
+                        i += 1
+                    splitIndex = temp % 3
+                else:
+                    splitIndex += 1
+                if (splitIndex % 3) != 0:
+                    index += 1
+                else:
+                    translatable = True
+                    queryLength += 1
+                    alignment_map.append((op, aligned_pair[index][0], aligned_pair[index][1], shift, prevShift))
+                    index += 1
             else:
                 queryLength += 1
                 alignment_map.append((op, aligned_pair[index][0], aligned_pair[index][1], shift, prevShift))
@@ -83,28 +100,23 @@ def mapCigarToAlignment(cigar, aligned_pair):
         elif op == "D":
             prevShift = shift
             shift -= 1
-            if startDel & ((aligned_pair[index][1] % 3) == 2):
-                translatable = True
-                refLength += 3
-                alignment_map.append((op, aligned_pair[index-2][0], aligned_pair[index-2][1], shift, prevShift+2))
-                alignment_map.append((op, aligned_pair[index-1][0], aligned_pair[index-1][1], shift, prevShift+1))
-                alignment_map.append((op, aligned_pair[index][0], aligned_pair[index][1], shift, prevShift))
-                index += 1
             if not(translatable):
-                if (aligned_pair[index][1] % 3) != 0:
+                if (splitIndex % 3) != 2:
                     index += 1
                 else:
+                    translatable = True
+                    refLength += 1
+                    alignment_map.append((op, aligned_pair[index][0], aligned_pair[index][1], shift, prevShift))
                     index += 1
-                    startDel = True
             else:
                 refLength += 1
                 alignment_map.append((op, aligned_pair[index][0], aligned_pair[index][1], shift, prevShift))
                 index += 1
         else:
             continue
-    while (refLength % 3) != 0:
+    while (queryLength % 3) != 0:
         poped = alignment_map.pop()
-        if poped[0] != "I" : refLength -= 1
+        if poped[0] != "D" : queryLength -= 1
     return alignment_map
 
 def aaAlignment(nt_alignment_map):
@@ -113,6 +125,10 @@ def aaAlignment(nt_alignment_map):
     }
     insertCount = 0
     ntRefIndex = nt_alignment_map[0][2]
+    i = 1
+    while ntRefIndex == None:
+        ntRefIndex = nt_alignment_map[i][2]
+        i+=1
     ntQueryIndex = 0
     aaQueryIndex = 0
     prevAaShift = None    
@@ -202,8 +218,6 @@ def verifyNonsense(stopLocation, aa_alignment_map, gene, name):
     if (len(SNPInfo) == 0):
         disregard(name)
     else:
-        testOutput.write(name + "\n")
-        testOutput.write(SNPInfo.__str__() + "\n")
         res = 0
         for snp in SNPInfo:
             stopLocTemp = aa_alignment_map.get(snp[1]-1,False)
@@ -218,8 +232,6 @@ def verifyMultiple(aa_alignment_map, gene, name, aaQuerySequence):
     if (len(SNPInfo) == 0):
         disregard(name)
     else:
-        testOutput.write(name + "\n")
-        testOutput.write(SNPInfo.__str__() + "\n")
         resBool = True
         for snpMult in SNPInfo:
             for snp in snpMult:
@@ -254,7 +266,17 @@ def verify(read, gene):
         aligned_pair = read.get_aligned_pairs()
         nt_alignment_map = mapCigarToAlignment(cigar, aligned_pair)
         querySeq = read.query_sequence
-        trimmedQuerySequence = querySeq[nt_alignment_map[0][1]:nt_alignment_map[len(nt_alignment_map)-1][1]+1]
+        start = nt_alignment_map[0][1]
+        i = 1
+        while start == None:
+            start = nt_alignment_map[i][1]
+            i += 1
+        end = nt_alignment_map[len(nt_alignment_map)-1][1]
+        i = 2
+        while end == None:
+            end = nt_alignment_map[len(nt_alignment_map)-i][1]
+            i += 1
+        trimmedQuerySequence = querySeq[start:end+1]
         aaQuerySequence = dnaTranslate(trimmedQuerySequence)
         stopLocation = aaQuerySequence.find('*') 
         aa_alignment_map = aaAlignment(nt_alignment_map)
@@ -263,8 +285,6 @@ def verify(read, gene):
             verifyNonsense(stopLocation, aa_alignment_map, gene, name)
         else :
             SNPInfo = gene.condensedRegDelInfo()
-            testOutput.write(name + "\n")
-            testOutput.write(SNPInfo.__str__() + "\n")
             res = 0
             for snp in SNPInfo:
                 if (aa_alignment_map.get(snp[1]-1,False)) == False:
@@ -319,5 +339,4 @@ for name in fileName:
     samfile.close() 
     for name in argInfoDict:
         output.write(snpInfoPrint(name, str(argInfoDict[name][0]), str(argInfoDict[name][1])))
-    output.close()
-    testOutput.close()
+output.close()

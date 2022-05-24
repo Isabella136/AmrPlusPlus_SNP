@@ -1,0 +1,156 @@
+Insertion1
+MEG_4094: 2 resitant reads out of 2 total reads
+MEG_4130: 2 resitant reads out of 2 total reads
+MEG_5328: 2 resitant reads out of 2 total reads
+MEG_5331: 2 resitant reads out of 2 total reads
+MEG_5401: 2 resitant reads out of 2 total reads
+Insertion3
+MEG_4094: 4 resitant reads out of 4 total reads
+MEG_4130: 4 resitant reads out of 4 total reads
+MEG_5328: 4 resitant reads out of 4 total reads
+MEG_5331: 4 resitant reads out of 4 total reads
+MEG_5401: 4 resitant reads out of 4 total reads
+Insertion4_1
+MEG_4094: 6 resitant reads out of 6 total reads
+MEG_4130: 4 resitant reads out of 6 total reads
+MEG_5328: 6 resitant reads out of 6 total reads
+MEG_5331: 6 resitant reads out of 6 total reads
+MEG_5401: 4 resitant reads out of 6 total reads
+Insertion4_2
+MEG_4094: 6 resitant reads out of 8 total reads
+MEG_4130: 6 resitant reads out of 8 total reads
+MEG_5328: 8 resitant reads out of 8 total reads
+MEG_5331: 6 resitant reads out of 8 total reads
+MEG_5401: 6 resitant reads out of 8 total reads
+Insertion2_1
+MEG_4094: 6 resitant reads out of 8 total reads
+MEG_4130: 6 resitant reads out of 8 total reads
+MEG_5328: 8 resitant reads out of 8 total reads
+MEG_5331: 6 resitant reads out of 8 total reads
+MEG_5401: 6 resitant reads out of 8 total reads
+MEG_413: 2 resitant reads out of 2 total reads
+Insertion2_2
+MEG_4094: 6 resitant reads out of 8 total reads
+MEG_4130: 6 resitant reads out of 8 total reads
+MEG_5328: 8 resitant reads out of 8 total reads
+MEG_5331: 6 resitant reads out of 8 total reads
+MEG_5401: 6 resitant reads out of 8 total reads
+MEG_413: 4 resitant reads out of 4 total reads
+Insertion2_3
+MEG_4094: 6 resitant reads out of 8 total reads
+MEG_4130: 6 resitant reads out of 8 total reads
+MEG_5328: 8 resitant reads out of 8 total reads
+MEG_5331: 6 resitant reads out of 8 total reads
+MEG_5401: 6 resitant reads out of 8 total reads
+MEG_413: 4 resitant reads out of 6 total reads
+Insertion5
+MEG_4094: 6 resitant reads out of 8 total reads
+MEG_4130: 6 resitant reads out of 8 total reads
+MEG_5328: 8 resitant reads out of 8 total reads
+MEG_5331: 6 resitant reads out of 8 total reads
+MEG_5401: 6 resitant reads out of 8 total reads
+MEG_413: 6 resitant reads out of 8 total reads
+Deletion1
+MEG_4094: 6 resitant reads out of 8 total reads
+MEG_4130: 6 resitant reads out of 8 total reads
+MEG_5328: 8 resitant reads out of 8 total reads
+MEG_5331: 6 resitant reads out of 8 total reads
+MEG_5401: 6 resitant reads out of 8 total reads
+MEG_413: 8 resitant reads out of 10 total reads
+MEG_6090: 2 resitant reads out of 2 total reads
+Deletion2
+MEG_4094: 6 resitant reads out of 8 total reads
+MEG_4130: 6 resitant reads out of 8 total reads
+MEG_5328: 8 resitant reads out of 8 total reads
+MEG_5331: 6 resitant reads out of 8 total reads
+MEG_5401: 6 resitant reads out of 8 total reads
+MEG_413: 10 resitant reads out of 12 total reads
+MEG_6090: 2 resitant reads out of 2 total reads
+Insertion6
+MEG_4094: 6 resitant reads out of 8 total reads
+MEG_4130: 6 resitant reads out of 8 total reads
+MEG_5328: 8 resitant reads out of 8 total reads
+MEG_5331: 6 resitant reads out of 8 total reads
+MEG_5401: 6 resitant reads out of 8 total reads
+MEG_413: 10 resitant reads out of 14 total reads
+MEG_6090: 2 resitant reads out of 2 total reads
+Deletion3_1
+MEG_4094: 6 resitant reads out of 8 total reads
+MEG_4130: 6 resitant reads out of 8 total reads
+MEG_5328: 8 resitant reads out of 8 total reads
+MEG_5331: 6 resitant reads out of 8 total reads
+MEG_5401: 6 resitant reads out of 8 total reads
+MEG_413: 12 resitant reads out of 16 total reads
+MEG_6090: 2 resitant reads out of 2 total reads
+Deletion3_2
+MEG_4094: 6 resitant reads out of 8 total reads
+MEG_4130: 6 resitant reads out of 8 total reads
+MEG_5328: 8 resitant reads out of 8 total reads
+MEG_5331: 6 resitant reads out of 8 total reads
+MEG_5401: 6 resitant reads out of 8 total reads
+MEG_413: 12 resitant reads out of 18 total reads
+MEG_6090: 2 resitant reads out of 2 total reads
+InsertionDeletion1_1
+MEG_4094: 6 resitant reads out of 8 total reads
+MEG_4130: 6 resitant reads out of 8 total reads
+MEG_5328: 8 resitant reads out of 8 total reads
+MEG_5331: 6 resitant reads out of 8 total reads
+MEG_5401: 6 resitant reads out of 8 total reads
+MEG_413: 12 resitant reads out of 20 total reads
+MEG_6090: 2 resitant reads out of 2 total reads
+InsertionDeletion1_2
+MEG_4094: 6 resitant reads out of 8 total reads
+MEG_4130: 6 resitant reads out of 8 total reads
+MEG_5328: 8 resitant reads out of 8 total reads
+MEG_5331: 6 resitant reads out of 8 total reads
+MEG_5401: 6 resitant reads out of 8 total reads
+MEG_413: 14 resitant reads out of 22 total reads
+MEG_6090: 2 resitant reads out of 2 total reads
+InsertionDeletion2_1
+MEG_4094: 6 resitant reads out of 8 total reads
+MEG_4130: 6 resitant reads out of 8 total reads
+MEG_5328: 8 resitant reads out of 8 total reads
+MEG_5331: 6 resitant reads out of 8 total reads
+MEG_5401: 6 resitant reads out of 8 total reads
+MEG_413: 16 resitant reads out of 24 total reads
+MEG_6090: 2 resitant reads out of 2 total reads
+InsertionDeletion2_2
+MEG_4094: 6 resitant reads out of 8 total reads
+MEG_4130: 6 resitant reads out of 8 total reads
+MEG_5328: 8 resitant reads out of 8 total reads
+MEG_5331: 6 resitant reads out of 8 total reads
+MEG_5401: 6 resitant reads out of 8 total reads
+MEG_413: 18 resitant reads out of 26 total reads
+MEG_6090: 2 resitant reads out of 2 total reads
+InsertionDeletion3
+MEG_4094: 6 resitant reads out of 8 total reads
+MEG_4130: 6 resitant reads out of 8 total reads
+MEG_5328: 8 resitant reads out of 8 total reads
+MEG_5331: 6 resitant reads out of 8 total reads
+MEG_5401: 6 resitant reads out of 8 total reads
+MEG_413: 18 resitant reads out of 28 total reads
+MEG_6090: 2 resitant reads out of 2 total reads
+InsertionDeletion4
+MEG_4094: 6 resitant reads out of 8 total reads
+MEG_4130: 6 resitant reads out of 8 total reads
+MEG_5328: 8 resitant reads out of 8 total reads
+MEG_5331: 6 resitant reads out of 8 total reads
+MEG_5401: 6 resitant reads out of 8 total reads
+MEG_413: 20 resitant reads out of 30 total reads
+MEG_6090: 2 resitant reads out of 2 total reads
+Deletion4
+MEG_4094: 6 resitant reads out of 8 total reads
+MEG_4130: 6 resitant reads out of 8 total reads
+MEG_5328: 8 resitant reads out of 8 total reads
+MEG_5331: 6 resitant reads out of 8 total reads
+MEG_5401: 6 resitant reads out of 8 total reads
+MEG_413: 20 resitant reads out of 30 total reads
+MEG_6090: 4 resitant reads out of 4 total reads
+Deletion5
+MEG_4094: 6 resitant reads out of 8 total reads
+MEG_4130: 6 resitant reads out of 8 total reads
+MEG_5328: 8 resitant reads out of 8 total reads
+MEG_5331: 6 resitant reads out of 8 total reads
+MEG_5401: 6 resitant reads out of 8 total reads
+MEG_413: 20 resitant reads out of 30 total reads
+MEG_6090: 6 resitant reads out of 6 total reads
