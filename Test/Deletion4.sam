@@ -488,5 +488,5 @@
 @SQ	SN:MEG_7806|Drugs|Lipopeptides|Daptomycin-resistant_mutant|WALK|RequiresSNPConfirmation	LN:1827
 @SQ	SN:MEG_7840|Drugs|Lipopeptides|Defensin-resistant_mutant|YKKCL|RequiresSNPConfirmation	LN:2571
 @SQ	SN:MEG_7843|Drugs|Lipopeptides|Daptomycin-resistant_mutant|YYBT|RequiresSNPConfirmation	LN:1977
-Test_1	99	MEG_6090|Drugs|Rifampin|Rifampin-resistant_beta-subunit_of_RNA_polymerase_RpoB|RPOB|RequiresSNPConfirmation	1299	255	20H1M13D6M20H	=	1299	19	TAATCCT	*	
-Test_1	147	MEG_6090|Drugs|Rifampin|Rifampin-resistant_beta-subunit_of_RNA_polymerase_RpoB|RPOB|RequiresSNPConfirmation	1299	255	20H1M13D6M20H	=	1299	-19	TAATCCT	*	
+Test_1	99	MEG_6090|Drugs|Rifampin|Rifampin-resistant_beta-subunit_of_RNA_polymerase_RpoB|RPOB|RequiresSNPConfirmation	1299	255	20H1M12D6M20H	=	1299	19	TAATCCT	*	
+Test_1	147	MEG_6090|Drugs|Rifampin|Rifampin-resistant_beta-subunit_of_RNA_polymerase_RpoB|RPOB|RequiresSNPConfirmation	1299	255	20H1M12D6M20H	=	1299	-19	TAATCCT	*	

@@ -48,6 +48,7 @@ def makeTest(SNP_Num, fullName, aa_seq, cigar, start, end):
     indexEnd = end % 3
     nt_seq = nt_seq[indexStart:]
     if indexEnd != 0:
+        indexEnd = 3 - indexEnd
         nt_seq = nt_seq[:-1*indexEnd]
     return SNPTest(SNP_Num, fullName, start, end, cigar, nt_seq)
 
@@ -288,11 +289,11 @@ SAM_file.close()
 
 
 SAM_file = open("Test/Deletion3_1.sam", "w")
-SAM_file.write(makeTest(SNP_Num, FullName[5], "CGAIY", "20H1M1D8M2D3M20H", 45 * 3 - 2, 49 * 3)) #Test with mt at first deletion chunk
+SAM_file.write(makeTest(SNP_Num, FullName[5], "CGAI", "20H1M1D8M2D3M20H", 45 * 3 - 2, 49 * 3)) #Test with mt at first deletion chunk
 SAM_file.close()
 
 SAM_file = open("Test/Deletion3_2.sam", "w")
-SAM_file.write(makeTest(SNP_Num, FullName[5], "AGVTC", "20H1M1D8M2D3M20H", 41 * 3 - 2, 45 * 3)) #Test with mt at last deletion chunk
+SAM_file.write(makeTest(SNP_Num, FullName[5], "AGVT", "20H1M1D8M2D3M20H", 41 * 3 - 2, 45 * 3)) #Test with mt at last deletion chunk
 SAM_file.close()
 
 
@@ -325,10 +326,10 @@ SAM_file.close()
 
 
 SAM_file = open("Test/Deletion4.sam", "w")
-SAM_file.write(makeTest(SNP_Num, FullName[6], "FNP", "20H1M13D6M20H", 433 * 3, 439 * 3)) #Test with deletion mutations
+SAM_file.write(makeTest(SNP_Num, FullName[6], "FNP", "20H1M12D6M20H", 433 * 3, 439 * 3)) #Test with deletion mutations
 SAM_file.close()
 
 
 SAM_file = open("Test/Deletion5.sam", "w")
-SAM_file.write(makeTest(SNP_Num, FullName[6], "N", "20H12D1M20H", 434 * 3 - 2, 438 * 3 - 2)) #Test with deletion mutations
+SAM_file.write(makeTest(SNP_Num, FullName[6], "FN", "20H3M12D1M20H", 433 * 3 - 2, 438 * 3 - 2)) #Test with deletion mutations
 SAM_file.close()
