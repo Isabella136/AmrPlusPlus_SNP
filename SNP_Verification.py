@@ -397,7 +397,10 @@ for line in SNPinfo:
         isSequence = True
 SNPinfo.close()
 output = open("Test/insertion_and_deletion_tests_output.txt", "w")
-fileName = ["Insertion1", "Insertion3", "Insertion4_1", "Insertion4_2", "Insertion2_1", "Insertion2_2", "Insertion2_3", "Insertion5", "Deletion1", "Deletion2", "Insertion6", "Deletion3_1", "Deletion3_2", "InsertionDeletion1_1", "InsertionDeletion1_2", "InsertionDeletion2_1", "InsertionDeletion2_2", "InsertionDeletion3", "InsertionDeletion4", "Deletion4", "Deletion5"]
+fileName = ["Insertion1", "Insertion3", "Insertion4_1", "Insertion4_2", "Insertion2_1", "Insertion2_2", "Insertion2_3", "Insertion5", "Deletion1", "Deletion2", "Insertion6", "Deletion3_1", "Deletion3_2", "InsertionDeletion1_1", "InsertionDeletion1_2", "InsertionDeletion2_1", "InsertionDeletion2_2", "InsertionDeletion3", "InsertionDeletion4", "Deletion4", "Deletion5", "Test", "Test2", "P_BPW_50_2_filtered"]
+outputName = ["Test/test_output.txt", "Test/test2_output.txt", "Test/P_BPW_50_2_filtered_output.txt"]
+fileNameIndex = 0
+outputNameIndex = 0 
 for name in fileName:
     output.write(name + "\n")
     pysam.sort("-o", "Test/Sorted_" + name + ".sam", "Test/" + name + ".sam")
@@ -417,4 +420,9 @@ for name in fileName:
         output.write(snpInfoPrint(name, str(argInfoDict[name][0]), str(argInfoDict[name][1])))
     argInfoDict = {
     }
+    if (fileNameIndex >= 20) & (fileNameIndex < 23) :
+        output.close()
+        output = open(outputName[outputNameIndex], "w")
+        outputNameIndex += 1
+    fileNameIndex += 1
 output.close()
