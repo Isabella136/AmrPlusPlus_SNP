@@ -136,7 +136,10 @@ def aaAlignment(nt_alignment_map):
     thirdAlignment = 0
     mapIndex = 0
     inbetween = None
+    hasDeletion = False
     for nt in nt_alignment_map:
+        if (ntQueryIndex % 3) == 0:
+            hasDeletion = False
         if (ntRefIndex % 3) == 0:
             if nt[0] == "I":
                 insertCount += 1
@@ -176,6 +179,7 @@ def aaAlignment(nt_alignment_map):
                 if prevAaShift == None:
                     prevAaShift = nt[4]
                 insertCount = 0
+                hasDeletion = True
             else: #nt[0] == "M"
                 ntQueryIndex += 1
                 ntRefIndex += 1
@@ -183,7 +187,9 @@ def aaAlignment(nt_alignment_map):
                 if prevAaShift == None:
                     prevAaShift = nt[4]
                 if (ntQueryIndex % 3) == 0: #2I1M3M
-                    if inbetween == None:
+                    if (prevAaShift == 0):
+                        inbetween = None
+                    elif inbetween == None:
                         aa = aa_alignment_map.get(int(ntRefIndex/3)-1, False)
                         if aa == False:
                             aa_alignment_map.update({int(ntRefIndex/3)-1:(thirdAlignment,)})
@@ -192,13 +198,27 @@ def aaAlignment(nt_alignment_map):
                             temp.append(thirdAlignment)
                             aa = tuple(temp)
                             aa_alignment_map.update({int(ntRefIndex/3)-1:aa})
-                    inbetween = thirdAlignment
+                        inbetween = thirdAlignment
+                        if hasDeletion:
+                            aa = aa_alignment_map.get(int(ntRefIndex/3), False)
+                            if aa == False:
+                                aa_alignment_map.update({int(ntRefIndex/3):(thirdAlignment + 1,)})
+                            else:
+                                temp = list(aa)
+                                temp.append(thirdAlignment + 1)
+                                aa = tuple(temp)
+                                aa_alignment_map.update({int(ntRefIndex/3)-1:aa})
+                            inbetween = thirdAlignment + 1
+                    else:
+                        inbetween = thirdAlignment
                 firstAlignment = aaQueryIndex
         elif (ntRefIndex % 3) == 1:
             if nt[0] == "I":
                 ntQueryIndex += 1
                 if (ntQueryIndex % 3) == 0: #1I2M2M1I
-                    if inbetween == None:
+                    if prevAaShift == 0:
+                        inbetween = None
+                    elif inbetween == None:
                         aa = aa_alignment_map.get(int(ntRefIndex/3)-1, False)
                         if aa == False:
                             aa_alignment_map.update({int(ntRefIndex/3)-1:(thirdAlignment,)})
@@ -207,9 +227,12 @@ def aaAlignment(nt_alignment_map):
                             temp.append(thirdAlignment)
                             aa = tuple(temp)
                             aa_alignment_map.update({int(ntRefIndex/3)-1:aa})
-                    inbetween = thirdAlignment
+                        inbetween = thirdAlignment
+                    else:
+                        inbetween = thirdAlignment
             elif nt[0] == "D":
                 ntRefIndex += 1
+                hasDeletion = True
             else: #nt[0] == "M"
                 ntQueryIndex += 1
                 ntRefIndex += 1
@@ -218,7 +241,9 @@ def aaAlignment(nt_alignment_map):
                 if prevAaShift == None:
                     prevAaShift = nt[4]
                 if (ntQueryIndex % 3) == 0: #1I2M3M
-                    if inbetween == None:
+                    if (prevAaShift == 0):
+                        inbetween = None
+                    elif inbetween == None:
                         aa = aa_alignment_map.get(int(ntRefIndex/3)-1, False)
                         if aa == False:
                             aa_alignment_map.update({int(ntRefIndex/3)-1:(thirdAlignment,)})
@@ -227,11 +252,24 @@ def aaAlignment(nt_alignment_map):
                             temp.append(thirdAlignment)
                             aa = tuple(temp)
                             aa_alignment_map.update({int(ntRefIndex/3)-1:aa})
-                    inbetween = thirdAlignment
+                        inbetween = thirdAlignment
+                        if hasDeletion:
+                            aa = aa_alignment_map.get(int(ntRefIndex/3), False)
+                            if aa == False:
+                                aa_alignment_map.update({int(ntRefIndex/3):(thirdAlignment + 1,)})
+                            else:
+                                temp = list(aa)
+                                temp.append(thirdAlignment + 1)
+                                aa = tuple(temp)
+                                aa_alignment_map.update({int(ntRefIndex/3)-1:aa})
+                            inbetween = thirdAlignment + 1
+                    else:
+                        inbetween = thirdAlignment
         else: #(ntRefIndex % 3) == 2
             if nt[0] == "I":
                 ntQueryIndex += 1
             elif nt[0] == "D":
+                hasDeletion = True
                 ntRefIndex += 1
                 if firstAlignment != None:
                     if (prevAaShift % 3) == 0: #1M2D, 2M1D
@@ -247,6 +285,9 @@ def aaAlignment(nt_alignment_map):
                             inbetween = None
                         else:
                             aa_alignment_map.update({int(nt[2]/3):('-',)})
+                    else:
+                        aa_alignment_map.update({int(nt[2]/3):('-',)})
+                        inbetween = '-'
                 prevAaShift = None
                 firstAlignment = None
             else: #nt[0] == "M"
@@ -277,8 +318,19 @@ def aaAlignment(nt_alignment_map):
                         else:
                             aa_alignment_map.update({int(nt[2]/3):(firstAlignment,)})
                 elif (nt[4] % 3) == 0: #2D/1I...1M1D1M
-                    if inbetween != None:
-                        aa_alignment_map.update({int(nt[2]/3):(inbetween, thirdAlignment,)})
+                    if (inbetween != None) && (inbetween != thirdAlignment):
+                        if hasDeletion:
+                            aa = aa_alignment_map.get(int(nt[2]/3) - 1, False)
+                            if aa == False:
+                                aa_alignment_map.update({int(nt[2]/3) - 1:(inbetween,)})
+                            else:
+                                temp = list(aa)
+                                temp.append(inbetwenn)
+                                aa = tuple(temp)
+                                aa_alignment_map.update({int(nt[2]/3) - 1:aa})
+                            aa_alignment_map.update({int(nt[2]/3):(thirdAlignment, )})
+                        else:
+                            aa_alignment_map.update({int(nt[2]/3):(inbetween, thirdAlignment,)})
                         inbetween = None
                     else:
                         aa_alignment_map.update({int(nt[2]/3):(thirdAlignment,)})  
@@ -397,8 +449,8 @@ for line in SNPinfo:
         isSequence = True
 SNPinfo.close()
 output = open("Test/insertion_and_deletion_tests_output.txt", "w")
-fileName = ["Insertion1", "Insertion3", "Insertion4_1", "Insertion4_2", "Insertion2_1", "Insertion2_2", "Insertion2_3", "Insertion5", "Deletion1", "Deletion2", "Insertion6", "Deletion3_1", "Deletion3_2", "InsertionDeletion1_1", "InsertionDeletion1_2", "InsertionDeletion2_1", "InsertionDeletion2_2", "InsertionDeletion3", "InsertionDeletion4", "Deletion4", "Deletion5", "Test", "Test2", "P_BPW_50_2_filtered"]
-outputName = ["Test/test_output.txt", "Test/test2_output.txt", "Test/P_BPW_50_2_filtered_output.txt"]
+fileName = ["Insertion1", "Insertion3", "Insertion4_1", "Insertion4_2", "Insertion2_1", "Insertion2_2", "Insertion2_3", "Insertion5", "Deletion1", "Deletion2", "Insertion6", "Deletion3_1", "Deletion3_2", "InsertionDeletion1_1", "InsertionDeletion1_2", "InsertionDeletion2_1", "InsertionDeletion2_2", "InsertionDeletion3", "InsertionDeletion4", "Deletion4", "Deletion5"]#, "Test", "Test2", "P_BPW_50_2_filtered"]
+#outputName = ["Test/test_output.txt", "Test/test2_output.txt", "Test/P_BPW_50_2_filtered_output.txt"]
 fileNameIndex = 0
 outputNameIndex = 0 
 for name in fileName:
@@ -420,9 +472,9 @@ for name in fileName:
         output.write(snpInfoPrint(name, str(argInfoDict[name][0]), str(argInfoDict[name][1])))
     argInfoDict = {
     }
-    if (fileNameIndex >= 20) & (fileNameIndex < 23) :
-        output.close()
-        output = open(outputName[outputNameIndex], "w")
-        outputNameIndex += 1
-    fileNameIndex += 1
+    #if (fileNameIndex >= 20) & (fileNameIndex < 23) :
+    #    output.close()
+    #    output = open(outputName[outputNameIndex], "w")
+    #    outputNameIndex += 1
+    #fileNameIndex += 1
 output.close()
