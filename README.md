@@ -10,10 +10,6 @@ Collection of csv files that contain the count matrix to all **AMRPlusPlus** hit
 ### *extracted_SNP_files* Folder
 All SNP information extracted from **MetaMARC** in `MetamarcInfoExtraction` and **KARGVA** in `KargvaInfoExtracion`.
 
-### *fluro_filter* Folder
-Contains the `fluro_filter` program that filters SAM files for Fluoroquinolones ARGs.  
-Is currently deprecated.
-
 ### *InfoExtraction* Folder
 Contains the following two folders:
 
