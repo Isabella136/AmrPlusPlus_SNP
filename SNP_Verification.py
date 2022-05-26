@@ -318,14 +318,14 @@ def aaAlignment(nt_alignment_map):
                         else:
                             aa_alignment_map.update({int(nt[2]/3):(firstAlignment,)})
                 elif (nt[4] % 3) == 0: #2D/1I...1M1D1M
-                    if (inbetween != None) && (inbetween != thirdAlignment):
+                    if (inbetween != None) & (inbetween != thirdAlignment):
                         if hasDeletion:
                             aa = aa_alignment_map.get(int(nt[2]/3) - 1, False)
                             if aa == False:
                                 aa_alignment_map.update({int(nt[2]/3) - 1:(inbetween,)})
                             else:
                                 temp = list(aa)
-                                temp.append(inbetwenn)
+                                temp.append(inbetween)
                                 aa = tuple(temp)
                                 aa_alignment_map.update({int(nt[2]/3) - 1:aa})
                             aa_alignment_map.update({int(nt[2]/3):(thirdAlignment, )})
