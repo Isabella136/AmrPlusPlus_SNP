@@ -18,6 +18,7 @@ from SNP_Verification.Gene import Gene
 from SNP_Verification.SNP import SNP
 from SNP_Verification import dnaTranslate
 import pysam
+import sys, getopt
 
 mt_and_wt = True #used in case of insertion leading to presence of both mt and wt; if true, mark as resistant; if false, mark as susceptible
 
@@ -134,8 +135,6 @@ def mapCigarToAlignment(cigar, aligned_pair):
         poped = alignment_map.pop()
         if poped[0] != "D" : queryLength -= 1
     return alignment_map
-
-
 
 def aaAlignment(nt_alignment_map):
     aa_alignment_map = {
@@ -403,6 +402,7 @@ def verifyMultiple(aa_alignment_map, gene, name, aaQuerySequence):
                     resBool = False
         if not(resBool):
             disregard(name)
+
 def verify(read, gene):
     name = gene.getName()
     cigarOpCount = read.get_cigar_stats()[0].tolist()
@@ -439,15 +439,52 @@ def verify(read, gene):
                 for mt in snp[2]: 
                     for queryIndex in tuple(aa_alignment_map[snp[1]-1]):
                         if queryIndex == '-': continue
-                        if mt == aaQuerySequence[queryIndex]:
-                            res = 1
-                            break
+                        if mt_and_wt:
+                            if mt == aaQuerySequence[queryIndex]:
+                                res = 1
+                                break
+                        else:
+                            if mt == aaQuerySequence[queryIndex]:
+                                res = 1
+                            elif snp[0] == aaQuerySequence[queryIndex]:
+                                res = -1
+                                break
                     if res == 1: break
+                    elif res == -1:
+                        res = 0
+                        break
                 if res == 1: break
             if res == 0 : #take care of Mult
                 verifyMultiple(aa_alignment_map, gene, name, aaQuerySequence)
             else: resistant(name, res)
 
+inputFile = []
+outputFolder = ""
+try:
+    options, args = getopt.getopt(sys.argv[1:], "hwci:o:", ["mt_and_wt="])
+except getopt.GetoptError:
+    print("SNP_Verification.py -i <inputFile> -o <outputFolder>")
+    sys.exit(-1)
+for opt, arg in options:
+    if opt == "-h":
+        print("List of arguments:\n\n\n-c: conditions for redistribution\n-h: help\n-i: input file\n-o: output folder\n-w: warranty disclaimer\n\n--mt_and_wt: true by default, used in case of insertion leading to presence of both mt and wt; if true, mark as resistant; if false, mark as susceptible\n\n")
+        sys.exit()
+    elif opt == "-c":
+        print("\n\nAMRPlusPlus_SNP_Verification\nCopyright (C) 2022  Nathalie Bonin\n\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\n")
+        sys.exit()
+    elif opt == "-w":
+        print("\n\nAMRPlusPlus_SNP_Verification\nCopyright (C) 2022  Nathalie Bonin\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\n")
+        sys.exit()
+    elif opt == "-i":
+        inputFile.append(arg)
+    elif opt == "-o":
+        outputFolder = arg
+    elif opt == "--mt_and_wt":
+        if arg == "False":
+            mt_and_wt = False
+if len(inputFile) == 0:
+    print("SNP_Verification.py -i <inputFile> -o <outputFolder>")
+    sys.exit(-1)
 
 SNPinfo = open("extracted_SNP_files/SNPinfo.fasta", "rt")
 isSequence = False
@@ -467,17 +504,10 @@ for line in SNPinfo:
         snp = line[temp+1:len(line)-1]
         isSequence = True
 SNPinfo.close()
-output = open("Test/insertion_and_deletion_tests_output.txt", "w")
-fileName = ["Insertion1", "Insertion3", "Insertion4_1", "Insertion4_2", "Insertion2_1", "Insertion2_2", "Insertion2_3", "Insertion5", "Deletion1", "Deletion2", "Insertion6", "Deletion3_1", "Deletion3_2", "InsertionDeletion1_1", "InsertionDeletion1_2", "InsertionDeletion2_1", "InsertionDeletion2_2", "InsertionDeletion3", "InsertionDeletion4", "Deletion4", "Deletion5", "Test", "Test2", "P_BPW_50_2_filtered"]
-outputName = ["Test/test_output.txt", "Test/test2_output.txt", "Test/P_BPW_50_2_filtered_output.txt"]
-fileNameIndex = 0
-outputNameIndex = 0 
-for name in fileName:
-    output.write(name + "\n")
-    pysam.sort("-o", "Test/Sorted_" + name + ".sam", "Test/" + name + ".sam")
-    
-    samfile = pysam.AlignmentFile("Test/Sorted_" + name + ".sam", "r")
-
+for name in inputFile:
+    output = open(outputFolder + "/" + name[name.rfind("/")+1:] + ".txt", "w")
+    pysam.sort("-o", outputFolder + "/Sorted_" + name[name.rfind("/")+1:] + ".sam", name)
+    samfile = pysam.AlignmentFile(outputFolder + "/Sorted_" + name[name.rfind("/")+1:], "r")
     iter = samfile.fetch()
     for read in iter:
         gene = geneDict.get(read.reference_name, False)
@@ -491,9 +521,5 @@ for name in fileName:
         output.write(snpInfoPrint(name, str(argInfoDict[name][0]), str(argInfoDict[name][1])))
     argInfoDict = {
     }
-    if (fileNameIndex >= 20) & (fileNameIndex < 23) :
-        output.close()
-        output = open(outputName[outputNameIndex], "w")
-        outputNameIndex += 1
-    fileNameIndex += 1
-output.close()
+    output.close()
+sys.exit(0)
