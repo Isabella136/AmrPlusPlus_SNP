@@ -191,7 +191,7 @@ def aaAlignment(nt_alignment_map):
             aa_alignment_map.update({index:aa})
     for nt in nt_alignment_map:
         if (ntQueryIndex % 3) == 0:
-            if deleteCount > 0: #1/2D3M
+            if deleteCount == 0: #1/2D3M
                 hasDeletion = False
         if (ntRefIndex % 3) == 0:
             if nt[0] == "I":
@@ -286,9 +286,7 @@ def aaAlignment(nt_alignment_map):
                 ntRefIndex += 1
                 if firstAlignment != None:
                     if (prevAaShift % 3) == 0: #1M2D, 2M1D
-                        inbetween = thirdAlignment
-                        addToMapDeletion(int(nt[2]/3), thirdAlignment)
-                        inbetween = None
+                        addToMap(int(nt[2]/3), thirdAlignment)
                 else: #3D
                     addToMap(int(nt[2]/3), '-')
                     if (prevAaShift % 3) != 0:
@@ -369,25 +367,40 @@ def verifyMultiple(aa_alignment_map, gene, name, aaQuerySequence):
         resBool = True
         for snpMult in SNPInfo:
             for snp in snpMult:
+                #codons that count for one deletion mutation but aren't fully deleted in read
+                #if >1, snp is disregarded
+                codonNotFullyDeleted = 0 
                 if (aa_alignment_map.get(snp[1]-1,False)) == False:
                     resBool = False
-                    continue
+                    break
                 for mt in snp[2]: 
+                    delMut = 0
+                    misMut = 0
+                    actualResBool = False
                     for queryIndex in tuple(aa_alignment_map[snp[1]-1]):
                         if queryIndex == '-':
                             if mt == queryIndex:
-                                resBool = True
-                                break
+                                delMut += 1
+                                actualResBool = True
+                                continue
                         elif mt == aaQuerySequence[queryIndex]:
-                            resBool = True
+                            actualResBool = True
                             break
                         else:
+                            misMut += 1
                             resBool = False
-                    if resBool: break
+                    if (delMut > 0) & (misMut > 0):
+                        codonNotFullyDeleted += 1
+                    if actualResBool: 
+                        resBool = actualResBool
+                        break
                 if not(resBool): break
             if resBool: 
-                resistant(name, 1)
-                break
+                if codonNotFullyDeleted < 2:
+                    resistant(name, 1)
+                    break
+                else:
+                    resBool = False
         if not(resBool):
             disregard(name)
 def verify(read, gene):
@@ -455,8 +468,8 @@ for line in SNPinfo:
         isSequence = True
 SNPinfo.close()
 output = open("Test/insertion_and_deletion_tests_output.txt", "w")
-fileName = ["Insertion1", "Insertion3", "Insertion4_1", "Insertion4_2", "Insertion2_1", "Insertion2_2", "Insertion2_3", "Insertion5", "Deletion1", "Deletion2", "Insertion6", "Deletion3_1", "Deletion3_2", "InsertionDeletion1_1", "InsertionDeletion1_2", "InsertionDeletion2_1", "InsertionDeletion2_2", "InsertionDeletion3", "InsertionDeletion4", "Deletion4", "Deletion5"]#, "Test", "Test2", "P_BPW_50_2_filtered"]
-#outputName = ["Test/test_output.txt", "Test/test2_output.txt", "Test/P_BPW_50_2_filtered_output.txt"]
+fileName = ["Insertion1", "Insertion3", "Insertion4_1", "Insertion4_2", "Insertion2_1", "Insertion2_2", "Insertion2_3", "Insertion5", "Deletion1", "Deletion2", "Insertion6", "Deletion3_1", "Deletion3_2", "InsertionDeletion1_1", "InsertionDeletion1_2", "InsertionDeletion2_1", "InsertionDeletion2_2", "InsertionDeletion3", "InsertionDeletion4", "Deletion4", "Deletion5", "Test", "Test2", "P_BPW_50_2_filtered"]
+outputName = ["Test/test_output.txt", "Test/test2_output.txt", "Test/P_BPW_50_2_filtered_output.txt"]
 fileNameIndex = 0
 outputNameIndex = 0 
 for name in fileName:
@@ -478,9 +491,9 @@ for name in fileName:
         output.write(snpInfoPrint(name, str(argInfoDict[name][0]), str(argInfoDict[name][1])))
     argInfoDict = {
     }
-    #if (fileNameIndex >= 20) & (fileNameIndex < 23) :
-    #    output.close()
-    #    output = open(outputName[outputNameIndex], "w")
-    #    outputNameIndex += 1
-    #fileNameIndex += 1
+    if (fileNameIndex >= 20) & (fileNameIndex < 23) :
+        output.close()
+        output = open(outputName[outputNameIndex], "w")
+        outputNameIndex += 1
+    fileNameIndex += 1
 output.close()
