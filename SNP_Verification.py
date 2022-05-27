@@ -141,16 +141,6 @@ def aaAlignment(nt_alignment_map):
     aa_alignment_map = {
 
     }
-    def addToMapDeletion():
-    def addToMapInbetween(index, toAdd):
-        aa = aa_alignment_map.get(index, False)
-        if aa == False:
-            aa_alignment_map.update({index:(toAdd,)})
-        else:
-            temp = list(aa)
-            temp.append(toAdd)
-            aa = tuple(temp)
-            aa_alignment_map.update({index:aa})
     ntRefIndex = nt_alignment_map[0][2]
     i = 1
     while ntRefIndex == None:
@@ -166,6 +156,39 @@ def aaAlignment(nt_alignment_map):
     inbetween = None
     deleteCount = 0
     hasDeletion = False
+    def addToMapDeletion(index, toAdd):
+        aa = aa_alignment_map.get(index-1, False)
+        if aa == False:
+            aa_alignment_map.update({index-1:(inbetween, )})
+        else:
+            temp = list(aa)
+            temp.append(inbetween)
+            aa = tuple(temp)
+            aa_alignment_map.update({index-1:aa})
+        addToMap(index, toAdd)
+    def addToMapInbetween(index, toAdd):
+        aa = aa_alignment_map.get(index, False)
+        if aa == False:
+            if (inbetween != None):
+                aa_alignment_map.update({index:(inbetween, toAdd, )})
+            else:
+                aa_alignment_map.update({index:(toAdd,)})
+        else:
+            temp = list(aa)
+            if (inbetween != None):
+                temp.append(inbetween)
+            temp.append(toAdd)
+            aa = tuple(temp)
+            aa_alignment_map.update({index:aa})
+    def addToMap(index, toAdd):
+        aa = aa_alignment_map.get(index, False)
+        if aa == False:
+            aa_alignment_map.update({index:(toAdd,)})
+        else:
+            temp = list(aa)
+            temp.append(toAdd)
+            aa = tuple(temp)
+            aa_alignment_map.update({index:aa})
     for nt in nt_alignment_map:
         if (ntQueryIndex % 3) == 0:
             if deleteCount > 0: #1/2D3M
@@ -177,22 +200,10 @@ def aaAlignment(nt_alignment_map):
                 if (nt[3] % 3) == 0:  
                     if insertCount == 3: #3I
                         if inbetween == None:
-                            addToMapInbetween(int(ntRefIndex/3)-1, thirdAlignment)
+                            addToMap(int(ntRefIndex/3)-1, thirdAlignment)
                         inbetween = thirdAlignment
                     else: #1I...1M2I or 2I...2M1I
-                        aa = aa_alignment_map.get(int(ntRefIndex/3)-1, False)
-                        if aa == False:
-                            if (inbetween != None):
-                                aa_alignment_map.update({int(ntRefIndex/3)-1:(inbetween, thirdAlignment, )})
-                            else:
-                                aa_alignment_map.update({int(ntRefIndex/3)-1:(thirdAlignment,)})
-                        else:
-                            temp = list(aa)
-                            if (inbetween != None):
-                                temp.append(inbetween)
-                            temp.append(thirdAlignment)
-                            aa = tuple(temp)
-                            aa_alignment_map.update({int(ntRefIndex/3)-1:aa})
+                        addToMapInbetween(int(ntRefIndex/3)-1, thirdAlignment)
                         inbetween = None
                     insertCount = 0
                 if prevAaShift == None:
@@ -205,7 +216,7 @@ def aaAlignment(nt_alignment_map):
                 insertCount = 0
                 deleteCount += 1
                 if deleteCount == 3:
-                    addToMapInbetween(int(ntRefIndex/3)-1, '-')
+                    addToMap(int(ntRefIndex/3)-1, '-')
                     inbetween = '-'
                 hasDeletion = True
             else: #nt[0] == "M"
@@ -220,9 +231,9 @@ def aaAlignment(nt_alignment_map):
                         inbetween = None
                     elif inbetween == None:
                         if not(hasDeletion):
-                            addToMapInbetween(int(ntRefIndex/3)-1, thirdAlignment)
+                            addToMap(int(ntRefIndex/3)-1, thirdAlignment)
                         if nt[3] < 0:
-                            addToMapInbetween(int(ntRefIndex/3), thirdAlignment)
+                            addToMap(int(ntRefIndex/3), thirdAlignment)
                         inbetween = thirdAlignment
                     else:
                         inbetween = thirdAlignment
@@ -235,7 +246,7 @@ def aaAlignment(nt_alignment_map):
                     if prevAaShift == 0:
                         inbetween = None
                     elif inbetween == None:
-                        addToMapInbetween(int(ntRefIndex/3)-1, thirdAlignment)
+                        addToMap(int(ntRefIndex/3)-1, thirdAlignment)
                         inbetween = thirdAlignment
                     else:
                         inbetween = thirdAlignment
@@ -243,7 +254,7 @@ def aaAlignment(nt_alignment_map):
                 ntRefIndex += 1
                 deleteCount += 1
                 if deleteCount == 3:
-                    addToMapInbetween(int(ntRefIndex/3)-1, '-')
+                    addToMap(int(ntRefIndex/3)-1, '-')
                     inbetween = '-'
                 hasDeletion = True
             else: #nt[0] == "M"
@@ -259,9 +270,9 @@ def aaAlignment(nt_alignment_map):
                         inbetween = None
                     elif inbetween == None:
                         if not(hasDeletion):
-                            addToMapInbetween(int(ntRefIndex/3)-1, thirdAlignment)
+                            addToMap(int(ntRefIndex/3)-1, thirdAlignment)
                         if nt[3] < 0:
-                            addToMapInbetween(int(ntRefIndex/3), thirdAlignment)
+                            addToMap(int(ntRefIndex/3), thirdAlignment)
                         inbetween = thirdAlignment
                     else:
                         inbetween = thirdAlignment
@@ -275,20 +286,12 @@ def aaAlignment(nt_alignment_map):
                 ntRefIndex += 1
                 if firstAlignment != None:
                     if (prevAaShift % 3) == 0: #1M2D, 2M1D
-                        if inbetween != None:
-                            aa_alignment_map.update({int(nt[2]/3):(inbetween, thirdAlignment,)})
-                            inbetween = None
-                        else:
-                            aa_alignment_map.update({int(nt[2]/3):(thirdAlignment,)})
+                        inbetween = thirdAlignment
+                        addToMapDeletion(int(nt[2]/3), thirdAlignment)
+                        inbetween = None
                 else: #3D
-                    if (prevAaShift % 3) == 0:
-                        if inbetween != None:
-                            aa_alignment_map.update({int(nt[2]/3):('-', inbetween, )})
-                            inbetween = None
-                        else:
-                            aa_alignment_map.update({int(nt[2]/3):('-',)})
-                    else:
-                        aa_alignment_map.update({int(nt[2]/3):('-',)})
+                    addToMap(int(nt[2]/3), '-')
+                    if (prevAaShift % 3) != 0:
                         inbetween = '-'
                 prevAaShift = None
                 firstAlignment = None
@@ -302,24 +305,18 @@ def aaAlignment(nt_alignment_map):
                     prevAaShift = nt[4]
                 if firstAlignment == thirdAlignment:
                     if ((prevAaShift % 3) == 0) | ((nt[4] % 3) == 0): #3M, 1D1I2M, 1D/2I...2D1M, 2D/1I...1D2M, 2D3M, 1D3M
-                        if (inbetween != None) & (inbetween != thirdAlignment):
+                        if inbetween != None:
                             if hasDeletion:
                                 if inbetween != '-':
                                     inbetween = thirdAlignment
-                                aa = aa_alignment_map.get(int(nt[2]/3) - 1, False)
-                                if aa == False:
-                                    aa_alignment_map.update({int(nt[2]/3) - 1:(inbetween,)})
+                                    addToMapDeletion(int(nt[2]/3), thirdAlignment)
                                 else:
-                                    temp = list(aa)
-                                    temp.append(inbetween)
-                                    aa = tuple(temp)
-                                    aa_alignment_map.update({int(nt[2]/3) - 1:aa})
-                                aa_alignment_map.update({int(nt[2]/3):(thirdAlignment, )})
+                                    addToMapInbetween(int(nt[2]/3), thirdAlignment)
                             else:
-                                aa_alignment_map.update({int(nt[2]/3):(inbetween, thirdAlignment,)})
+                                addToMapInbetween(int(nt[2]/3), thirdAlignment)
                             inbetween = None
                         else:
-                            aa_alignment_map.update({int(nt[2]/3):(thirdAlignment,)})
+                            addToMap(int(nt[2]/3), thirdAlignment)
                 elif (prevAaShift % 3) == 0:
                     if (nt[4] % 3) == 0: #3Mand3xI
                         if inbetween != None:
@@ -328,30 +325,21 @@ def aaAlignment(nt_alignment_map):
                         else:
                             aa_alignment_map.update({int(nt[2]/3):(firstAlignment, thirdAlignment)})
                     else: #1/2Iand3M
-                        if inbetween != None:
-                            aa_alignment_map.update({int(nt[2]/3):(inbetween, firstAlignment,)})
-                            inbetween = None
-                        else:
-                            aa_alignment_map.update({int(nt[2]/3):(firstAlignment,)})
+                        addToMapInbetween(int(nt[2]/3), firstAlignment)
+                        inbetween = None
                 elif (nt[4] % 3) == 0: #2D/1I...1M1D1M
-                    if (inbetween != None) & (inbetween != thirdAlignment):
+                    if inbetween != None:
                         if hasDeletion:
                             if inbetween != '-':
                                 inbetween = thirdAlignment
-                            aa = aa_alignment_map.get(int(nt[2]/3) - 1, False)
-                            if aa == False:
-                                aa_alignment_map.update({int(nt[2]/3) - 1:(inbetween,)})
+                                addToMapDeletion(int(nt[2]/3), thirdAlignment)
                             else:
-                                temp = list(aa)
-                                temp.append(inbetween)
-                                aa = tuple(temp)
-                                aa_alignment_map.update({int(nt[2]/3) - 1:aa})
-                            aa_alignment_map.update({int(nt[2]/3):(thirdAlignment, )})
+                                addToMapInbetween(int(nt[2]/3), thirdAlignment)
                         else:
-                            aa_alignment_map.update({int(nt[2]/3):(inbetween, thirdAlignment,)})
+                            addToMapInbetween(int(nt[2]/3), thirdAlignment)
                         inbetween = None
                     else:
-                        aa_alignment_map.update({int(nt[2]/3):(thirdAlignment,)})  
+                        addToMap(int(nt[2]/3), thirdAlignment)
                 prevAaShift = None
                 firstAlignment = None
         aaQueryIndex = int(ntQueryIndex / 3)
