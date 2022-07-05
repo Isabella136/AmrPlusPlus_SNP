@@ -1,11 +1,11 @@
 #pragma once
 #include <string>
 #include <list>
-#include "../ModelReg.h"
+#include "../ModelMissense.h"
 
 using namespace std;
 
-class MmarcModel: public virtual ModelReg {
+class MmarcModel: public virtual ModelMissense {
     private:
         int mmarc_codon_start;
         int mmarc_codon_end;
@@ -65,7 +65,7 @@ void MmarcModel::makeModel(string line)
 }
 string MmarcModel::condensedSNPinfo()
 {
-    string toReturn = "Reg:";
+    string toReturn = "Mis:";
     toReturn += wt_aa;
     toReturn += to_string(pos);
     for (int i = 0; i < mutant_aa.size(); i++)

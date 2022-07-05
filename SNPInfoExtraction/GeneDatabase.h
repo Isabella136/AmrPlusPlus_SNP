@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <unordered_map>
+#include <map>
 #include <iostream>
 #include "Gene.h"
 #include "MetamarcInfoExtraction/MmarcDatabase.h"
@@ -10,7 +11,7 @@ using namespace std;
 
 class GeneDatabase {
     private:
-        unordered_map<string, Gene*>  genes;
+        map<int, Gene*>  genes;
         unordered_map<string, list<Model*>> snpInfoDatabase;
     public:
         GeneDatabase(ModelDatabase& models);
@@ -42,7 +43,8 @@ void GeneDatabase::addGene(string _geneName, string _geneType, string _geneClass
             toAdd->addSNP((*iter)->condensedSNPinfo());
     }
     catch (const out_of_range & oor) {}
-    genes.emplace(_geneName, toAdd);
+    int megNumber = stoi(_geneName.substr(_geneName.find('_') + 1));
+    genes.emplace(megNumber, toAdd);
 }
 void GeneDatabase::print(string csv, string fasta)
 {

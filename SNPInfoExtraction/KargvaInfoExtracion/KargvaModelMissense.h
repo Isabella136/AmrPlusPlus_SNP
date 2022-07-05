@@ -1,49 +1,49 @@
 #pragma once
-#include "../ModelReg.h"
+#include "../ModelMissense.h"
 #include "KargvaModel.h"
 
 using namespace std;
 
-class KargvaModelReg : public ModelReg, public KargvaModel {
+class KargvaModelMissense : public ModelMissense, public KargvaModel {
 private:
     void makeModel(string line);
     bool includesAll(string line);
     bool includesMt(string snp);
 public:
-    KargvaModelReg(string line, string id, shared_ptr<CARD_database> dbSeq);
-    ~KargvaModelReg();
-    KargvaModelReg(const KargvaModelReg& other);
+    KargvaModelMissense(string line, string id, shared_ptr<CARD_database> dbSeq);
+    ~KargvaModelMissense();
+    KargvaModelMissense(const KargvaModelMissense& other);
     Model* Clone();
     void addToModel(string line);
     bool includes(string line);
     string condensedSNPinfo();
 };
 
-KargvaModelReg::KargvaModelReg(string line, string id, shared_ptr<CARD_database> dbSeq):KargvaModel(id, dbSeq) {
+KargvaModelMissense::KargvaModelMissense(string line, string id, shared_ptr<CARD_database> dbSeq):KargvaModel(id, dbSeq) {
     makeModel(line);
 }
-KargvaModelReg::KargvaModelReg(const KargvaModelReg& other) {
+KargvaModelMissense::KargvaModelMissense(const KargvaModelMissense& other) {
     this->wt_aa = other.wt_aa;
     this->pos = other.pos;
     this->mutant_aa = other.mutant_aa;
     this->cardID = other.cardID;
     this->databaseSequences = other.databaseSequences;
 }
-Model* KargvaModelReg::Clone() {
-    return new KargvaModelReg(*this);
+Model* KargvaModelMissense::Clone() {
+    return new KargvaModelMissense(*this);
 }
-KargvaModelReg::~KargvaModelReg() {}
-void KargvaModelReg::addToModel(string line) {
+KargvaModelMissense::~KargvaModelMissense() {}
+void KargvaModelMissense::addToModel(string line) {
     mutant_aa.push_back(line.at(line.size() - 1));
 }
-bool KargvaModelReg::includesMt(string snp) {
+bool KargvaModelMissense::includesMt(string snp) {
     for (auto iter = this->mutant_aa.begin(); iter != this->mutant_aa.end(); ++iter) {
         if (snp.at(snp.size() - 1) == *iter)
             return true;
     }
     return false;
 }
-bool KargvaModelReg::includesAll(string line) {
+bool KargvaModelMissense::includesAll(string line) {
     string temp = line;
     vector<string> snp;
     if (line.find(";") != -1) {
@@ -73,7 +73,7 @@ bool KargvaModelReg::includesAll(string line) {
     return false;
 
 }
-bool KargvaModelReg::includes(string line) {
+bool KargvaModelMissense::includes(string line) {
     if (line.find(";") != -1 || line.find(",") != -1)
         return this->includesAll(line);
     string temp = "";
@@ -81,8 +81,8 @@ bool KargvaModelReg::includes(string line) {
     temp += to_string(pos);
     return temp == line.substr(0, line.size() - 1);
 }
-string KargvaModelReg::condensedSNPinfo() {
-    string toReturn = "Reg:";
+string KargvaModelMissense::condensedSNPinfo() {
+    string toReturn = "Mis:";
     toReturn += wt_aa;
     toReturn += to_string(pos);
     for (int i = 0; i < mutant_aa.size(); i++)
@@ -90,7 +90,7 @@ string KargvaModelReg::condensedSNPinfo() {
     toReturn += addContext(pos - 2, pos, wt_aa);
     return toReturn;
 }
-void KargvaModelReg::makeModel(string line) {
+void KargvaModelMissense::makeModel(string line) {
     wt_aa = line.at(0);
     pos = stoi(line.substr(1, line.size() - 2));
     mutant_aa.push_back(line.at(line.size() - 1));

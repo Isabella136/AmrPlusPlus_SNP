@@ -38,7 +38,7 @@
     <ClInclude Include="KargvaInfoExtracion\KargvaDatabase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ModelReg.h">
+    <ClInclude Include="ModelMissense.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Model.h">
@@ -50,13 +50,7 @@
     <ClInclude Include="ModelNonsense.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="KargvaInfoExtracion\KargvaModelReg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="KargvaInfoExtracion\KargvaModelInsertion.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ModelInsertion.h">
+    <ClInclude Include="KargvaInfoExtracion\KargvaModelMissense.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="KargvaInfoExtracion\KargvaModelDeletion.h">
@@ -78,6 +72,54 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="KargvaInfoExtracion\MEG_6090MultipleModels.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelNucMissense.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelNucDeletion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MEGARes_database.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LiteratureInfoExtraction\LiteratureModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LiteratureInfoExtraction\LiteratureModelMissense.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LiteratureInfoExtraction\LiteratureModelDeletion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LiteratureInfoExtraction\LiteratureMultipleModels.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LiteratureInfoExtraction\LiteratureNucModelMissense.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LiteratureInfoExtraction\LiteratureNucModelDeletion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LiteratureInfoExtraction\LiteratureMultipleNucModels.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LiteratureInfoExtraction\LiteratureMustModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LiteratureInfoExtraction\LiteratureNucMustModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelMust.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelNucMust.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LiteratureInfoExtraction\LiteratureMustList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LiteratureInfoExtraction\LiteratureDatabase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

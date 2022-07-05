@@ -147,19 +147,33 @@
     <ClInclude Include="KargvaInfoExtracion\KargvaDatabase.h" />
     <ClInclude Include="KargvaInfoExtracion\KargvaModel.h" />
     <ClInclude Include="KargvaInfoExtracion\KargvaModelDeletion.h" />
-    <ClInclude Include="KargvaInfoExtracion\KargvaModelInsertion.h" />
     <ClInclude Include="KargvaInfoExtracion\KargvaModelNonsense.h" />
-    <ClInclude Include="KargvaInfoExtracion\KargvaModelReg.h" />
+    <ClInclude Include="KargvaInfoExtracion\KargvaModelMissense.h" />
     <ClInclude Include="KargvaInfoExtracion\KargvaMultipleModels.h" />
     <ClInclude Include="KargvaInfoExtracion\MEG_6090MultipleModels.h" />
+    <ClInclude Include="LiteratureInfoExtraction\LiteratureDatabase.h" />
+    <ClInclude Include="LiteratureInfoExtraction\LiteratureModel.h" />
+    <ClInclude Include="LiteratureInfoExtraction\LiteratureModelDeletion.h" />
+    <ClInclude Include="LiteratureInfoExtraction\LiteratureModelMissense.h" />
+    <ClInclude Include="LiteratureInfoExtraction\LiteratureMultipleModels.h" />
+    <ClInclude Include="LiteratureInfoExtraction\LiteratureMultipleNucModels.h" />
+    <ClInclude Include="LiteratureInfoExtraction\LiteratureMustList.h" />
+    <ClInclude Include="LiteratureInfoExtraction\LiteratureMustModel.h" />
+    <ClInclude Include="LiteratureInfoExtraction\LiteratureNucModelDeletion.h" />
+    <ClInclude Include="LiteratureInfoExtraction\LiteratureNucModelMissense.h" />
+    <ClInclude Include="LiteratureInfoExtraction\LiteratureNucMustModel.h" />
+    <ClInclude Include="MEGARes_database.h" />
     <ClInclude Include="MetamarcInfoExtraction\MmarcDatabase.h" />
     <ClInclude Include="MetamarcInfoExtraction\MmarcModel.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelDeletion.h" />
-    <ClInclude Include="ModelInsertion.h" />
+    <ClInclude Include="ModelMust.h" />
     <ClInclude Include="ModelNonsense.h" />
-    <ClInclude Include="ModelReg.h" />
+    <ClInclude Include="ModelMissense.h" />
     <ClInclude Include="ModelDatabase.h" />
+    <ClInclude Include="ModelNucDeletion.h" />
+    <ClInclude Include="ModelNucMissense.h" />
+    <ClInclude Include="ModelNucMust.h" />
     <ClInclude Include="ModelSingle.h" />
   </ItemGroup>
   <ItemGroup>

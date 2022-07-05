@@ -6,7 +6,7 @@
 #include <iostream>
 #include "KargvaModelDeletion.h"
 #include "KargvaModelNonsense.h"
-#include "KargvaModelReg.h"
+#include "KargvaModelMissense.h"
 #include "KargvaMultipleModels.h"
 #include "MEG_6090MultipleModels.h"
 #include "../ModelDatabase.h"
@@ -30,7 +30,7 @@ void KargvaDatabase::addSNP(string snp, string id, string meg) {
     if (snpInfoDatabase.find(meg) != snpInfoDatabase.end()) {
         if (snp.find("STOP") == -1) {
             for (auto iter = snpInfoDatabase.at(meg).begin(); iter != snpInfoDatabase.at(meg).end(); ++iter) {
-                KargvaModelReg* tempReg = dynamic_cast<KargvaModelReg*>(*iter);
+                KargvaModelMissense* tempReg = dynamic_cast<KargvaModelMissense*>(*iter);
                 if (tempReg != nullptr) {
                     included = tempReg->includes(snp);
                     if (included) {
@@ -52,7 +52,7 @@ void KargvaDatabase::addSNP(string snp, string id, string meg) {
             else if (snp.find("STOP") != -1)
                 model = new KargvaModelNonsense(snp, id, databaseSequences);
             else
-                model = new KargvaModelReg(snp, id, databaseSequences);
+                model = new KargvaModelMissense(snp, id, databaseSequences);
             snpInfoDatabase.at(meg).push_back(model->Clone());
             delete model;
         }
@@ -64,7 +64,7 @@ void KargvaDatabase::addSNP(string snp, string id, string meg) {
         else if (snp.find("STOP") != -1)
             model = new KargvaModelNonsense(snp, id, databaseSequences);
         else
-            model = new KargvaModelReg(snp, id, databaseSequences);
+            model = new KargvaModelMissense(snp, id, databaseSequences);
         list<Model*> temp;
         temp.push_back(model->Clone());
         snpInfoDatabase.emplace(meg, temp);

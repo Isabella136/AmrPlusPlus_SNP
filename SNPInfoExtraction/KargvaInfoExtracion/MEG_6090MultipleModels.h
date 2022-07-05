@@ -35,7 +35,7 @@ MEG_6090MultipleModels::MEG_6090MultipleModels(string line, string id, shared_pt
 		if (snp[i].at(snp[i].size() - 1) == '-')
 			model = new KargvaModelDeletion(snp[i], id, dbSeq);
 		else
-			model = new KargvaModelReg(snp[i], id, dbSeq);
+			model = new KargvaModelMissense(snp[i], id, dbSeq);
 		models.push_back(model);
 	}
 }

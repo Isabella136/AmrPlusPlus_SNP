@@ -1,17 +1,18 @@
-/*#pragma once
+#pragma once
 #include <string>
-#include <vector>
 #include "ModelSingle.h"
 
 using namespace std;
 
-class ModelInsertion : public virtual ModelSingle {
+class ModelMust : public virtual ModelSingle {
 protected:
-    vector<char> mutant_aa;
+    char wt_aa = 0;
     virtual void makeModel(string line) = 0;
 public:
-    ModelInsertion();
+    ModelMust();
+    virtual ~ModelMust();
     virtual string condensedSNPinfo() = 0;
 };
 
-ModelInsertion::ModelInsertion() {}*/
+ModelMust::ModelMust() {}
+ModelMust::~ModelMust() {}

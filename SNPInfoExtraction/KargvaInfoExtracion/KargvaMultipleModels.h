@@ -2,9 +2,8 @@
 #include <string>
 #include <vector>
 #include "KargvaModelDeletion.h"
-//#include "KargvaModelInsertion.h"
 #include "KargvaModelNonsense.h"
-#include "KargvaModelReg.h"
+#include "KargvaModelMissense.h"
 
 using namespace std;
 
@@ -36,7 +35,7 @@ KargvaMultipleModels::KargvaMultipleModels(string line, string id, shared_ptr<CA
 		if (snp[i].at(0) == '-')
 			model = new KargvaModelDeletion(snp[i], id, dbSeq);
 		else
-			model = new KargvaModelReg(snp[i], id, dbSeq);
+			model = new KargvaModelMissense(snp[i], id, dbSeq);
 		models.push_back(model);
 	}
 }

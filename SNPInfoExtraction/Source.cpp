@@ -22,6 +22,7 @@
 #include <unordered_map>
 #include "MetamarcInfoExtraction/MmarcDatabase.h"
 #include "KargvaInfoExtracion/KargvaDatabase.h"
+#include "LiteratureInfoExtraction/LiteratureDatabase.h"
 #include "GeneDatabase.h"
 
 using namespace std;
@@ -30,8 +31,10 @@ int main()
 {
 	MmarcDatabase mmarc;
 	KargvaDatabase kargva;
+	LiteratureDatabase literature;
 	GeneDatabase megaresSNP(mmarc);
 	megaresSNP.combineDatabases(kargva);
+	megaresSNP.combineDatabases(literature);
 	//GeneDatabase megaresSNP(kargva);
 	fstream database;
 	database.open("../MEGARes_database.fasta");
