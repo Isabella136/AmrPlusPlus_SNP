@@ -46,5 +46,5 @@ string LiteratureMustList::condensedSNPinfo() {
 		toReturn += iter->second->condensedSNPinfo();
 		toReturn += ";";
 	}
-	return toReturn;
+	return toReturn.substr(0,toReturn.length()-1);
 }

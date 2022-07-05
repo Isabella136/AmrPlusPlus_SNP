@@ -64,11 +64,15 @@ void LiteratureDatabase::SNPInfo() {
 					if (must2 == nullptr) {
 						must2 = new LiteratureMustList(headerAndSNP[i].substr(7), headerAndSNP[0], databaseSequences);
 					}
+					else
+						must2->addToList(headerAndSNP[i].substr(7), headerAndSNP[0], databaseSequences);
 				}
 				else {
 					if (must1 == nullptr) {
 						must1 = new LiteratureMustList(headerAndSNP[i].substr(5), headerAndSNP[0], databaseSequences);
 					}
+					else
+						must1->addToList(headerAndSNP[i].substr(5), headerAndSNP[0], databaseSequences);
 				}
 			}
 			else if (headerAndSNP[i].find("NucDel:") != -1)
