@@ -605,4 +605,10 @@ for name in inputFile:
     argInfoDict = {
     }
     output.close()
+    output = open(outputFolder + "/extraInformation_" + name[name.rfind("/")+1:] + ".txt", "w")
+    for name in intrinsicArgInfoDict:
+        output.write(name + ":\n")
+        for outputString in intrinsicArgInfoDict[name]:
+            output.write("\t" + outputString)
+    output.close()
 sys.exit(0)
