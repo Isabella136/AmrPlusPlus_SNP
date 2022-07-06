@@ -30,8 +30,26 @@ argInfoDict = {
 
 }
 
+intrinsicArgInfoDict = {}
+
+intrinsic = ["MEG_1628", "MEG_3979", "MEG_3983", "MEG_4279", "MEG_4280", "MEG_4281", "MEG_4282", "MEG_6092", "MEG_6093"]
+
 snpInfoPrint = lambda a, b, c : a + ": " + b + " resitant reads out of " + c + " total reads\n"
 
+def intrinsicResistant(name, queryName, missing, messageType, aaOrNu):
+    if name not in intrinsicArgInfoDict:
+        intrinsicArgInfoDict.update({name:list()})
+    if missing == None:
+        if messageType == None:
+            intrinsicArgInfoDict[name].append("Based on the sequence given, " + queryName + " contains the " + aaOrNu + " required for intrinsic resistance")
+        elif messageType == "All":
+            intrinsicArgInfoDict[name].append(queryName + " contains ALL " + aaOrNu + " required for intrinsic resistance")
+        else:
+            intrinsicArgInfoDict[name].append("The sequence given for " + queryName + " does not include the position where the " + aaOrNu + " required for intrinsic resistance are located")
+    elif messageType == "MEG_6093":
+        intrinsicArgInfoDict[name].append("The sequence given for " + queryName + " does not have the following amino acids required for resistance: " + str(missing[0]) + "; nor does it have this alternative group of amino acids that can also induce resistance: " + str(missing[1]))
+    else:
+        intrinsicArgInfoDict[name].append("The sequence given for " + queryName + " does not have the following " + aaOrNu + " required for intrinsic resistance:" + str(missing))
 def resistant(name, increment):
     argInfo = argInfoDict.get(name, False)
     if (argInfo == False):
@@ -58,7 +76,7 @@ def extendCigar(cigar):
                 count -= 1
     return toReturn
 
-def mapCigarToAlignment(cigar, aligned_pair):
+def mapCigarToAlignment(cigar, aligned_pair, rRna):
     alignment_map = []
     queryLength = 0
     refLength = 0
@@ -72,7 +90,7 @@ def mapCigarToAlignment(cigar, aligned_pair):
             index += 1
         elif (op == "M") | (op == "X") | (op == "="):
             prevShift = shift
-            if not(translatable):
+            if not(translatable) and not(rRna):
                 if splitIndex < 0:
                     splitIndex = aligned_pair[index][1] % 3
                 else:
@@ -86,6 +104,8 @@ def mapCigarToAlignment(cigar, aligned_pair):
                     alignment_map.append(("M", aligned_pair[index][0], aligned_pair[index][1], shift, prevShift))
                     index += 1
             else:
+                if not(translatable):
+                    translatable = True
                 queryLength += 1
                 refLength += 1
                 alignment_map.append(("M", aligned_pair[index][0], aligned_pair[index][1], shift, prevShift))
@@ -93,7 +113,7 @@ def mapCigarToAlignment(cigar, aligned_pair):
         elif op == "I":
             prevShift = shift
             shift += 1
-            if not(translatable):
+            if not(translatable) and not(rRna):
                 if splitIndex < 0:
                     temp = aligned_pair[index][1]
                     i = 1
@@ -111,13 +131,15 @@ def mapCigarToAlignment(cigar, aligned_pair):
                     alignment_map.append((op, aligned_pair[index][0], aligned_pair[index][1], shift, prevShift))
                     index += 1
             else:
+                if not(translatable):
+                    translatable = True
                 queryLength += 1
                 alignment_map.append((op, aligned_pair[index][0], aligned_pair[index][1], shift, prevShift))
                 index += 1
         elif op == "D":
             prevShift = shift
             shift -= 1
-            if not(translatable):
+            if not(translatable) and not(rRna):
                 if ((splitIndex % 3) != 2) and (splitIndex != -1):
                     index += 1
                 else:
@@ -126,15 +148,28 @@ def mapCigarToAlignment(cigar, aligned_pair):
                     alignment_map.append((op, aligned_pair[index][0], aligned_pair[index][1], shift, prevShift))
                     index += 1
             else:
+                if not(translatable):
+                    translatable = True
                 refLength += 1
                 alignment_map.append((op, aligned_pair[index][0], aligned_pair[index][1], shift, prevShift))
                 index += 1
         else:
             continue
-    while (queryLength % 3) != 0:
-        poped = alignment_map.pop()
-        if poped[0] != "D" : queryLength -= 1
+    if not(rRna):
+        while (queryLength % 3) != 0:
+            poped = alignment_map.pop()
+            if poped[0] != "D" : queryLength -= 1
     return alignment_map
+
+def transformNtAlignmentMap(nt_alignment_map):
+    new_nt_alignment_map = {}
+    ntQueryIndex = 0
+    for nt in nt_alignment_map:
+        if nt[0] == "I":
+            continue
+        new_nt_alignment_map.update({nt[2]:(ntQueryIndex,)})
+        ntQueryIndex += 1
+    return new_nt_alignment_map
 
 def aaAlignment(nt_alignment_map):
     aa_alignment_map = {
@@ -339,6 +374,7 @@ def aaAlignment(nt_alignment_map):
                         addToMap(int(nt[2]/3), thirdAlignment)
                 prevAaShift = None
                 firstAlignment = None
+
         aaQueryIndex = int(ntQueryIndex / 3)
         thirdAlignment = aaQueryIndex
         mapIndex += 1
@@ -405,58 +441,105 @@ def verifyMultiple(aa_alignment_map, gene, name, aaQuerySequence):
 
 def verify(read, gene):
     name = gene.getName()
-    cigarOpCount = read.get_cigar_stats()[0].tolist()
-    #if (insertions - deletions) %3 != 0, disregard
-    if ((cigarOpCount[1] - cigarOpCount[2]) % 3) != 0: disregard(name) 
-    else :
-        cigar = extendCigar(read.cigarstring)
-        aligned_pair = read.get_aligned_pairs()
-        nt_alignment_map = mapCigarToAlignment(cigar, aligned_pair)
-        querySeq = read.query_sequence
-        start = nt_alignment_map[0][1]
-        i = 1
-        while start == None:
-            start = nt_alignment_map[i][1]
-            i += 1
-        end = nt_alignment_map[len(nt_alignment_map)-1][1]
-        i = 2
-        while end == None:
-            end = nt_alignment_map[len(nt_alignment_map)-i][1]
-            i += 1
-        trimmedQuerySequence = querySeq[start:end+1]
+    rRna = gene.rRna()
+    if not(rRna):
+        cigarOpCount = read.get_cigar_stats()[0].tolist()
+        #if (insertions - deletions) %3 != 0, disregard
+        if ((cigarOpCount[1] - cigarOpCount[2]) % 3) != 0: 
+            disregard(name) 
+            return None
+    cigar = extendCigar(read.cigarstring)
+    aligned_pair = read.get_aligned_pairs()
+    nt_alignment_map = mapCigarToAlignment(cigar, aligned_pair, rRna)
+    querySeq = read.query_sequence
+    mapOfInterest = transformNtAlignmentMap(nt_alignment_map)
+    start = nt_alignment_map[0][1]
+    i = 1
+    while start == None:
+        start = nt_alignment_map[i][1]
+        i += 1
+    end = nt_alignment_map[len(nt_alignment_map)-1][1]
+    i = 2
+    while end == None:
+        end = nt_alignment_map[len(nt_alignment_map)-i][1]
+        i += 1
+    trimmedQuerySequence = querySeq[start:end+1]
+    seqOfInterest = trimmedQuerySequence
+    if not(rRna):
         aaQuerySequence = dnaTranslate(trimmedQuerySequence)
         stopLocation = aaQuerySequence.find('*') 
         aa_alignment_map = aaAlignment(nt_alignment_map)
         #if nonsense mutations
         if (stopLocation != -1) & ((stopLocation < len(aaQuerySequence)-1) | (read.reference_end < gene.ntSeqLength())): 
             verifyNonsense(stopLocation, aa_alignment_map, gene, name)
-        else :
-            SNPInfo = gene.condensedRegDelInfo()
-            res = 0
-            for snp in SNPInfo:
-                if (aa_alignment_map.get(snp[1]-1,False)) == False:
-                    continue
-                for mt in snp[2]: 
-                    for queryIndex in tuple(aa_alignment_map[snp[1]-1]):
-                        if queryIndex == '-': continue
-                        if mt_and_wt:
-                            if mt == aaQuerySequence[queryIndex]:
-                                res = 1
-                                break
-                        else:
-                            if mt == aaQuerySequence[queryIndex]:
-                                res = 1
-                            elif snp[0] == aaQuerySequence[queryIndex]:
-                                res = -1
-                                break
-                    if res == 1: break
-                    elif res == -1:
-                        res = 0
+        seqOfInterest = aaQuerySequence
+        mapOfInterest = aa_alignment_map
+    else :
+        begin = mapOfInterest[0][0]+1
+        end = mapOfInterest[list(mapOfInterest.keys())[-1]][0]+1
+        mustList, all = gene.getFirstMustBetweenParams(begin, end)
+        missingList = []
+        if mustList != None:
+            for must in mustList:
+                listInMissingList = []
+                hasAllMust = True
+                while(must.getPos() < end):
+                    hasMust = False
+                    for queryIndex in mapOfInterest[must.getPos()-1]:
+                        if queryIndex == None:
+                            continue
+                        if must.getWt() == seqOfInterest[queryIndex]:
+                            hasMust = True
+                            continue
+                    if not(hasMust): 
+                        hasAllMust = False
+                        listInMissingList.append(must.condensedInfo())
+                    must = must.getNext()
+                    if must == None:
+                        all = all & True
                         break
+                if hasAllMust:
+                    missingList = None
+                    break
+                elif name == "MEG_6093":
+                    missingList.append(listInMissingList)
+                else:
+                    missingList = listInMissingList
+            # def intrinsicResistant(name, queryName, missing, messageType, aaOrNu):
+            messageType = None
+            if name == "MEG_6093": messageType = "MEG_6093"
+            if all: messageType = "All"
+            intrinsicResistant(name, read.query_name, missingList, messageType, gene.aaOrNu())
+            if missingList == None:
+                resistant(name, 1)
+        elif name in intrinsic:
+            intrinsicResistant(name, read.query_name, None, "NA", gene.aaOrNu())
+        SNPInfo = gene.condensedRegDelInfo()
+        res = 0
+        for snp in SNPInfo:
+            if (mapOfInterest.get(snp[1]-1,False)) == False:
+                continue
+            for mt in snp[2]: 
+                for queryIndex in tuple(mapOfInterest[snp[1]-1]):
+                    if queryIndex == '-': continue
+                    if mt_and_wt:
+                        if mt == seqOfInterest[queryIndex]:
+                            res = 1
+                            break
+                    else:
+                        if mt == seqOfInterest[queryIndex]:
+                            res = 1
+                        elif snp[0] == seqOfInterest[queryIndex]:
+                            res = -1
+                            break
                 if res == 1: break
-            if res == 0 : #take care of Mult
-                verifyMultiple(aa_alignment_map, gene, name, aaQuerySequence)
-            else: resistant(name, res)
+                elif res == -1:
+                    res = 0
+                    break
+            if res == 1: break
+        if res == 0 : #take care of Mult
+            verifyMultiple(mapOfInterest, gene, name, seqOfInterest)
+        else: resistant(name, res)
 
 inputFile = []
 outputFolder = ""

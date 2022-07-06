@@ -1,4 +1,3 @@
-from multiprocessing.dummy import Value
 from . import Gene
 class SNP:
     def __init__(this, snpStringList, name):
@@ -105,7 +104,8 @@ class SNP:
             return False
     def isSnpValid(this):
         return this.posACT > -1
-class SNP_Reg(SNP):
+
+class SNP_Mis(SNP):
     def __init__(this, sequence, snpString, name):
         snpStringList = [snpString]
         SNP.__init__(this, snpStringList, name)
@@ -133,6 +133,7 @@ class SNP_Reg(SNP):
         except ValueError: 
             this.wtACT = sequence[i+5]
             this.posACT = i+5+1
+
 class SNP_Del(SNP):
     def __init__(this, sequence, snpString, name):
         snpStringList = [snpString]
@@ -149,6 +150,7 @@ class SNP_Del(SNP):
     def changeACT(this, sequence, i):
         this.wtACT = sequence[i+5]
         this.posACT = i+5+1
+
 class SNP_Non(SNP):
     def __init__(this, sequence, snpString, name):
         snpStringList = [snpString]
@@ -165,20 +167,75 @@ class SNP_Non(SNP):
     def changeACT(this, sequence, i):
         this.wtACT = sequence[i+5]
         this.posACT = i+5+1
+
+class Must(SNP):
+    def __init__(this, wtString, name):
+        tempList = [wtString]
+        SNP.__init__(this, tempList, name)
+        wtString = tempList[0]
+        wtString = wtString[1:]
+        SNP.establishContext(this, wtString)
+        this.changeACT()
+        this.next = None
+    def condensedInfo(this):
+        return (this.wtOG, this.posOG)
+    def changeACT(this):
+        this.wtACT = this.wtOG
+        this.posACT = this.posOG
+    def getPos(this):
+        return this.posOG
+    def defineNext(this,nextMust):
+        this.next = nextMust
+    def getNest(this):
+        return this.next
+    def getWt(this):
+        return this.wtOG
+
+class MustList:
+    def __init__(this, wtString, name):
+        this.listOfMust = {}
+        this.firstPos = None
+        this.aaOrNu = "amino acids"
+        if wtString[:3] == "Nuc":
+            this.aaOrNu = "nucleic acids"
+        while(wtString.find(";") != -1):
+            temp = wtString[wtString.fin(';')][4:]
+            wtToAdd = Must(temp, name)
+            if len(this.listOfMust) > 0:
+                this.listOfMust[-1].defineNext(wtToAdd)
+            else:
+                this.firstPos = wtToAdd.getPos()
+            this.listOfMust.update({wtToAdd.getPos():wtToAdd})
+            wtString = wtString[wtString.find(';')+1:]
+        wtToAdd = Must(wtString[4:], name)
+        this.listOfMust.update({wtToAdd.getPos():wtToAdd})
+        this.lastPos = wtToAdd.getPos()
+        if this.firstPos == None: this.firstPos = this.lastPos
+    def getFirstMustBetweenParams(this, begin, end):
+        if (end < this.firstPos) or (begin > this.lastPos):
+            return None
+        if (end >= this.firstPos) and (begin <= this.firstPos): return (this.listOfMust[this.firstPos], True)
+        for pos in this.listOfMust.keys():
+            if (begin <= pos) and (end >= pos):
+                return (this.listOfMust[pos], False)
+        return None
+    def aaOrNu(this):
+        return this.aaOrNu
+
 class SNP_Mult:
     def __init__(this, sequence, snpString, name):
         this.listOfSNPs = []
         while(snpString.find(';') != -1):
             temp = snpString[:snpString.find(';')]
-            if temp[:3] == "Reg":
-                snpToAdd = SNP_Reg(sequence, temp[4:], name)
+            if temp[:3] == "Mis":
+                snpToAdd = SNP_Mis(sequence, temp[4:], name)
                 this.listOfSNPs.append(snpToAdd)
             else: # temp[:3] == "Del"
                 snpToAdd = SNP_Del(sequence, temp[4:], name)
                 this.listOfSNPs.append(snpToAdd)
             snpString = snpString[snpString.find(';')+1:]
-        if snpString[:3] == "Reg":
-            snpToAdd = SNP_Reg(sequence, snpString[4:], name)
+        if snpString[:3] == "Mis":
+            snpToAdd = SNP_Mis(sequence, snpString[4:], name)
             this.listOfSNPs.append(snpToAdd)
         else: # snpString[:3] == "Del"
             snpToAdd = SNP_Del(sequence, snpString[4:], name)
