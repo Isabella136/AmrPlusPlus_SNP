@@ -6,7 +6,7 @@ class Gene:
         this.name = name[:name.find('|')]
         this.fullName = name + "|RequiresSNPConfirmation"
         this.sequence = sequence.upper()
-        if ("16S" in this.fullName) or ("23S" in this.fullName):
+        if "Nuc" in snps:
             this.translated = None
         else:
             this.translated = dnaTranslate(this.sequence)
@@ -33,14 +33,14 @@ class Gene:
                 snpToAdd = SNP.SNP_Mult(this.sequence, temp[8:], this.name)
                 if(snpToAdd.isSnpValid()):
                     this.listOfMultSNPs.append(snpToAdd)
-            elif temp[:3] == "Nuc":
-                snpToAdd = SNP.SNP_Mis(this.sequence, temp[4:], this.name)
-                if(snpToAdd.isSnpValid()):
-                    this.listOfMisSNPs.append(snpToAdd)
             elif temp[:6] == "NucDel":
                 snpToAdd = SNP.SNP_Del(this.sequence, temp[7:], this.name)
                 if(snpToAdd.isSnpValid()):
                     this.listOfDelSNPs.append(snpToAdd)
+            elif temp[:3] == "Nuc":
+                snpToAdd = SNP.SNP_Mis(this.sequence, temp[4:], this.name)
+                if(snpToAdd.isSnpValid()):
+                    this.listOfMisSNPs.append(snpToAdd)
             elif temp[:4] == "Must":
                 wtToAdd = SNP.MustList(temp[5:], this.name)
                 this.listsOfMusts.append(wtToAdd)
@@ -53,7 +53,7 @@ class Gene:
             snpToAdd = SNP.SNP_Mult(this.translated, snps[5:], this.name)
             if(snpToAdd.isSnpValid()):
                 this.listOfMultSNPs.append(snpToAdd)
-        elif snps[:3] == "Reg":
+        elif snps[:3] == "Mis":
             snpToAdd = SNP.SNP_Mis(this.translated, snps[4:], this.name)
             if(snpToAdd.isSnpValid()):
                 this.listOfMisSNPs.append(snpToAdd)
@@ -65,14 +65,14 @@ class Gene:
             snpToAdd = SNP.SNP_Mult(this.sequence, snps[8:], this.name)
             if(snpToAdd.isSnpValid()):
                 this.listOfMultSNPs.append(snpToAdd)
-        elif snps[:3] == "Nuc":
-            snpToAdd = SNP.SNP_Mis(this.sequence, snps[4:], this.name)
-            if(snpToAdd.isSnpValid()):
-                this.listOfMisSNPs.append(snpToAdd)
         elif snps[:6] == "NucDel":
             snpToAdd = SNP.SNP_Del(this.sequence, snps[7:], this.name)
             if(snpToAdd.isSnpValid()):
                 this.listOfDelSNPs.append(snpToAdd)
+        elif snps[:3] == "Nuc":
+            snpToAdd = SNP.SNP_Mis(this.sequence, snps[4:], this.name)
+            if(snpToAdd.isSnpValid()):
+                this.listOfMisSNPs.append(snpToAdd)
         elif snps[:4] == "Must":
             wtToAdd = SNP.MustList(snps[5:], this.name)
             this.listsOfMusts.append(wtToAdd)
@@ -119,6 +119,6 @@ class Gene:
     def ntSeqLength(this):
         return len(this.sequence)
     def aaOrNu(this):
-        return this.listsOfMusts[0].aaOrNu()
+        return this.listsOfMusts[0].returnAaOrNu()
     def rRna(this):
-        return ("16S" in this.fullName) or ("23S" in this.fullName)
+        return (("16S" in this.fullName) or ("23S" in this.fullName)) and (this.name != "MEG_6144") 

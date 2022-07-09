@@ -166,9 +166,12 @@ def transformNtAlignmentMap(nt_alignment_map):
     ntQueryIndex = 0
     for nt in nt_alignment_map:
         if nt[0] == "I":
-            continue
-        new_nt_alignment_map.update({nt[2]:(ntQueryIndex,)})
-        ntQueryIndex += 1
+            ntQueryIndex += 1 
+        elif nt[0] == "D":
+            new_nt_alignment_map.update({nt[2]:(None,)})   
+        else:
+            new_nt_alignment_map.update({nt[2]:(ntQueryIndex,)})
+            ntQueryIndex += 1    
     return new_nt_alignment_map
 
 def aaAlignment(nt_alignment_map):
@@ -474,72 +477,72 @@ def verify(read, gene):
             verifyNonsense(stopLocation, aa_alignment_map, gene, name)
         seqOfInterest = aaQuerySequence
         mapOfInterest = aa_alignment_map
-    else :
-        begin = mapOfInterest[0][0]+1
-        end = mapOfInterest[list(mapOfInterest.keys())[-1]][0]+1
-        mustList, all = gene.getFirstMustBetweenParams(begin, end)
-        missingList = []
-        if mustList != None:
-            for must in mustList:
-                listInMissingList = []
-                hasAllMust = True
-                while(must.getPos() < end):
-                    hasMust = False
-                    for queryIndex in mapOfInterest[must.getPos()-1]:
-                        if queryIndex == None:
-                            continue
-                        if must.getWt() == seqOfInterest[queryIndex]:
-                            hasMust = True
-                            continue
-                    if not(hasMust): 
-                        hasAllMust = False
-                        listInMissingList.append(must.condensedInfo())
-                    must = must.getNext()
-                    if must == None:
-                        all = all & True
+    
+    begin = list(mapOfInterest.keys())[0]+1
+    end = list(mapOfInterest.keys())[-1]+1
+    mustList = gene.getFirstMustBetweenParams(begin, end)
+    missingList = []
+    if mustList != None:
+        for must, all in mustList:
+            listInMissingList = []
+            hasAllMust = True
+            while(must.getPos() < end):
+                hasMust = False
+                for queryIndex in mapOfInterest[must.getPos()-1]:
+                    if queryIndex == None:
+                        continue
+                    if must.getWt() == seqOfInterest[queryIndex]:
+                        hasMust = True
+                        continue
+                if not(hasMust): 
+                    hasAllMust = False
+                    listInMissingList.append(must.condensedInfo())
+                must = must.getNext()
+                if must == None:
+                    all = all & True
+                    break
+            if hasAllMust:
+                missingList = None
+                break
+            elif name == "MEG_6093":
+                missingList.append(listInMissingList)
+            else:
+                missingList = listInMissingList
+        # def intrinsicResistant(name, queryName, missing, messageType, aaOrNu):
+        messageType = None
+        if name == "MEG_6093": messageType = "MEG_6093"
+        if all: messageType = "All"
+        intrinsicResistant(name, read.query_name, missingList, messageType, gene.aaOrNu())
+        if missingList == None:
+            resistant(name, 1)
+    elif name in intrinsic:
+        intrinsicResistant(name, read.query_name, None, "NA", gene.aaOrNu())
+    SNPInfo = gene.condensedRegDelInfo()
+    res = 0
+    for snp in SNPInfo:
+        if (mapOfInterest.get(snp[1]-1,False)) == False:
+            continue
+        for mt in snp[2]: 
+            for queryIndex in tuple(mapOfInterest[snp[1]-1]):
+                if queryIndex == '-': continue
+                if mt_and_wt:
+                    if mt == seqOfInterest[queryIndex]:
+                        res = 1
                         break
-                if hasAllMust:
-                    missingList = None
-                    break
-                elif name == "MEG_6093":
-                    missingList.append(listInMissingList)
                 else:
-                    missingList = listInMissingList
-            # def intrinsicResistant(name, queryName, missing, messageType, aaOrNu):
-            messageType = None
-            if name == "MEG_6093": messageType = "MEG_6093"
-            if all: messageType = "All"
-            intrinsicResistant(name, read.query_name, missingList, messageType, gene.aaOrNu())
-            if missingList == None:
-                resistant(name, 1)
-        elif name in intrinsic:
-            intrinsicResistant(name, read.query_name, None, "NA", gene.aaOrNu())
-        SNPInfo = gene.condensedRegDelInfo()
-        res = 0
-        for snp in SNPInfo:
-            if (mapOfInterest.get(snp[1]-1,False)) == False:
-                continue
-            for mt in snp[2]: 
-                for queryIndex in tuple(mapOfInterest[snp[1]-1]):
-                    if queryIndex == '-': continue
-                    if mt_and_wt:
-                        if mt == seqOfInterest[queryIndex]:
-                            res = 1
-                            break
-                    else:
-                        if mt == seqOfInterest[queryIndex]:
-                            res = 1
-                        elif snp[0] == seqOfInterest[queryIndex]:
-                            res = -1
-                            break
-                if res == 1: break
-                elif res == -1:
-                    res = 0
-                    break
+                    if mt == seqOfInterest[queryIndex]:
+                        res = 1
+                    elif snp[0] == seqOfInterest[queryIndex]:
+                        res = -1
+                        break
             if res == 1: break
-        if res == 0 : #take care of Mult
-            verifyMultiple(mapOfInterest, gene, name, seqOfInterest)
-        else: resistant(name, res)
+            elif res == -1:
+                res = 0
+                break
+        if res == 1: break
+    if res == 0 : #take care of Mult
+        verifyMultiple(mapOfInterest, gene, name, seqOfInterest)
+    else: resistant(name, res)
 
 inputFile = []
 outputFolder = ""
@@ -600,8 +603,8 @@ for name in inputFile:
             continue
         verify(read, gene)
     samfile.close() 
-    for name in argInfoDict:
-        output.write(snpInfoPrint(name, str(argInfoDict[name][0]), str(argInfoDict[name][1])))
+    for argName in argInfoDict:
+        output.write(snpInfoPrint(argName, str(argInfoDict[argName][0]), str(argInfoDict[argName][1])))
     argInfoDict = {
     }
     output.close()
@@ -609,6 +612,7 @@ for name in inputFile:
     for name in intrinsicArgInfoDict:
         output.write(name + ":\n")
         for outputString in intrinsicArgInfoDict[name]:
-            output.write("\t" + outputString)
+            output.write("\t" + outputString + "\n")
+    intrinsicArgInfoDict = {}
     output.close()
 sys.exit(0)

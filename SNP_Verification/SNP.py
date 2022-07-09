@@ -186,7 +186,7 @@ class Must(SNP):
         return this.posOG
     def defineNext(this,nextMust):
         this.next = nextMust
-    def getNest(this):
+    def getNext(this):
         return this.next
     def getWt(this):
         return this.wtOG
@@ -199,15 +199,17 @@ class MustList:
         if wtString[:3] == "Nuc":
             this.aaOrNu = "nucleic acids"
         while(wtString.find(";") != -1):
-            temp = wtString[wtString.fin(';')][4:]
+            temp = wtString[:wtString.find(';')][4:]
             wtToAdd = Must(temp, name)
             if len(this.listOfMust) > 0:
-                this.listOfMust[-1].defineNext(wtToAdd)
+                this.listOfMust[list(this.listOfMust.keys())[-1]].defineNext(wtToAdd)
             else:
                 this.firstPos = wtToAdd.getPos()
             this.listOfMust.update({wtToAdd.getPos():wtToAdd})
             wtString = wtString[wtString.find(';')+1:]
         wtToAdd = Must(wtString[4:], name)
+        if len(this.listOfMust) > 0:
+            this.listOfMust[list(this.listOfMust.keys())[-1]].defineNext(wtToAdd)
         this.listOfMust.update({wtToAdd.getPos():wtToAdd})
         this.lastPos = wtToAdd.getPos()
         if this.firstPos == None: this.firstPos = this.lastPos
@@ -219,7 +221,7 @@ class MustList:
             if (begin <= pos) and (end >= pos):
                 return (this.listOfMust[pos], False)
         return None
-    def aaOrNu(this):
+    def returnAaOrNu(this):
         return this.aaOrNu
 
 class SNP_Mult:
@@ -227,14 +229,14 @@ class SNP_Mult:
         this.listOfSNPs = []
         while(snpString.find(';') != -1):
             temp = snpString[:snpString.find(';')]
-            if temp[:3] == "Mis":
+            if temp[:3] != "Del":
                 snpToAdd = SNP_Mis(sequence, temp[4:], name)
                 this.listOfSNPs.append(snpToAdd)
             else: # temp[:3] == "Del"
                 snpToAdd = SNP_Del(sequence, temp[4:], name)
                 this.listOfSNPs.append(snpToAdd)
             snpString = snpString[snpString.find(';')+1:]
-        if snpString[:3] == "Mis":
+        if snpString[:3] != "Del":
             snpToAdd = SNP_Mis(sequence, snpString[4:], name)
             this.listOfSNPs.append(snpToAdd)
         else: # snpString[:3] == "Del"
