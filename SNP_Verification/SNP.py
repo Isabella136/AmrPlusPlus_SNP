@@ -199,7 +199,10 @@ class MustList:
         if wtString[:3] == "Nuc":
             this.aaOrNu = "nucleic acids"
         while(wtString.find(";") != -1):
-            temp = wtString[:wtString.find(';')][4:]
+            if wtString[:3] == "Nuc":
+                temp = wtString[:wtString.find(';')][4:]
+            else:
+                temp = wtString[:wtString.find(';')][6:]
             wtToAdd = Must(temp, name)
             if len(this.listOfMust) > 0:
                 this.listOfMust[list(this.listOfMust.keys())[-1]].defineNext(wtToAdd)
@@ -207,7 +210,10 @@ class MustList:
                 this.firstPos = wtToAdd.getPos()
             this.listOfMust.update({wtToAdd.getPos():wtToAdd})
             wtString = wtString[wtString.find(';')+1:]
-        wtToAdd = Must(wtString[4:], name)
+        if wtString[:3] == "Nuc":
+            wtToAdd = Must(wtString[4:], name)
+        else:
+            wtToAdd = Must(wtString[6:], name)
         if len(this.listOfMust) > 0:
             this.listOfMust[list(this.listOfMust.keys())[-1]].defineNext(wtToAdd)
         this.listOfMust.update({wtToAdd.getPos():wtToAdd})

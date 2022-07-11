@@ -37,7 +37,7 @@ int LiteratureMustModel::getPos() {
 LiteratureMustModel::~LiteratureMustModel() {}
 
 string LiteratureMustModel::condensedSNPinfo() {
-    string toReturn = "Mis:";
+    string toReturn = "Amino:";
     toReturn += wt_aa;
     toReturn += to_string(pos);
     toReturn += addContext(pos - 2, pos, wt_aa);
