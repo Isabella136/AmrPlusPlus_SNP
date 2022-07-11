@@ -40,7 +40,7 @@ def intrinsicResistant(name, queryName, missing, messageType, aaOrNu):
     if name not in intrinsicArgInfoDict:
         intrinsicArgInfoDict.update({name:list()})
     if missing == None:
-        if messageType == None:
+        if (messageType == None) or (messageType == "MEG_6093"):
             intrinsicArgInfoDict[name].append("Based on the sequence given, " + queryName + " contains the " + aaOrNu + " required for intrinsic resistance")
         elif messageType == "All":
             intrinsicArgInfoDict[name].append(queryName + " contains ALL " + aaOrNu + " required for intrinsic resistance")
@@ -475,9 +475,9 @@ def verify(read, gene):
         #if nonsense mutations
         if (stopLocation != -1) & ((stopLocation < len(aaQuerySequence)-1) | (read.reference_end < gene.ntSeqLength())): 
             verifyNonsense(stopLocation, aa_alignment_map, gene, name)
+            return 0
         seqOfInterest = aaQuerySequence
         mapOfInterest = aa_alignment_map
-    
     begin = list(mapOfInterest.keys())[0]+1
     end = list(mapOfInterest.keys())[-1]+1
     mustList = gene.getFirstMustBetweenParams(begin, end)
@@ -501,6 +501,8 @@ def verify(read, gene):
                 if must == None:
                     all = all & True
                     break
+            if must != None:
+                all = False
             if hasAllMust:
                 missingList = None
                 break
@@ -510,11 +512,13 @@ def verify(read, gene):
                 missingList = listInMissingList
         # def intrinsicResistant(name, queryName, missing, messageType, aaOrNu):
         messageType = None
-        if name == "MEG_6093": messageType = "MEG_6093"
-        if all: messageType = "All"
+        if name == "MEG_6093": 
+            messageType = "MEG_6093"
+        if all and (missingList == None): messageType = "All"
         intrinsicResistant(name, read.query_name, missingList, messageType, gene.aaOrNu())
         if missingList == None:
             resistant(name, 1)
+            return 0
     elif name in intrinsic:
         intrinsicResistant(name, read.query_name, None, "NA", gene.aaOrNu())
     SNPInfo = gene.condensedRegDelInfo()
@@ -592,7 +596,7 @@ for line in SNPinfo:
 SNPinfo.close()
 for name in inputFile:
     output = open(outputFolder + "/" + name[name.rfind("/")+1:] + ".txt", "w")
-    pysam.sort("-o", outputFolder + "/Sorted_" + name[name.rfind("/")+1:] + ".sam", name)
+    pysam.sort("-o", outputFolder + "/Sorted_" + name[name.rfind("/")+1:], name)
     samfile = pysam.AlignmentFile(outputFolder + "/Sorted_" + name[name.rfind("/")+1:], "r")
     iter = samfile.fetch()
     for read in iter:
