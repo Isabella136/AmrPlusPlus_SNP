@@ -14,10 +14,10 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see https://www.gnu.org/licenses/.
 
-from SNP_Verification.Gene import Gene
-from SNP_Verification.SNP import SNP
-from SNP_Verification import dnaTranslate
-from SNP_Verification import reverseTranslation
+from SNP_Verification_Tools.Gene import Gene
+from SNP_Verification_Tools.SNP import SNP
+from SNP_Verification_Tools import dnaTranslate
+from SNP_Verification_Tools import reverseTranslation
 
 geneDict = {
 
