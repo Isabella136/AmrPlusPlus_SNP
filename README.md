@@ -42,11 +42,13 @@ Collection of csv files that contain the count matrix to all **AMRPlusPlus** hit
 All SNP information extracted from **MetaMARC** in `MetamarcInfoExtraction` and **KARGVA** in `KargvaInfoExtracion`.
 
 ### *InfoExtraction* Folder
-Contains the following two folders:
+Contains the following three folders:
 
 #### *KargvaInfoExtraction* Folder
-Contains the `KargvaInfoExtracion` program that extracts SNP information retrieved from the database in the [KARGVA](https://github.com/DataIntellSystLab/KARGVA) repository.  
-Currently only contains a copy of the database.
+Contains the `KargvaInfoExtracion` program that extracts SNP information retrieved from the database in the [KARGVA](https://github.com/DataIntellSystLab/KARGVA) repository and saves it in the *extracted_SNP_files* folder. 
+
+#### *LiteratureInfoExtraction* Folder
+Contains the `LiteratureInfoExtracion` program that extracts SNP information retrieved from the literature (which was previously compiled into the "SNPinfo_literature.csv" file) and saves it in the *extracted_SNP_files* folder.  
 
 #### *MetamarcInfoExtraction* Folder
 Contains the `MetamarcInfoExtraction` program that extracts SNP information retrieved from the database in the [MetaMARC](https://github.com/lakinsm/meta-marc) repository and saves it in the *extracted_SNP_files* folder.  
