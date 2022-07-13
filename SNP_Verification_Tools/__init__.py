@@ -17,6 +17,20 @@ aa = {
     "GTG" : 'V',    "GCG" : 'A',    "GAG" : 'E',    "GGG" : 'G'
 }
 
+def resistant(name, increment, argInfoDict):
+    argInfo = argInfoDict.get(name, False)
+    if (argInfo == False):
+        argInfoDict.update({name:(increment, 1)})
+    else:
+        temp = list(argInfo)
+        temp[0] += increment
+        temp[1] += 1
+        argInfo = tuple(temp)
+        argInfoDict.update({name:argInfo})
+
+def disregard(name, argInfoDict):
+    resistant(name, 0, argInfoDict)
+
 def dnaTranslate(dna):
     toReturn = ""
     for i in range(0, len(dna), 3):
@@ -25,6 +39,7 @@ def dnaTranslate(dna):
         else:
             toReturn += 'N'
     return toReturn
+
 def reverseTranslation(amino_acid):
     for codon, aAcid in aa.items():
         if amino_acid == aAcid:

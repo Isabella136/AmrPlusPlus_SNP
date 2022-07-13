@@ -23,7 +23,7 @@ geneDict = {
 
 }
 
-intrinsic = ["MEG_1628", "MEG_3979", "MEG_3983", "MEG_4279", "MEG_4280", "MEG_4281", "MEG_4282", "MEG_6092", "MEG_6093"]
+intrinsic = ["MEG_1628", "MEG_3979", "MEG_3983", "MEG_4279", "MEG_4280", "MEG_4281", "MEG_4282", "MEG_6092"]
 
 def SNPTest(SNP_Num, fullName, start, end, cigar, SEQ):
     line1 = []

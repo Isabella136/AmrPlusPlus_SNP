@@ -24,7 +24,8 @@ mt_and_wt = True #used in case of insertion leading to presence of both mt and w
 
 geneDict = {}
 argInfoDict = {}
-mustGroupInfoDict = {}
+intrinsicInfoDict = {}
+frameshiftInfoDict = {}
 snpInfoPrint = lambda a, b, c : a + ": " + b + " resitant reads out of " + c + " total reads\n"
 
 inputFile = []
@@ -86,7 +87,7 @@ for name in inputFile:
             continue
         elif (read.cigarstring == None):
             continue
-        verify(read, gene, argInfoDict, mustGroupInfoDict, mt_and_wt)
+        verify(read, gene, argInfoDict, intrinsicInfoDict, frameshiftInfoDict, mt_and_wt)
     samfile.close() 
 
     #Output SNP Info
@@ -97,13 +98,45 @@ for name in inputFile:
     }
     output.close()
 
-    #Output Must Group Info
-    output = open(outputFolder + "/extraInformation_" + name[name.rfind("/")+1:] + ".txt", "w")
-    for name in mustGroupInfoDict:
-        output.write(name + ":\n")
-        for outputString in mustGroupInfoDict[name]:
-            output.write("\t" + outputString + "\n")
-    mustGroupInfoDict = {}
-    output.close()
+    #Output Intrinsic Resistance Info
+    if len(intrinsicInfoDict) != 0:
+        output = open(outputFolder + "/intrinsic_resistance_" + name[name.rfind("/")+1:] + ".csv", "w")
+        output.write("ARG,All nuc/aa required present,Some nuc/aa positions in query,No nuc/aa positions in query,Mutants in nuc/aa positions\n")
+        for argName in intrinsicInfoDict:
+            output.write(argName + ",")
+            if "All" in intrinsicInfoDict[argName]:
+                for query in intrinsicInfoDict[argName]["All"][:-1]:
+                    output.write(query + ";")
+                output.write(intrinsicInfoDict[argName]["All"][-1] + ",")
+            else: output.write(",")
+            if "Some" in intrinsicInfoDict[argName]:
+                for query in intrinsicInfoDict[argName]["Some"][:-1]:
+                    output.write(query + ";")
+                output.write(intrinsicInfoDict[argName]["Some"][-1] + ",")
+            else: output.write(",")
+            if "NA" in intrinsicInfoDict[argName]:
+                for query in intrinsicInfoDict[argName]["NA"][:-1]:
+                    output.write(query + ";")
+                output.write(intrinsicInfoDict[argName]["NA"][-1] + ",")
+            else: output.write(",")
+            if "Mutant" in intrinsicInfoDict[argName]:
+                for query in intrinsicInfoDict[argName]["Mutant"][:-1]:
+                    output.write(query + ";")
+                output.write(intrinsicInfoDict[argName]["Mutant"][-1] + "\n")
+            else: output.write("\n")
+        intrinsicInfoDict = {}
+        output.close()
+
+    #Output Info on Insertion/Deletion Difference
+    if len(frameshiftInfoDict) != 0:
+        output = open(outputFolder + "/insertion_deletion_frameshift_" + name[name.rfind("/")+1:] + ".csv", "w")
+        output.write("ARG,Reads with a frameshift at the end of their sequence\n")
+        for argName in frameshiftInfoDict:
+            output.write(argName + ",")
+            for query in frameshiftInfoDict[argName][:-1]:
+                output.write(query + ",")
+            output.write(frameshiftInfoDict[argName][-1] + "\n")
+        frameshiftInfoDict = {}
+        output.close()
 
 sys.exit(0)

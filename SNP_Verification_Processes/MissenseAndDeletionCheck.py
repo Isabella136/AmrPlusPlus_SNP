@@ -1,4 +1,4 @@
-from SNP_Verification_Processes import resistant, disregard
+from SNP_Verification_Tools import resistant
 from SNP_Verification_Tools import Gene
 from SNP_Verification_Tools import SNP
 

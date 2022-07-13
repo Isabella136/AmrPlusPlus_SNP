@@ -265,7 +265,6 @@ MEG_6055: 2 resitant reads out of 2 total reads
 MEG_6090: 96 resitant reads out of 96 total reads
 MEG_6091: 4 resitant reads out of 4 total reads
 MEG_6092: 4 resitant reads out of 4 total reads
-MEG_6093: 6 resitant reads out of 8 total reads
 MEG_6094: 18 resitant reads out of 18 total reads
 MEG_6095: 16 resitant reads out of 16 total reads
 MEG_6097: 6 resitant reads out of 6 total reads

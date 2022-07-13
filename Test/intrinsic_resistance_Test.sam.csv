@@ -1,0 +1,9 @@
+ARG,All nuc/aa required present,Some nuc/aa positions in query,No nuc/aa positions in query,Mutants in nuc/aa positions
+MEG_1628,Test_44;Test_44,,,
+MEG_3979,Test_728;Test_728,Test_726;Test_726;Test_727;Test_727;Test_729;Test_729,,
+MEG_3983,Test_737;Test_737,,,
+MEG_4279,Test_824;Test_824,Test_825;Test_825,,
+MEG_4280,Test_826;Test_826;Test_827;Test_827,,,
+MEG_4281,Test_828;Test_828,Test_829;Test_829,,
+MEG_4282,Test_830;Test_830,Test_831;Test_831,,
+MEG_6092,Test_1150;Test_1150,Test_1151;Test_1151,,
