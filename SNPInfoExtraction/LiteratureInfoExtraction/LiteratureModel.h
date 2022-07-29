@@ -16,7 +16,7 @@ public:
     LiteratureModel(string id, shared_ptr<MEGARes_database> dbSeq, bool nuc);
     ~LiteratureModel();
     virtual int getPos() = 0;
-    virtual string condensedSNPinfo() = 0;
+    virtual string condensedInfo() = 0;
 };
 LiteratureModel::LiteratureModel() {}
 

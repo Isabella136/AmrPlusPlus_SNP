@@ -1,42 +1,43 @@
 #pragma once
-#include "../ModelDeletion.h"
+#include "../AaDeletion.h"
 #include "KargvaModel.h"
 
 using namespace std;
 
-class KargvaModelDeletion : public ModelDeletion, public KargvaModel {
+class KargvaAaDeletion : public AaDeletion, public KargvaModel {
 private:
     void makeModel(string line);
 public:
-    KargvaModelDeletion(string line, string id, shared_ptr<CARD_database> dbSeq);
-    ~KargvaModelDeletion();
-    KargvaModelDeletion(const KargvaModelDeletion& other);
-    Model* Clone();
+    KargvaAaDeletion(string line, string id, shared_ptr<CARD_database> dbSeq);
+    ~KargvaAaDeletion();
+    KargvaAaDeletion(const KargvaAaDeletion& other);
+    InfoPipe* Clone();
     void addToModel(string line);
     bool includes(string line);
-    string condensedSNPinfo();
+    string condensedInfo();
+    string infoType();
 };
 
-KargvaModelDeletion::KargvaModelDeletion(string line, string id, shared_ptr<CARD_database> dbSeq) :KargvaModel(id, dbSeq) {
+KargvaAaDeletion::KargvaAaDeletion(string line, string id, shared_ptr<CARD_database> dbSeq) :KargvaModel(id, dbSeq) {
     makeModel(line);
 }
-KargvaModelDeletion::KargvaModelDeletion(const KargvaModelDeletion& other) {
+KargvaAaDeletion::KargvaAaDeletion(const KargvaAaDeletion& other) {
     this->wt_aa = other.wt_aa;
     this->pos = other.pos;
     this->cardID = other.cardID;
     this->databaseSequences = other.databaseSequences;
 }
-Model* KargvaModelDeletion::Clone() {
-    return new KargvaModelDeletion(*this);
+InfoPipe* KargvaAaDeletion::Clone() {
+    return new KargvaAaDeletion(*this);
 }
-KargvaModelDeletion::~KargvaModelDeletion() {}
-void KargvaModelDeletion::addToModel(string line) {
+KargvaAaDeletion::~KargvaAaDeletion() {}
+void KargvaAaDeletion::addToModel(string line) {
     throw std::exception("should not have been called: model type is deletion");
 }
-bool KargvaModelDeletion::includes(string line) {
+bool KargvaAaDeletion::includes(string line) {
     return false;
 }
-string KargvaModelDeletion::condensedSNPinfo() {
+string KargvaAaDeletion::condensedInfo() {
     string toReturn = "Del:";
     toReturn += wt_aa;
     toReturn += to_string(pos);
@@ -44,7 +45,7 @@ string KargvaModelDeletion::condensedSNPinfo() {
     toReturn += addContext(pos - 2, pos, wt_aa);
     return toReturn;
 }
-void KargvaModelDeletion::makeModel(string line) {
+void KargvaAaDeletion::makeModel(string line) {
     if (isalpha(line.at(0))) {
         wt_aa = line.at(0);
         pos = stoi(line.substr(1, line.size() - 2));
@@ -57,4 +58,7 @@ void KargvaModelDeletion::makeModel(string line) {
         pos = stoi(line.substr(1, line.size() - 2));
         wt_aa = line.at(line.size() - 1);
     }
+}
+string KargvaAaDeletion::infoType() {
+    return "Model";
 }

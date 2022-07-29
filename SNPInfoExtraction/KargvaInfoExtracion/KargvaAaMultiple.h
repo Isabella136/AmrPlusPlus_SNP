@@ -1,28 +1,28 @@
 #pragma once
 #include <string>
 #include <vector>
-#include "KargvaModelDeletion.h"
-#include "KargvaModelNonsense.h"
-#include "KargvaModelMissense.h"
+#include "KargvaAaDeletion.h"
+#include "KargvaAaMissense.h"
 
 using namespace std;
 
-class KargvaMultipleModels : public virtual KargvaModel {
+class KargvaAaMultiple : public virtual KargvaModel {
 	protected:
 		vector<KargvaModel*> models;
 	public:
-		KargvaMultipleModels();
-		KargvaMultipleModels(string line, string id, shared_ptr<CARD_database> dbSeq);
-		~KargvaMultipleModels();
-		KargvaMultipleModels(const KargvaMultipleModels& other);
-		Model* Clone();
+		KargvaAaMultiple();
+		KargvaAaMultiple(string line, string id, shared_ptr<CARD_database> dbSeq);
+		~KargvaAaMultiple();
+		KargvaAaMultiple(const KargvaAaMultiple& other);
+		InfoPipe* Clone();
 		void addToModel(string line);
 		bool includes(string line);
-		string condensedSNPinfo();
+		string condensedInfo();
+		string infoType();
 
 };
-KargvaMultipleModels::KargvaMultipleModels() {}
-KargvaMultipleModels::KargvaMultipleModels(string line, string id, shared_ptr<CARD_database> dbSeq) {
+KargvaAaMultiple::KargvaAaMultiple() {}
+KargvaAaMultiple::KargvaAaMultiple(string line, string id, shared_ptr<CARD_database> dbSeq) {
 	string temp = line;
 	vector<string> snp;
 	snp.push_back(temp.substr(0, temp.find(";")));
@@ -33,31 +33,31 @@ KargvaMultipleModels::KargvaMultipleModels(string line, string id, shared_ptr<CA
 	for (int i = 0; i < snp.size(); i++) {
 		KargvaModel* model;
 		if (snp[i].at(0) == '-')
-			model = new KargvaModelDeletion(snp[i], id, dbSeq);
+			model = new KargvaAaDeletion(snp[i], id, dbSeq);
 		else
-			model = new KargvaModelMissense(snp[i], id, dbSeq);
+			model = new KargvaAaMissense(snp[i], id, dbSeq);
 		models.push_back(model);
 	}
 }
-KargvaMultipleModels::KargvaMultipleModels(const KargvaMultipleModels& other) {
+KargvaAaMultiple::KargvaAaMultiple(const KargvaAaMultiple& other) {
 	for (auto iter = other.models.begin(); iter != other.models.end(); ++iter) {
 		this->models.push_back(dynamic_cast<KargvaModel*>((*iter)->Clone()));
 	}
 }
-Model* KargvaMultipleModels::Clone() {
-	return new KargvaMultipleModels(*this);
+InfoPipe* KargvaAaMultiple::Clone() {
+	return new KargvaAaMultiple(*this);
 }
-KargvaMultipleModels::~KargvaMultipleModels() {
+KargvaAaMultiple::~KargvaAaMultiple() {
 	while (!models.empty())
 		models.pop_back();
 }
-void KargvaMultipleModels::addToModel(string line) {
+void KargvaAaMultiple::addToModel(string line) {
 	throw std::exception("should not have been called: model type is multiple");
 }
-bool KargvaMultipleModels::includes(string line) {
+bool KargvaAaMultiple::includes(string line) {
 	return false;
 }
-string KargvaMultipleModels::condensedSNPinfo()
+string KargvaAaMultiple::condensedInfo()
 {
 	string toReturn = "Mult:";
 	for (int i = 0; i < models.size(); i++) {
@@ -66,4 +66,7 @@ string KargvaMultipleModels::condensedSNPinfo()
 			toReturn += ";";
 	}
 	return toReturn;
+}
+string KargvaAaMultiple::infoType() {
+	return "Model";
 }

@@ -10,15 +10,15 @@ using namespace std;
 
 class ModelDatabase{
     protected:
-        unordered_map<string, list<Model*>> snpInfoDatabase;
+        unordered_map<string, list<InfoPipe*>> snpInfoDatabase;
     public:
         ModelDatabase();
         virtual void SNPInfo() = 0;
-        unordered_map<string, list<Model*>> getDatabase();
+        unordered_map<string, list<InfoPipe*>> getDatabase();
 };
 
 ModelDatabase::ModelDatabase() {}
-unordered_map<string, list<Model*>> ModelDatabase::getDatabase()
+unordered_map<string, list<InfoPipe*>> ModelDatabase::getDatabase()
 {
     return snpInfoDatabase;
 }

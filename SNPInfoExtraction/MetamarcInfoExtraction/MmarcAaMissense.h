@@ -1,11 +1,11 @@
 #pragma once
 #include <string>
 #include <list>
-#include "../ModelMissense.h"
+#include "../AaMissense.h"
 
 using namespace std;
 
-class MmarcModel: public virtual ModelMissense {
+class MmarcAaMissense : public virtual AaMissense {
     private:
         int mmarc_codon_start;
         int mmarc_codon_end;
@@ -13,17 +13,18 @@ class MmarcModel: public virtual ModelMissense {
         string context_right_aa = "";
         void makeModel(string line);
     public:
-        MmarcModel(string line);
-        ~MmarcModel();
-        MmarcModel(const MmarcModel& other);
-        Model* Clone();
-        string condensedSNPinfo();
+        MmarcAaMissense(string line);
+        ~MmarcAaMissense();
+        MmarcAaMissense(const MmarcAaMissense& other);
+        InfoPipe* Clone();
+        string condensedInfo();
+        string infoType();
 };
-MmarcModel::MmarcModel(string line)
+MmarcAaMissense::MmarcAaMissense(string line)
 {
     makeModel(line);
 }
-MmarcModel::MmarcModel(const MmarcModel& other) {
+MmarcAaMissense::MmarcAaMissense(const MmarcAaMissense& other) {
     this->wt_aa = other.wt_aa;
     this->pos = other.pos;
     this->mutant_aa = other.mutant_aa;
@@ -32,11 +33,11 @@ MmarcModel::MmarcModel(const MmarcModel& other) {
     this->mmarc_codon_end = other.mmarc_codon_end;
     this->mmarc_codon_start = other.mmarc_codon_start;
 }
-Model* MmarcModel::Clone() {
-    return new MmarcModel(*this);
+InfoPipe* MmarcAaMissense::Clone() {
+    return new MmarcAaMissense(*this);
 }
-MmarcModel::~MmarcModel() {}
-void MmarcModel::makeModel(string line)
+MmarcAaMissense::~MmarcAaMissense() {}
+void MmarcAaMissense::makeModel(string line)
 {
     line = line.substr(line.find(',') + 1);
     line = line.substr(line.find(',') + 1);
@@ -63,7 +64,7 @@ void MmarcModel::makeModel(string line)
     for (int i = 0; i < aaList.size(); i++)
         context_right_aa += aaList[i];
 }
-string MmarcModel::condensedSNPinfo()
+string MmarcAaMissense::condensedInfo()
 {
     string toReturn = "Mis:";
     toReturn += wt_aa;
@@ -75,4 +76,8 @@ string MmarcModel::condensedSNPinfo()
     toReturn += '_';
     toReturn += context_right_aa;
     return toReturn;
+}
+
+string MmarcAaMissense::infoType() {
+    return "Model";
 }

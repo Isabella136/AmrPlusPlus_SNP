@@ -3,7 +3,7 @@
 #include <string>
 #include <unordered_map>
 #include <iostream>
-#include "MmarcModel.h"
+#include "MmarcAaMissense.h"
 #include "../ModelDatabase.h"
 
 using namespace std;
@@ -23,17 +23,17 @@ void MmarcDatabase::SNPInfo()
 {
     ifstream snpsearch;
     snpsearch.open("MetamarcInfoExtraction/metamarc_files/mmarc_snpsearch_metadata2_modified.txt");
-    unordered_map<string, list<Model*>> name_model;
+    unordered_map<string, list<InfoPipe*>> name_model;
     string line;
     std::getline(snpsearch, line);
     while (std::getline(snpsearch, line))
     {
         string modelName = line.substr(0, line.find(','));
-        Model* model = new MmarcModel(line);
+        InfoPipe* model = new MmarcAaMissense(line);
         if (name_model.find(modelName) != name_model.end())
             name_model.at(modelName).push_back((model->Clone()));
         else { 
-			list<Model*> temp;
+			list<InfoPipe*> temp;
 			temp.push_back(model->Clone());
 			name_model.emplace(modelName, temp);
 		}

@@ -16,7 +16,7 @@ class KargvaModel : public virtual Model {
         ~KargvaModel();
         virtual void addToModel(string line) = 0;
         virtual bool includes(string line) = 0;
-        virtual string condensedSNPinfo() = 0;
+        virtual string condensedInfo() = 0;
 };
 KargvaModel::KargvaModel() {}
 
