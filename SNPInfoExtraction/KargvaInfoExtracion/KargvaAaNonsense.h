@@ -39,7 +39,7 @@ bool KargvaAaNonsense::includes(string line) {
     return false;
 }
 string KargvaAaNonsense::condensedInfo() {
-    string toReturn = "Non:";
+    string toReturn = "Nonsense:";
     toReturn += wt_aa;
     toReturn += to_string(pos);
     toReturn += '*';

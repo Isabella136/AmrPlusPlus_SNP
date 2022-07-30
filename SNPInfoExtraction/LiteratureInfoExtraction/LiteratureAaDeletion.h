@@ -31,7 +31,7 @@ InfoPipe* LiteratureAaDeletion::Clone() {
 }
 
 int LiteratureAaDeletion::getPos() {
-    return pos;
+    return *(pos.begin());
 }
 
 LiteratureAaDeletion::~LiteratureAaDeletion() {}
@@ -39,14 +39,20 @@ LiteratureAaDeletion::~LiteratureAaDeletion() {}
 string LiteratureAaDeletion::condensedInfo() {
     string toReturn = "Del:";
     toReturn += wt_aa;
-    toReturn += to_string(pos);
-    toReturn += '-';
-    toReturn += addContext(pos - 2, pos, wt_aa);
+    int firstPos = *(pos.begin());
+    int lastPos = 0;
+    for (auto iter = pos.begin(); iter != pos.end(); ++iter) {
+        lastPos = *iter;
+        if (lastPos != firstPos)
+            toReturn += "/";
+        toReturn += to_string(*iter);
+    }
+    toReturn += addContext(firstPos - 2, lastPos, wt_aa);
     return toReturn;
 }
 void LiteratureAaDeletion::makeModel(string line) {
     wt_aa = line.at(0);
-    pos = stoi(line.substr(1, line.size() - 2));
+    pos.push_back(stoi(line.substr(1, line.size() - 2)));
 }
 string LiteratureAaDeletion::infoType() {
     return "Model";

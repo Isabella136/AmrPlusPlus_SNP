@@ -31,7 +31,7 @@ InfoPipe* LiteratureNtDeletion::Clone() {
 }
 
 int LiteratureNtDeletion::getPos() {
-    return pos;
+    return *(pos.begin());
 }
 
 LiteratureNtDeletion::~LiteratureNtDeletion() {}
@@ -39,14 +39,20 @@ LiteratureNtDeletion::~LiteratureNtDeletion() {}
 string LiteratureNtDeletion::condensedInfo() {
     string toReturn = "NucDel:";
     toReturn += wt_nuc;
-    toReturn += to_string(pos);
-    toReturn += '-';
-    toReturn += addContext(pos - 2, pos, wt_nuc);
+    int firstPos = *(pos.begin());
+    int lastPos = 0;
+    for (auto iter = pos.begin(); iter != pos.end(); ++iter) {
+        lastPos = *iter;
+        if (lastPos != firstPos)
+            toReturn += "/";
+        toReturn += to_string(*iter);
+    }
+    toReturn += addContext(firstPos - 2, lastPos, wt_nuc);
     return toReturn;
 }
 void LiteratureNtDeletion::makeModel(string line) {
     wt_nuc = line.at(0);
-    pos = stoi(line.substr(1, line.size() - 2));
+    pos.push_back(stoi(line.substr(1, line.size() - 2)));
 }
 string LiteratureNtDeletion::infoType() {
     return "Model";

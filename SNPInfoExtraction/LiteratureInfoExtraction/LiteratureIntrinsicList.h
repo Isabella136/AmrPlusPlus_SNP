@@ -26,7 +26,9 @@ LiteratureIntrinsicList::LiteratureIntrinsicList(string line, string id, shared_
 }
 LiteratureIntrinsicList::~LiteratureIntrinsicList() {}
 LiteratureIntrinsicList::LiteratureIntrinsicList(const LiteratureIntrinsicList& other) {
-	this->mustHaveList = other.mustHaveList;
+	for (auto iter = other.mustHaveList.begin(); iter != other.mustHaveList.end(); ++iter) {
+		this->mustHaveList.emplace(iter->first, iter->second->Clone());
+	}
 }
 void LiteratureIntrinsicList::addToList(string line, string id, shared_ptr<MEGARes_database> dbSeq) {
 	LiteratureModel* must;

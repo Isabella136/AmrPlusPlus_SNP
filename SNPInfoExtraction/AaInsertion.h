@@ -6,7 +6,7 @@ using namespace std;
 
 class AaInsertion : public virtual ModelInDel {
 protected:
-    char mt_aa = 0;
+    string mt_aa = "";
     virtual void makeModel(string line) = 0;
 public:
     AaInsertion();

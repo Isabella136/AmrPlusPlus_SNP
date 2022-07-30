@@ -40,22 +40,33 @@ bool KargvaAaDeletion::includes(string line) {
 string KargvaAaDeletion::condensedInfo() {
     string toReturn = "Del:";
     toReturn += wt_aa;
-    toReturn += to_string(pos);
-    toReturn += '-';
-    toReturn += addContext(pos - 2, pos, wt_aa);
+    int firstPos = *(pos.begin());
+    int lastPos = 0;
+    for (auto iter = pos.begin(); iter != pos.end(); ++iter) {
+        lastPos = *iter;
+        if (lastPos != firstPos)
+            toReturn += "/";
+        toReturn += to_string(*iter);
+    }
+    toReturn += addContext(firstPos - 2, lastPos, wt_aa);
     return toReturn;
 }
 void KargvaAaDeletion::makeModel(string line) {
     if (isalpha(line.at(0))) {
         wt_aa = line.at(0);
-        pos = stoi(line.substr(1, line.size() - 2));
+        string posString = line.substr(1, line.size() - 2);
+        while (posString.find("/") != -1) {
+            pos.push_back(stoi(posString.substr(0, posString.find("/"))));
+            posString = posString.substr(posString.find("/") + 1);
+        }
+        pos.push_back(stoi(line.substr(1, line.size() - 2)));
     }
     else if (isalpha(line.at(1))) {
         wt_aa = line.at(1);
-        pos = stoi(line.substr(2));
+        pos.push_back(stoi(line.substr(2)));
     }
     else {
-        pos = stoi(line.substr(1, line.size() - 2));
+        pos.push_back(stoi(line.substr(1, line.size() - 2)));
         wt_aa = line.at(line.size() - 1);
     }
 }

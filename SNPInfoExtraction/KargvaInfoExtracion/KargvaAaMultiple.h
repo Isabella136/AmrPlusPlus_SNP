@@ -3,6 +3,7 @@
 #include <vector>
 #include "KargvaAaDeletion.h"
 #include "KargvaAaMissense.h"
+#include "KargvaAaNonstop.h"
 
 using namespace std;
 
@@ -32,7 +33,9 @@ KargvaAaMultiple::KargvaAaMultiple(string line, string id, shared_ptr<CARD_datab
 	}
 	for (int i = 0; i < snp.size(); i++) {
 		KargvaModel* model;
-		if (snp[i].at(0) == '-')
+		if (snp[i] == "nonstop")
+			model = new KargvaAaNonstop(snp[i], id, dbSeq);
+		else if (snp[i].at(0) == '-')
 			model = new KargvaAaDeletion(snp[i], id, dbSeq);
 		else
 			model = new KargvaAaMissense(snp[i], id, dbSeq);
@@ -61,7 +64,7 @@ string KargvaAaMultiple::condensedInfo()
 {
 	string toReturn = "Mult:";
 	for (int i = 0; i < models.size(); i++) {
-		toReturn += models[i]->condensedSNPinfo();
+		toReturn += models[i]->condensedInfo();
 		if (i + 1 < models.size())
 			toReturn += ";";
 	}

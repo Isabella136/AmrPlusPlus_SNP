@@ -1,10 +1,10 @@
 #pragma once
 #include <string>
-#include "ModelSingle.h"
+#include "ModelInDel.h"
 
 using namespace std;
 
-class AaDeletion : public virtual ModelSingle {
+class AaDeletion : public virtual ModelInDel {
 protected:
     char wt_aa = 0;
     virtual void makeModel(string line) = 0;

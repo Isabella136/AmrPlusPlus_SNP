@@ -6,7 +6,6 @@ using namespace std;
 
 class AaNonstop : public virtual ModelSNP {
 protected:
-    char mt_aa = 0;
     virtual void makeModel(string line) = 0;
 public:
     AaNonstop();

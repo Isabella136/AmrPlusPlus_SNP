@@ -10,6 +10,7 @@ class KargvaModel : public virtual Model {
         shared_ptr<CARD_database> databaseSequences;
         string cardID = "";
         string addContext(int lastLeftIndex, int firstRightIndex, char wt);
+        int findTermination();
     public:
         KargvaModel();
         KargvaModel(string id, shared_ptr<CARD_database> dbSeq);
@@ -46,4 +47,9 @@ string KargvaModel::addContext(int lastLeftIndex, int firstRightIndex, char wt) 
     if (rightContextSize != 0)
         toReturn += sequence.substr(firstRightIndex, rightContextSize);
     return toReturn;
+}
+
+int KargvaModel::findTermination() {
+    string sequence = databaseSequences->getSequence(cardID);
+    return sequence.size();
 }
