@@ -26,6 +26,7 @@ LiteratureNtMissense::LiteratureNtMissense(const LiteratureNtMissense& other) {
     this->mutant_nuc = other.mutant_nuc;
     this->megID = other.megID;
     this->databaseSequences = other.databaseSequences;
+    this->nucleic = other.nucleic;
 }
 InfoPipe* LiteratureNtMissense::Clone() {
     return new LiteratureNtMissense(*this);

@@ -57,7 +57,7 @@ void MmarcDatabase::SNPInfo()
         }
     }
     model_members.close();
-    unordered_map<string, list<Model*>> header_model;
+    unordered_map<string, list<InfoPipe*>> header_model;
     for (auto iter = header_name.begin(); iter != header_name.end(); ++iter)
     {
         if (name_model.find(iter->second) != name_model.end()) {
@@ -80,11 +80,11 @@ void MmarcDatabase::SNPInfo()
         source_to_header.emplace(line, header);
     }
     v1.close();
-    unordered_map<string, list<Model*>> source_model;
+    unordered_map<string, list<InfoPipe*>> source_model;
     for (auto iter = source_to_header.begin(); iter != source_to_header.end(); ++iter)
     {
         if (header_model.find(iter->second) != header_model.end()) {
-            list<Model*> temp = header_model.at(iter->second);
+            list<InfoPipe*> temp = header_model.at(iter->second);
             source_model.emplace(iter->first, temp); 
         }
     }

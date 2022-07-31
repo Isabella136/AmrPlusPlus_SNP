@@ -8,6 +8,11 @@
 #include "KargvaAaNonsense.h"
 #include "KargvaAaMissense.h"
 #include "KargvaAaMultiple.h"
+#include "KargvaAaHypersusceptible.h"
+#include "KargvaAaInsertion.h"
+#include "KargvaIntrinsicList.h"
+#include "KargvaAaNonstop.h"
+#include "../FrameshiftInfo.h"
 #include "../ModelDatabase.h"
 
 using namespace std;
@@ -28,14 +33,24 @@ void KargvaDatabase::addSNP(string snp, string id, string meg) {
     bool included = false;
     if (snpInfoDatabase.find(meg) != snpInfoDatabase.end()) {
         if (snp.find("FS-") != -1) throw;
-        if (snp.find("STOP") == -1) {
+        if (snp.find("STOP") == -1 && snp.find("-") == -1 && snp.find("+") == -1 && snp.find("nonstop") == -1) {
             for (auto iter = snpInfoDatabase.at(meg).begin(); iter != snpInfoDatabase.at(meg).end(); ++iter) {
-                KargvaAaMissense* tempReg = dynamic_cast<KargvaAaMissense*>(*iter);
-                if (tempReg != nullptr) {
-                    included = tempReg->includes(snp);
-                    if (included) {
-                        if (snp.find(";") == -1)
-                            tempReg->addToModel(snp);
+                if ((*iter)->infoType() == "Model" && meg.find("Must:") == -1) {
+                    KargvaModel* temp = dynamic_cast<KargvaModel*>(*iter);
+                    if (temp != nullptr) {
+                        included = temp->includes(snp);
+                        if (included) {
+                            if (snp.find(";") == -1)
+                                temp->addToModel(snp);
+                            break;
+                        }
+                    }
+                }
+                else if ((*iter)->infoType() == "List" && meg.find("Must:") != -1) {
+                    KargvaIntrinsicList* temp = dynamic_cast<KargvaIntrinsicList*>(*iter);
+                    if (temp != nullptr) {
+                        included = true;
+                        temp->addToList(snp, id, databaseSequences);
                         break;
                     }
                 }
@@ -43,12 +58,20 @@ void KargvaDatabase::addSNP(string snp, string id, string meg) {
         }
         if (!included) {
             Model* model;
-            if (snp.find(";") != -1)
+            if (snp.find("Not:") != -1)
+                model = new KargvaAaHypersuscetible(snp, id, databaseSequences);
+            else if (snp.find(";") != -1)
                 model = new KargvaAaMultiple(snp, id, databaseSequences);
+            else if (snp.find("Must:") != -1)
+                model = new KargvaIntrinsicList(snp, id, databaseSequences);
             else if (snp.find("-") != -1)
                 model = new KargvaAaDeletion(snp, id, databaseSequences);
+            else if (snp.find("+") != -1)
+                model = new KargvaAaInsertion(snp, id, databaseSequences);
             else if (snp.find("STOP") != -1)
                 model = new KargvaAaNonsense(snp, id, databaseSequences);
+            else if (snp.find("nonstop") != -1)
+                model = new KargvaAaNonstop(snp, id, databaseSequences);
             else
                 model = new KargvaAaMissense(snp, id, databaseSequences);
             snpInfoDatabase.at(meg).push_back(model->Clone());
@@ -56,17 +79,29 @@ void KargvaDatabase::addSNP(string snp, string id, string meg) {
         }
     }
     else {
-        Model* model;
-        if (snp.find(";") != -1 || snp.find("-") != -1)
-            throw;
+        InfoPipe* info;
+        if (snp.find("FS-") != -1)
+            info = new FrameshiftInfo(snp);
+        else if (snp.find("Not:") != -1)
+            info = new KargvaAaHypersuscetible(snp, id, databaseSequences);
+        else if (snp.find(";") != -1)
+            info = new KargvaAaMultiple(snp, id, databaseSequences);
+        else if (snp.find("Must:") != -1)
+            info = new KargvaIntrinsicList(snp, id, databaseSequences);
+        else if (snp.find("-") != -1)
+            info = new KargvaAaDeletion(snp, id, databaseSequences);
+        else if (snp.find("+") != -1)
+            info = new KargvaAaInsertion(snp, id, databaseSequences);
         else if (snp.find("STOP") != -1)
-            model = new KargvaAaNonsense(snp, id, databaseSequences);
+            info = new KargvaAaNonsense(snp, id, databaseSequences);
+        else if (snp.find("nonstop") != -1)
+            info = new KargvaAaNonstop(snp, id, databaseSequences);
         else
-            model = new KargvaAaMissense(snp, id, databaseSequences);
+            info = new KargvaAaMissense(snp, id, databaseSequences);
         list<InfoPipe*> temp;
-        temp.push_back(model->Clone());
+        temp.push_back(info->Clone());
         snpInfoDatabase.emplace(meg, temp);
-        delete model;
+        delete info;
     }
 }
 void KargvaDatabase::SNPInfo(){
@@ -74,7 +109,7 @@ void KargvaDatabase::SNPInfo(){
                                 "ARO:3003327", "ARO:3003458", "ARO:3003470", "ARO:3003901", "ARO:3003889", "ARO:3003940", "ARO:3003295",
                                 "ARO:3003298", "ARO:3004631", "ARO:3003294", "ARO:3003305", "ARO:3004562", "ARO:3003459", "ARO:3003303",
                                 "ARO:3003302", "ARO:3003393", "ARO:3003448", "ARO:3003392", "ARO:3003077", "ARO:3003790", "ARO:3003028",
-                                "ARO:3003028", "ARO:3003574", "ARO:3003777", "ARO:3003785", "ARO:3003784", "ARO:3003461", "ARO:3003779",
+                                "ARO:3003573", "ARO:3003574", "ARO:3003777", "ARO:3003785", "ARO:3003784", "ARO:3003461", "ARO:3003779",
                                 "ARO:3003686", "ARO:3003309", "ARO:3004630", "ARO:3003941", "ARO:3003316", "ARO:3003937", "ARO:3003323",
                                 "ARO:3003896", "ARO:3003394", "ARO:3003380", "ARO:3003379", "ARO:3003283", "ARO:3003288", "ARO:3004563",
                                 "ARO:3004721", "ARO:3003479", "ARO:3004153", "ARO:3003445", "ARO:3003465", "ARO:3003359", "ARO:3003902",
@@ -193,11 +228,11 @@ void KargvaDatabase::SNPInfo(){
     snpsearch.open("KargvaInfoExtracion/SNP_correction.csv");
     while (std::getline(snpsearch, line)) {
         string id = line.substr(0, line.find(","));
-        line = line.substr(line.find(","));
+        line = line.substr(line.find(",")+1);
         string meg = line.substr(0, line.find(","));
         vector<string> snp;
         while (line.find(",") != -1) {
-            line = line.substr(line.find(","));
+            line = line.substr(line.find(",")+1);
             if (line[0] == ',') break;
             snp.push_back(line.substr(0, line.find(",")));
         }

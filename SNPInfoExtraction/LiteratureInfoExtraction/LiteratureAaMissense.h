@@ -26,6 +26,7 @@ LiteratureAaMissense::LiteratureAaMissense(const LiteratureAaMissense& other) {
     this->mutant_aa = other.mutant_aa;
     this->megID = other.megID;
     this->databaseSequences = other.databaseSequences;
+    this->nucleic = other.nucleic;
 }
 InfoPipe* LiteratureAaMissense::Clone() {
     return new LiteratureAaMissense(*this);

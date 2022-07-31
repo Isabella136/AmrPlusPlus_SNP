@@ -26,6 +26,7 @@ LiteratureAaIntrinsic::LiteratureAaIntrinsic(const LiteratureAaIntrinsic& other)
     this->pos = other.pos;
     this->megID = other.megID;
     this->databaseSequences = other.databaseSequences;
+    this->nucleic = other.nucleic;
 }
 InfoPipe* LiteratureAaIntrinsic::Clone() {
     return new LiteratureAaIntrinsic(*this);

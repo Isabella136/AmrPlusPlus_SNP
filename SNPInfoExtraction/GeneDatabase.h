@@ -12,7 +12,7 @@ using namespace std;
 class GeneDatabase {
     private:
         map<int, Gene*>  genes;
-        unordered_map<string, list<Model*>> snpInfoDatabase;
+        unordered_map<string, list<InfoPipe*>> snpInfoDatabase;
     public:
         GeneDatabase(ModelDatabase& models);
         void combineDatabases(ModelDatabase& models);
@@ -27,7 +27,7 @@ GeneDatabase::GeneDatabase(ModelDatabase& models)
 }
 void GeneDatabase::combineDatabases(ModelDatabase& models)
 {
-    unordered_map<string, list<Model*>> temp = models.getDatabase();
+    unordered_map<string, list<InfoPipe*>> temp = models.getDatabase();
     for (auto iter = temp.begin(); iter != temp.end(); ++iter) {
         if (snpInfoDatabase.find(iter->first) == snpInfoDatabase.end())
             snpInfoDatabase.emplace(iter->first, iter->second);
@@ -38,9 +38,9 @@ void GeneDatabase::addGene(string _geneName, string _geneType, string _geneClass
     Gene* toAdd = new Gene(_geneName, _geneType, _geneClass, _geneMechanism, _geneGroup, _geneSequence);
     try
     {
-        list<Model*> allSNPs = snpInfoDatabase.at(_geneName);
+        list<InfoPipe*> allSNPs = snpInfoDatabase.at(_geneName);
         for (auto iter = allSNPs.begin(); iter != allSNPs.end(); ++iter)
-            toAdd->addSNP((*iter)->condensedSNPinfo());
+            toAdd->addSNP((*iter)->condensedInfo());
     }
     catch (const out_of_range & oor) {}
     int megNumber = stoi(_geneName.substr(_geneName.find('_') + 1));

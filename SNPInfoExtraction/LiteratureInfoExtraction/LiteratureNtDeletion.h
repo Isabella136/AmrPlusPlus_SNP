@@ -25,6 +25,7 @@ LiteratureNtDeletion::LiteratureNtDeletion(const LiteratureNtDeletion& other) {
     this->pos = other.pos;
     this->megID = other.megID;
     this->databaseSequences = other.databaseSequences;
+    this->nucleic = other.nucleic;
 }
 InfoPipe* LiteratureNtDeletion::Clone() {
     return new LiteratureNtDeletion(*this);

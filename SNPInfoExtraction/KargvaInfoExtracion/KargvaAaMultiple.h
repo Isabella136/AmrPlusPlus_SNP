@@ -4,6 +4,7 @@
 #include "KargvaAaDeletion.h"
 #include "KargvaAaMissense.h"
 #include "KargvaAaNonstop.h"
+#include "KargvaAaInsertion.h"
 
 using namespace std;
 
@@ -35,8 +36,10 @@ KargvaAaMultiple::KargvaAaMultiple(string line, string id, shared_ptr<CARD_datab
 		KargvaModel* model;
 		if (snp[i] == "nonstop")
 			model = new KargvaAaNonstop(snp[i], id, dbSeq);
-		else if (snp[i].at(0) == '-')
+		else if (snp[i].find("-") != -1)
 			model = new KargvaAaDeletion(snp[i], id, dbSeq);
+		else if (snp[i].find("+") != -1)
+			model = new KargvaAaInsertion(snp[i], id, dbSeq);
 		else
 			model = new KargvaAaMissense(snp[i], id, dbSeq);
 		models.push_back(model);

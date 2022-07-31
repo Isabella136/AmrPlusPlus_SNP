@@ -8,10 +8,12 @@
 #include "LiteratureAaDeletion.h"
 #include "LiteratureAaMissense.h"
 #include "LiteratureAaMultiple.h"
+#include "LiteratureAaNonsense.h"
 #include "LiteratureNtMultiple.h"
 #include "LiteratureIntrinsicList.h"
 #include "LiteratureNtDeletion.h"
 #include "LiteratureNtMissense.h"
+#include "../FrameshiftInfo.h"
 #include "../ModelDatabase.h"
 
 using namespace std;
@@ -44,11 +46,11 @@ void LiteratureDatabase::SNPInfo() {
 		for (int i = 5; i < headerAndSNP.size(); i++) {
 			if (headerAndSNP[i] == "RequiresSNPConfirmation") break;
 			if (headerAndSNP[i] == "") continue;
-			InfoPipe* model = nullptr;
+			InfoPipe* info = nullptr;
 			if (headerAndSNP[i].find("NucMult:") != -1)
-				model = new LiteratureNtMultiple(headerAndSNP[i].substr(8), headerAndSNP[0], databaseSequences);
+				info = new LiteratureNtMultiple(headerAndSNP[i].substr(8), headerAndSNP[0], databaseSequences);
 			else if (headerAndSNP[i].find("Mult:") != -1)
-				model = new LiteratureAaMultiple(headerAndSNP[i].substr(5), headerAndSNP[0], databaseSequences);
+				info = new LiteratureAaMultiple(headerAndSNP[i].substr(5), headerAndSNP[0], databaseSequences);
 			else if (headerAndSNP[i].find("MustNuc:") != -1)
 				if (must == nullptr) {
 					must = new LiteratureIntrinsicList(headerAndSNP[i], headerAndSNP[0], databaseSequences);
@@ -56,25 +58,29 @@ void LiteratureDatabase::SNPInfo() {
 				else {
 					must->addToList(headerAndSNP[i], headerAndSNP[0], databaseSequences);
 				}
-			else if (headerAndSNP[i].find("Must") != -1) {
+			else if (headerAndSNP[i].find("Must:") != -1) {
 				if (must == nullptr) {
 					must = new LiteratureIntrinsicList(headerAndSNP[i].substr(5), headerAndSNP[0], databaseSequences);
 				}
 				else
 					must->addToList(headerAndSNP[i].substr(5), headerAndSNP[0], databaseSequences);
 			}
+			else if (headerAndSNP[i].find("FS-") != -1)
+				info = new FrameshiftInfo(headerAndSNP[i]);
+			else if (headerAndSNP[i].find("Non:") != -1)
+				info = new LiteratureAaNonsense(headerAndSNP[i].substr(4), headerAndSNP[0], databaseSequences);
 			else if (headerAndSNP[i].find("NucDel:") != -1)
-				model = new LiteratureNtDeletion(headerAndSNP[i].substr(7), headerAndSNP[0], databaseSequences);
+				info = new LiteratureNtDeletion(headerAndSNP[i].substr(7), headerAndSNP[0], databaseSequences);
 			else if (headerAndSNP[i].find("Del:") != -1)
-				model = new LiteratureAaDeletion(headerAndSNP[i].substr(4), headerAndSNP[0], databaseSequences);
+				info = new LiteratureAaDeletion(headerAndSNP[i].substr(4), headerAndSNP[0], databaseSequences);
 			else if (headerAndSNP[i].find("Nuc:") != -1)
-				model = new LiteratureNtMissense(headerAndSNP[i].substr(4), headerAndSNP[0], databaseSequences);
+				info = new LiteratureNtMissense(headerAndSNP[i].substr(4), headerAndSNP[0], databaseSequences);
 			else
-				model = new LiteratureAaMissense(headerAndSNP[i].substr(4), headerAndSNP[0], databaseSequences);
-			if (model != nullptr) {
+				info = new LiteratureAaMissense(headerAndSNP[i].substr(4), headerAndSNP[0], databaseSequences);
+			if (info != nullptr) {
 				if (snpInfoDatabase.find(headerAndSNP[0]) == snpInfoDatabase.end()) 
 					snpInfoDatabase.emplace(headerAndSNP[0], list<InfoPipe*>());
-				snpInfoDatabase.at(headerAndSNP[0]).push_back(model);
+				snpInfoDatabase.at(headerAndSNP[0]).push_back(info);
 				
 			}
 		}

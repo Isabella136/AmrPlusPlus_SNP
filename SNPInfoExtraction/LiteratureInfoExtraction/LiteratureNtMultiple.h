@@ -59,7 +59,7 @@ string LiteratureNtMultiple::condensedInfo()
 {
 	string toReturn = "NucMult:";
 	for (int i = 0; i < models.size(); i++) {
-		toReturn += models[i]->condensedSNPinfo();
+		toReturn += models[i]->condensedInfo();
 		if (i + 1 < models.size())
 			toReturn += ";";
 	}

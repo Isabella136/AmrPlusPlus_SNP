@@ -27,7 +27,7 @@ LiteratureIntrinsicList::LiteratureIntrinsicList(string line, string id, shared_
 LiteratureIntrinsicList::~LiteratureIntrinsicList() {}
 LiteratureIntrinsicList::LiteratureIntrinsicList(const LiteratureIntrinsicList& other) {
 	for (auto iter = other.mustHaveList.begin(); iter != other.mustHaveList.end(); ++iter) {
-		this->mustHaveList.emplace(iter->first, iter->second->Clone());
+		this->mustHaveList.emplace(iter->first, dynamic_cast<LiteratureModel*>(iter->second->Clone()));
 	}
 }
 void LiteratureIntrinsicList::addToList(string line, string id, shared_ptr<MEGARes_database> dbSeq) {
@@ -51,5 +51,5 @@ string LiteratureIntrinsicList::condensedInfo() {
 	return toReturn.substr(0,toReturn.length()-1);
 }
 string LiteratureIntrinsicList::infoType() {
-	return "Model";
+	return "List";
 }

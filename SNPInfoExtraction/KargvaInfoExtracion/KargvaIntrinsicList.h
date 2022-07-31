@@ -23,7 +23,7 @@ KargvaIntrinsicList::KargvaIntrinsicList(string line, string id, shared_ptr<CARD
 KargvaIntrinsicList::~KargvaIntrinsicList() {}
 KargvaIntrinsicList::KargvaIntrinsicList(const KargvaIntrinsicList& other) {
 	for (auto iter = other.mustHaveList.begin(); iter != other.mustHaveList.end(); ++iter) {
-		this->mustHaveList.emplace(iter->first, iter->second->Clone());
+		this->mustHaveList.emplace(iter->first, dynamic_cast<KargvaAaIntrinsic*>(iter->second->Clone()));
 	}
 }
 void KargvaIntrinsicList::addToList(string line, string id, shared_ptr<CARD_database> dbSeq) {
@@ -42,5 +42,5 @@ string KargvaIntrinsicList::condensedInfo() {
 	return toReturn.substr(0, toReturn.length() - 1);
 }
 string KargvaIntrinsicList::infoType() {
-	return "Model";
+	return "List";
 }

@@ -23,7 +23,10 @@ KargvaAaInsertion::KargvaAaInsertion(string line, string id, shared_ptr<CARD_dat
 }
 KargvaAaInsertion::~KargvaAaInsertion() {}
 KargvaAaInsertion::KargvaAaInsertion(const KargvaAaInsertion& other) {
-
+    this->cardID = other.cardID;
+    this->databaseSequences = other.databaseSequences;
+    this->mt_aa = other.mt_aa;
+    this->pos = other.pos;
 }
 InfoPipe* KargvaAaInsertion::Clone() {
     return new KargvaAaInsertion(*this);
@@ -33,11 +36,12 @@ void KargvaAaInsertion::makeModel(string line) {
     for (i = 0; isalpha(line[i]); i++) {
         mt_aa += line[i];
     }
-    line = line.substr(i).substr(0,line.length()-1);
+    line = line.substr(i, line.length()-i-1);
     while (line.find("/") != -1) {
         pos.push_back(stoi(line.substr(0, line.find("/"))));
         line = line.substr(line.find("/")+1);
     }
+    pos.push_back(stoi(line));
 }
 void KargvaAaInsertion::addToModel(string line) {
     throw std::exception("should not have been called: model type is insertion");
