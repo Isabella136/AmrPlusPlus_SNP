@@ -59,7 +59,7 @@ void KargvaAaDeletion::makeModel(string line) {
             pos.push_back(stoi(posString.substr(0, posString.find("/"))));
             posString = posString.substr(posString.find("/") + 1);
         }
-        pos.push_back(stoi(line.substr(1, line.size() - 2)));
+        pos.push_back(stoi(posString.substr(0)));
     }
     else if (isalpha(line.at(1))) {
         wt_aa = line.at(1);

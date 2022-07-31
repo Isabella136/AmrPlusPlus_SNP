@@ -58,7 +58,7 @@ string KargvaAaInsertion::condensedInfo() {
         lastPos = *iter;
         if (lastPos != firstPos)
             toReturn += "/";
-        toReturn += *iter;
+        toReturn += to_string(*iter);
     }
     toReturn += addContext(firstPos - 2, lastPos - 1, 0);
     return toReturn;
