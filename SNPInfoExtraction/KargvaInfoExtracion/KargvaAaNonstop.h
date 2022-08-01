@@ -41,7 +41,7 @@ bool KargvaAaNonstop::includes(string line) {
 	return false;
 }
 string KargvaAaNonstop::condensedInfo() {
-	return "Nonstop:" + pos;
+	return "Nonstop:" + to_string(pos);
 }
 string KargvaAaNonstop::infoType() {
 	return "Model";

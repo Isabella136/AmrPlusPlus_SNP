@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <unordered_map>
+#include <algorithm>  
 
 using namespace std;
 
@@ -42,6 +43,7 @@ string MEGARes_database::getSequence(string id)
 string MEGARes_database::getAASequence(string id)
 {
 	if (databaseSequences.find(id) != databaseSequences.end())
+		transform(databaseSequences[id].begin(), databaseSequences[id].end(), databaseSequences[id].begin(), ::toupper);
 		return translate(databaseSequences[id]);
 	return "none";
 }

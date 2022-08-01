@@ -2,6 +2,7 @@
 #include <string>
 #include <unordered_map>
 #include <list>
+#include <algorithm>  
 
 using namespace std;
 
@@ -34,6 +35,7 @@ Gene::Gene(string _geneName, string _geneType, string _geneClass, string _geneMe
 	geneMechanism = _geneMechanism;
 	geneGroup = _geneGroup;
 	geneSequence = _geneSequence;
+	transform(geneSequence.begin(), geneSequence.end(), geneSequence.begin(), ::toupper);
 }
 void Gene::addSNP(string SNP)
 {

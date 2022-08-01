@@ -41,7 +41,7 @@ void LiteratureAaNonsense::makeModel(string line) {
 string LiteratureAaNonsense::condensedInfo() {
     string toReturn = "Non:";
     toReturn += wt_aa;
-    toReturn += pos;
+    toReturn += to_string(pos);
     toReturn += "*";
     toReturn += addContext(pos - 2, pos, wt_aa);
     return toReturn;
