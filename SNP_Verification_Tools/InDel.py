@@ -105,7 +105,7 @@ class Insertion(InDel):
                 break
             i+=1
     def condensedInfo(this):
-        return ("+", this.posACT, this.inserted)
+        return (this.inserted, this.posACT, "+")
 
 class Deletion(InDel):
     def __init__(this, sequence, mtString, name):

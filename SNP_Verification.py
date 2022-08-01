@@ -26,6 +26,7 @@ geneDict = {}
 argInfoDict = {}
 intrinsicInfoDict = {}
 frameshiftInfoDict = {}
+meg_3180InfoDict = {}
 snpInfoPrint = lambda a, b, c : a + ": " + b + " resitant reads out of " + c + " total reads\n"
 
 inputFile = []
@@ -87,7 +88,7 @@ for name in inputFile:
             continue
         elif (read.cigarstring == None):
             continue
-        verify(read, gene, argInfoDict, intrinsicInfoDict, frameshiftInfoDict, mt_and_wt)
+        verify(read, gene, argInfoDict, intrinsicInfoDict, frameshiftInfoDict, meg_3180InfoDict, mt_and_wt)
     samfile.close() 
 
     #Output SNP Info

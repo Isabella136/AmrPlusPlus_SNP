@@ -5,11 +5,11 @@ from SNP_Verification_Processes.DifferenceCheck import DifferenceCheck
 from SNP_Verification_Processes.MappingQueryToReference import MapQueryToReference
 from SNP_Verification_Processes.NonsenseCheck import NonsenseCheck
 from SNP_Verification_Processes.IntrinsicCheck import IntrinsicCheck
-from SNP_Verification_Processes.MissenseAndDeletionCheck import MissenseAndDeletionCheck
+from SNP_Verification_Processes.MisInDelCheck import MisInDelCheck
 from SNP_Verification_Processes.nTupleCheck import nTupleCheck
 import pysam
 
-def verify(read, gene, argInfoDict, intrinsicInfoDict, frameshiftInfoDict, mt_and_wt):
+def verify(read, gene, argInfoDict, intrinsicInfoDict, frameshiftInfoDict, meg_3180InfoDict, mt_and_wt):
     name = gene.getName()
     rRna = gene.rRna()
     if not(DifferenceCheck(name, read, rRna, argInfoDict, frameshiftInfoDict)): 
@@ -20,9 +20,9 @@ def verify(read, gene, argInfoDict, intrinsicInfoDict, frameshiftInfoDict, mt_an
         if nonsense != None: return nonsense
     if (IntrinsicCheck(mapOfInterest, seqOfInterest, gene, name, read, intrinsicInfoDict, argInfoDict)):
         return True
-    elif (MissenseAndDeletionCheck(gene, name, mapOfInterest, seqOfInterest, mt_and_wt, argInfoDict)):
+    elif (MisInDelCheck(gene, name, mapOfInterest, seqOfInterest, mt_and_wt, argInfoDict, meg_3180InfoDict)):
         return True
-    elif (nTupleCheck(mapOfInterest, gene, name, seqOfInterest, mt_and_wt, argInfoDict)):
+    elif (nTupleCheck(mapOfInterest, gene, name, seqOfInterest, mt_and_wt, argInfoDict, meg_3180InfoDict)):
         return True
     else: disregard(name, argInfoDict)
     return False

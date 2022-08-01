@@ -3,7 +3,6 @@ from . import InDel
 from . import dnaTranslate
 class Gene:
     def __init__(this, name, sequence, infoString):
-
         this.name = name[:name.find('|')]
         this.fullName = name + "|RequiresSNPConfirmation"
         this.sequence = sequence.upper()
@@ -71,10 +70,12 @@ class Gene:
                 snpToAdd = SNP.SNP_Non(this.translated, info[4:], this.name)
                 if(snpToAdd.isSnpValid()):
                     this.listOfNonsenseSNPs.append(snpToAdd)
+
     def aaSequence(this):
         return this.translated
     def ntSequence(this):
         return this.sequence
+
     def condensedMultInfo(this):
         condensedInfoList = []
         for snp in this.listOfMultSNPs :
@@ -86,9 +87,9 @@ class Gene:
         condensedInfoList = []
         for snp in this.listOfMisSNPs :
             condensedInfoList.append(snp.condensedInfo())
-        for snp in this.listOfDel :
-            condensedInfoList.append(snp.condensedInfo())
         for snp in this.listOfIns:
+            condensedInfoList.append(snp.condensedInfo())
+        for snp in this.listOfDel :
             condensedInfoList.append(snp.condensedInfo())
         return condensedInfoList
     def condensedNonInfo(this):
@@ -96,10 +97,13 @@ class Gene:
         for snp in this.listOfNonsenseSNPs :
             condensedInfoList.append(snp.condensedInfo())
         return condensedInfoList
+    def getNonstopInfo(this):
+        return this.isThereANonstop
     def getFirstMustBetweenParams(this, begin, end):
         if this.listOfMusts == None:
             return None
         return this.listOfMusts.getFirstMustBetweenParams(begin, end)
+
     def getName(this):
         return this.name
     def getFullName(this):
