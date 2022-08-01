@@ -1,4 +1,4 @@
-from . import Gene
+from . import InDel
 class SNP:
     def __init__(this, snpStringList, name):
         this.name = name
@@ -58,8 +58,8 @@ class SNP:
         else:
             begin = this.posOG - 35
             end = this.posOG + 26
-            if end > len(sequence)-1:
-                end = len(sequence) - 1 - len(this.rightContext) - len(this.leftContext)
+            if end > (len(sequence) - 2 - len(this.rightContext) - len(this.leftContext)):
+                end = len(sequence) - 2 - len(this.rightContext) - len(this.leftContext)
                 begin = end - 61
             elif begin < 0:
                 begin = 0
@@ -134,23 +134,6 @@ class SNP_Mis(SNP):
             this.wtACT = sequence[i+5]
             this.posACT = i+5+1
 
-class SNP_Del(SNP):
-    def __init__(this, sequence, snpString, name):
-        snpStringList = [snpString]
-        SNP.__init__(this, snpStringList, name)
-        snpString = snpStringList[0]
-        snpString = snpString[2:]
-        SNP.establishContext(this, snpString)
-        SNP.findACT(this, sequence)
-    def condensedInfo(this):
-        wt = this.wtOG
-        if (this.wtOG != this.wtACT):
-            wt += this.wtACT
-        return (wt, this.posACT, "-")
-    def changeACT(this, sequence, i):
-        this.wtACT = sequence[i+5]
-        this.posACT = i+5+1
-
 class SNP_Non(SNP):
     def __init__(this, sequence, snpString, name):
         snpStringList = [snpString]
@@ -194,12 +177,12 @@ class Must(SNP):
 class MustList:
     def __init__(this, wtString, name):
         this.listOfMust = {}
-        this.firstPos = None
         this.aaOrNu = "amino acids"
-        if wtString[:3] == "Nuc":
+        if wtString[:8] == "Must:Nuc":
             this.aaOrNu = "nucleic acids"
-        while(wtString.find(";") != -1):
-            if wtString[:3] == "Nuc":
+        infoList = wtString.split(";")
+        for info in infoList:
+            if info == "Nuc":
                 temp = wtString[:wtString.find(';')][4:]
             else:
                 temp = wtString[:wtString.find(';')][6:]
@@ -209,16 +192,7 @@ class MustList:
             else:
                 this.firstPos = wtToAdd.getPos()
             this.listOfMust.update({wtToAdd.getPos():wtToAdd})
-            wtString = wtString[wtString.find(';')+1:]
-        if wtString[:3] == "Nuc":
-            wtToAdd = Must(wtString[4:], name)
-        else:
-            wtToAdd = Must(wtString[6:], name)
-        if len(this.listOfMust) > 0:
-            this.listOfMust[list(this.listOfMust.keys())[-1]].defineNext(wtToAdd)
-        this.listOfMust.update({wtToAdd.getPos():wtToAdd})
-        this.lastPos = wtToAdd.getPos()
-        if this.firstPos == None: this.firstPos = this.lastPos
+            this.lastPos = wtToAdd.getPos()
     def getFirstMustBetweenParams(this, begin, end):
         if (end < this.firstPos) or (begin > this.lastPos):
             return None
@@ -232,29 +206,20 @@ class MustList:
 
 class SNP_Mult:
     def __init__(this, sequence, snpString, name):
-        this.listOfSNPs = []
-        while(snpString.find(';') != -1):
-            temp = snpString[:snpString.find(';')]
-            if temp[:3] != "Del":
-                snpToAdd = SNP_Mis(sequence, temp[4:], name)
-                this.listOfSNPs.append(snpToAdd)
-            else: # temp[:3] == "Del"
-                snpToAdd = SNP_Del(sequence, temp[4:], name)
-                this.listOfSNPs.append(snpToAdd)
-            snpString = snpString[snpString.find(';')+1:]
-        if snpString[:3] != "Del":
-            snpToAdd = SNP_Mis(sequence, snpString[4:], name)
-            this.listOfSNPs.append(snpToAdd)
-        else: # snpString[:3] == "Del"
-            snpToAdd = SNP_Del(sequence, snpString[4:], name)
-            this.listOfSNPs.append(snpToAdd)
+        this.listOfMts = []
+        snpsAndDels = snpString.split(";")
+        for info in snpsAndDels:
+            if info[:3] != "Del":
+                this.listOfMts.append(SNP_Mis(sequence, info[4:], name))
+            else: #info[:3] = "Del"
+                this.listOfMts.append(InDel.Deletion(sequence, info[4:], name))
     def condensedInfo(this):
         toReturn = []
-        for snp in this.listOfSNPs:
+        for snp in this.listOfMts:
             toReturn.append(snp.condensedInfo())
         return toReturn
     def isSnpValid(this):
-        for snp in this.listOfSNPs:
+        for snp in this.listOfMts:
             if not(snp.isSnpValid()):
                 return False
         return True
