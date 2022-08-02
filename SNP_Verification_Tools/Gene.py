@@ -9,7 +9,7 @@ class Gene:
         if "Nuc" in infoString:
             this.translated = None
         else:
-            this.translated = dnaTranslate(this.sequence)
+            this.translated = dnaTranslate(this.sequence, name)
 
         this.listOfHyperSNPs = []
         this.listOfMisSNPs = []
@@ -26,7 +26,7 @@ class Gene:
             if "Nonstop" in info:
                 if info[:4] == "Mult":
                     snpToAdd = SNP.SNP_Mis(this.translated, info[9:info.find(";")], this.name)
-                    if(snpToAdd.isSnpValid()):
+                    if (snpToAdd.isSnpValid()):
                         this.isThereANonstop = (True, snpToAdd)
                 else:
                     this.isThereANonstop = (True, None)
@@ -47,7 +47,7 @@ class Gene:
                 if(indelToAdd.isSnpValid()):
                     this.listOfIns.append(indelToAdd)
             elif info[:5] == "Hyper":
-                snpToAdd = SNP.SNP_Mult(this.sequence, info[6:], this.name)
+                snpToAdd = SNP.SNP_Mult(this.translated, info[6:], this.name)
                 if(snpToAdd.isSnpValid()):
                     this.listOfHyperSNPs.append(snpToAdd)
             elif info[:3] == "FS-":

@@ -1,3 +1,5 @@
+mycoplasmataceaeList = ["MEG_3185", "MEG_3240", "MEG_5328", "MEG_5330", "MEG_5331"]
+
 aa = {
     "TTT" : 'F',    "TCT" : 'S',    "TAT" : 'Y',    "TGT" : 'C',
     "TTC" : 'F',    "TCC" : 'S',    "TAC" : 'Y',    "TGC" : 'C',
@@ -31,16 +33,21 @@ def resistant(name, increment, argInfoDict):
 def disregard(name, argInfoDict):
     resistant(name, 0, argInfoDict)
 
-def dnaTranslate(dna):
+def dnaTranslate(dna, name):
     toReturn = ""
     for i in range(0, len(dna), 3):
         if dna[i:i+3].find('N') == -1:
-            toReturn += aa[dna[i:i+3]]
+            if (name in mycoplasmataceaeList) and (dna[i:i+3] == "TGA"):
+                toReturn += 'W'
+            else:
+                toReturn += aa[dna[i:i+3]]
         else:
             toReturn += 'N'
     return toReturn
 
 def reverseTranslation(amino_acid):
+    if amino_acid == '*':
+        return "TAA"
     for codon, aAcid in aa.items():
         if amino_acid == aAcid:
             return codon

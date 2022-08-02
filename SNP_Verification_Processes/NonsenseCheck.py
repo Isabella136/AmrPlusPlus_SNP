@@ -2,27 +2,37 @@ from SNP_Verification_Tools import resistant, disregard
 from SNP_Verification_Tools import Gene
 from SNP_Verification_Tools import SNP
 
-def NonsenseCheck(seqOfInterest, mapOfInterest, gene, read, name, argInfoDict):
+def NonsenseCheck(read, gene, mapOfInterest, seqOfInterest, argInfoDict, meg_3180InfoDict):
     stopLocation = seqOfInterest.find('*') 
     #if nonsense mutations
     if (stopLocation != -1) & ((stopLocation < len(seqOfInterest)-1) | (read.reference_end < gene.ntSeqLength())): 
-        return verifyNonsense(stopLocation, mapOfInterest, gene, name, argInfoDict)
+        return verifyNonsense(gene, stopLocation, mapOfInterest, argInfoDict, meg_3180InfoDict)
     return None
 
-def verifyNonsense(stopLocation, aa_alignment_map, gene, name, argInfoDict):
+def verifyNonsense(gene, stopLocation, mapOfInterest, argInfoDict, meg_3180InfoDict):
     SNPInfo = gene.condensedNonInfo()
     if (len(SNPInfo) == 0):
-        disregard(name, argInfoDict)
+        if gene.getName() == "MEG_3180":
+            if "susceptible" not in meg_3180InfoDict:
+                meg_3180InfoDict["susceptible"] = 0
+            meg_3180InfoDict["susceptible"] += 1
+        else:
+            disregard(gene.getName(), argInfoDict)
         return False
     else:
         toReturn = False
         res = 0
         for snp in SNPInfo:
-            stopLocTemp = aa_alignment_map.get(snp[1]-1,False)
+            stopLocTemp = mapOfInterest.get(snp[1]-1,False)
             if stopLocTemp != False:
                 if stopLocTemp[0] == stopLocation:
+                    if gene.getName() == "MEG_3180":
+                        if "resistant" not in meg_3180InfoDict:
+                            meg_3180InfoDict["resistant"] = 0
+                        meg_3180InfoDict["resistant"] += 1
+                        return True
                     res = 1
                     toReturn = True
                     break
-        resistant(name, res, argInfoDict)
+        resistant(gene.getName(), res, argInfoDict)
         return toReturn

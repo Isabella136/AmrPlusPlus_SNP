@@ -1,6 +1,6 @@
 from SNP_Verification_Tools import disregard
 
-def DifferenceCheck(name, read, rRna, argInfoDict, frameshiftInfoDict):
+def FrameshiftCheck(name, read, rRna, argInfoDict, frameshiftInfoDict):
     if not(rRna):
         cigarOpCount = read.get_cigar_stats()[0].tolist()
         #if (insertions - deletions) %3 != 0, disregard

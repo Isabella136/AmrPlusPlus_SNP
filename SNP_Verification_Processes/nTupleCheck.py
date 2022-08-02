@@ -2,7 +2,7 @@ from SNP_Verification_Tools import resistant
 from SNP_Verification_Tools import Gene
 from SNP_Verification_Tools import SNP
 
-def nTupleCheck(mapOfInterest, gene, name, seqOfInterest, mt_and_wt, argInfoDict, meg_3180InfoDict):
+def nTupleCheck(gene, mapOfInterest, seqOfInterest, mt_and_wt, argInfoDict, meg_3180InfoDict):
     SNPInfo = gene.condensedMultInfo()
     if (len(SNPInfo) == 0):
         return False
@@ -56,7 +56,7 @@ def nTupleCheck(mapOfInterest, gene, name, seqOfInterest, mt_and_wt, argInfoDict
                         break
                 if notValid:
                     continue
-                resistant(name, 1, argInfoDict)
+                resistant(gene.getName(), 1, argInfoDict)
                 return True
 
             resBool = True
@@ -127,6 +127,11 @@ def nTupleCheck(mapOfInterest, gene, name, seqOfInterest, mt_and_wt, argInfoDict
                     if not(resBool): break
 
             if resBool: 
-                resistant(name, 1, argInfoDict)
+                if (gene.getName() == "MEG_3180"):
+                    if "resistant" not in meg_3180InfoDict:
+                        meg_3180InfoDict["resistant"] = 0
+                    meg_3180InfoDict["resistant"] += 1    
+                else:
+                    resistant(gene.getName(), 1, argInfoDict)
                 return True
     return False

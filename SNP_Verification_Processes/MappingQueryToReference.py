@@ -12,7 +12,7 @@ def extendCigar(cigar):
                 count -= 1
     return toReturn
 
-def MapQueryToReference(rRna, read):
+def MapQueryToReference(rRna, read, name):
     cigar = extendCigar(read.cigarstring)
     aligned_pair = read.get_aligned_pairs()
     nt_alignment_map = mapCigarToAlignment(cigar, aligned_pair, rRna)
@@ -31,7 +31,7 @@ def MapQueryToReference(rRna, read):
     trimmedQuerySequence = querySeq[start:end+1]
     seqOfInterest = trimmedQuerySequence
     if not(rRna):
-        aaQuerySequence = dnaTranslate(trimmedQuerySequence)
+        aaQuerySequence = dnaTranslate(trimmedQuerySequence, name)
         aa_alignment_map = aaAlignment(nt_alignment_map)
         seqOfInterest = aaQuerySequence
         mapOfInterest = aa_alignment_map
