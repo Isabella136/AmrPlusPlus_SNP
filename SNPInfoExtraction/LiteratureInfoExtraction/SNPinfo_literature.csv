@@ -153,7 +153,7 @@ MEG_3994,Drugs,MLS,Macrolide-resistant_23S_rRNA_mutation,MLS23S,RequiresSNPConfi
 MEG_4087,Multi-compound,Drug_and_biocide_resistance,Drug_and_biocide_MFS_efflux_regulator,MTRR,Reg:A39T,Reg:G45D,Reg:E202G,,,,,,,,,,,,,
 MEG_4093,Drugs,Fosfomycin,Fosfomycin_target_mutation,MURA,Must:D119,,,,,,,,,,,,,,,
 MEG_4109,Drugs,Multi-drug_resistance,Multi-drug_RND_efflux_pumps,NALC,Reg:G71E,Reg:R97G,Mult:Reg:E72K;Reg:D75H;Reg:A85D,Mult:Reg:P105A;Reg:P122L;Reg:S141N,Mult:Reg:T100K;Reg:L110P,Mult:Reg:E204G;Reg:H205N,,,,,,,,,,
-MEG_4110,Drugs,Multi-drug_resistance,Multi-drug_RND_efflux_regulator,NALD,Reg:S32N,Mult:Reg:I137T;Del:E138-;Del:L139-;Del:C140-;Del:E141-;Del:Q142-;Del:L143-;Del:F144-;Del:A145-,Reg:T158I,,,,,,,,,,,,,
+MEG_4110,Drugs,Multi-drug_resistance,Multi-drug_RND_efflux_regulator,NALD,FS-pump_repressor,Reg:S32N,Reg:T158I,,,,,,,,,,,,,
 MEG_4161,Drugs,Multi-drug_resistance,Multi-drug_RND_efflux_pumps,NFXB,FS-pump_repressor,Reg:H87R,Reg:R82L,Non:E31*,Non:R23*,Reg:R42G,,,,,,,,,,
 MEG_4223,Drugs,Oxazolidinone,Oxazolidinone-resistant_23S_rRNA_mutation,O23S,Nuc:C2579T,Nuc:G2604T,,,,,,,,,,,,,,
 MEG_4279,Drugs,betalactams,Mutant_porin_proteins,OMP36,Must:D133,Must:G189,Must:E205,Must:Y230,Must:F231,Must:S234,Must:Y235,Must:Q236,Must:R237,Must:T238,Must:D279,,,,,

@@ -173,7 +173,7 @@ void KargvaDatabase::SNPInfo(){
                 header[1] = "I422N";
         }
         else if (header[2] == "ARO:3003776") {          //MEG_4094
-            if (header[1] != "L42*")
+            if (header[1] != "L42STOP")
                 continue;
         }
         else if (header[2] == "ARO:3003775") {          //MEG_4095
