@@ -99,6 +99,8 @@ class Gene:
         return condensedInfoList
     def getNonstopInfo(this):
         return this.isThereANonstop
+    def getFrameshiftInfo(this):
+        return this.frameshiftInfo
     def getFirstMustBetweenParams(this, begin, end):
         if this.listOfMusts == None:
             return None

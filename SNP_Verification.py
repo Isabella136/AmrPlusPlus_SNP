@@ -15,7 +15,6 @@
 #   along with this program.  If not, see https://www.gnu.org/licenses/.
 
 from SNP_Verification_Tools.Gene import Gene
-from SNP_Verification_Tools.SNP import SNP
 from SNP_Verification_Processes import verify
 import pysam
 import sys, getopt
@@ -25,8 +24,11 @@ mt_and_wt = True #used in case of insertion leading to presence of both mt and w
 geneDict = {}
 argInfoDict = {}
 intrinsicInfoDict = {}
-frameshiftInfoDict = {}
+susceptibleFrameshiftInfoDict = {}
+resistantFrameshiftInfoDict = {}
 meg_3180InfoDict = {}
+meg_6094InfoDict = {}
+
 snpInfoPrint = lambda a, b, c : a + ": " + b + " resitant reads out of " + c + " total reads\n"
 
 inputFile = []
@@ -88,7 +90,7 @@ for name in inputFile:
             continue
         elif (read.cigarstring == None):
             continue
-        verify(read, gene, argInfoDict, intrinsicInfoDict, frameshiftInfoDict, meg_3180InfoDict, mt_and_wt)
+        verify(read, gene)
     samfile.close() 
 
     #Output SNP Info
@@ -129,15 +131,15 @@ for name in inputFile:
         output.close()
 
     #Output Info on Insertion/Deletion Difference
-    if len(frameshiftInfoDict) != 0:
+    if len(susceptibleFrameshiftInfoDict) != 0:
         output = open(outputFolder + "/insertion_deletion_frameshift_" + name[name.rfind("/")+1:] + ".csv", "w")
         output.write("ARG,Reads with a frameshift at the end of their sequence\n")
-        for argName in frameshiftInfoDict:
+        for argName in susceptibleFrameshiftInfoDict:
             output.write(argName + ",")
-            for query in frameshiftInfoDict[argName][:-1]:
+            for query in susceptibleFrameshiftInfoDict[argName][:-1]:
                 output.write(query + ",")
-            output.write(frameshiftInfoDict[argName][-1] + "\n")
-        frameshiftInfoDict = {}
+            output.write(susceptibleFrameshiftInfoDict[argName][-1] + "\n")
+        susceptibleFrameshiftInfoDict = {}
         output.close()
 
 sys.exit(0)

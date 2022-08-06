@@ -1,16 +1,22 @@
-from SNP_Verification_Tools import resistant
-from SNP_Verification_Tools import Gene
-from SNP_Verification_Tools import SNP
-from SNP_Verification_Tools import InDel
+from SNP_Verification_Tools import resistant, Gene, SNP, InDel
+from SNP_Verification_Processes.FrameshiftCheck import addRead
+from SNP_Verification import argInfoDict, meg_3180InfoDict, meg_6094InfoDict, resistantFrameshiftInfoDict, mt_and_wt
 
-def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest, mt_and_wt, argInfoDict, meg_3180InfoDict):
+def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest):
+    frameshiftInfo = gene.getFrameshiftInfo()
     def missenseCheck(mtInfo):
         res = 0
-        resMtCount = 0  #will be used for MEG_3180 if hypersusceptible double mutation is present
+        resMtCount = 0                                              #will be used for MEG_3180 if hypersusceptible double mutation is present
         if (mapOfInterest.get(mtInfo[1]-1,False)) != False:
-            for mt in mtInfo[2]: 
+            for mt in mtInfo[2]:
+                firstAndLastTupleIndex = [0,len(mapOfInterest[mtInfo[1]-1]) - 1]
+                tupleIndex = -1
                 for queryIndex in tuple(mapOfInterest[mtInfo[1]-1]):
-                    if queryIndex == '-': continue
+                    tupleIndex += 1
+                    if gene.rRna():
+                        if tupleIndex not in firstAndLastTupleIndex:
+                            continue
+                    if (queryIndex == '-') or (queryIndex == None): continue
                     elif mt_and_wt:
                         if mt == seqOfInterest[queryIndex]:
                             res = 1
@@ -30,6 +36,12 @@ def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest, mt_and_wt, argInfoDi
                     res = 0
                     break
             if res == 1: 
+                if frameshiftInfo != None:
+                    if gene.getName() == "MEG_6094":
+                        addRead(gene.getName, read.query_name, meg_6094InfoDict, "Has a resistance-conferring missense mutation")
+                    else:
+                        addRead(gene.getName, read.query_name, resistantFrameshiftInfoDict, "Has a resistance-conferring missense mutation")
+                    return True
                 resistant(gene.getName(), res, argInfoDict)
                 return True
         return resMtCount
@@ -54,7 +66,7 @@ def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest, mt_and_wt, argInfoDi
     mtInfoList = gene.condensedMisInDelInfo()
     for mtInfo in mtInfoList:
         if mtInfo[2] == "+":
-            count = 0       #must be equal to len(mtInfo[1]) to be considered resistant
+            count = 0                                               #must be equal to len(mtInfo[1]) to be considered resistant
             for pos in mtInfo[1]:
                 if (mapOfInterest.get(pos-1,False)) == False:
                     continue
@@ -68,6 +80,12 @@ def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest, mt_and_wt, argInfoDi
                         count += 1
                         break
             if count == len(mtInfo[1]):
+                if frameshiftInfo != None:
+                    if gene.getName() == "MEG_6094":
+                        addRead(gene.getName, read.query_name, meg_6094InfoDict, "Has a resistance-conferring insertion")
+                    else:
+                        addRead(gene.getName, read.query_name, resistantFrameshiftInfoDict, "Has a resistance-conferring insertion")
+                    return True
                 resistant(gene.getName(), 1, argInfoDict)
                 return True
 
@@ -75,10 +93,26 @@ def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest, mt_and_wt, argInfoDi
             for pos in mtInfo[1]:
                 if (mapOfInterest.get(pos-1,False)) == False:
                     continue
+                foundADeletion = False
+                remainingResidueIsEqualToOriginal = (False, False)  #1/2M3D2/1M, must be both True or False to be res
                 for queryIndex in tuple(mapOfInterest[pos-1]):
-                    if queryIndex == "-":
-                        resistant(gene.getName(), 1, argInfoDict)
+                    if (queryIndex == "-") or (queryIndex == None):
+                        foundADeletion = True
+                    else:
+                        if seqOfInterest[queryIndex] == mtInfo[0]:
+                            if remainingResidueIsEqualToOriginal[0]:
+                                remainingResidueIsEqualToOriginal = (True,True)
+                            else:
+                                remainingResidueIsEqualToOriginal = (True,False)
+                if foundADeletion and (remainingResidueIsEqualToOriginal[0]==remainingResidueIsEqualToOriginal[1]):
+                    if frameshiftInfo != None:
+                        if gene.getName() == "MEG_6094":
+                            addRead(gene.getName, read.query_name, meg_6094InfoDict, "Has a resistance-conferring deletion")
+                        else:
+                            addRead(gene.getName, read.query_name, resistantFrameshiftInfoDict, "Has a resistance-conferring deletion")
                         return True
+                    resistant(gene.getName(), 1, argInfoDict)
+                    return True
 
         else:
             resMtCount = missenseCheck(mtInfo)

@@ -125,13 +125,32 @@ def mapCigarToAlignment(cigar, aligned_pair, rRna):
 def transformNtAlignmentMap(nt_alignment_map):
     new_nt_alignment_map = {}
     ntQueryIndex = 0
+    ntRefIndex = nt_alignment_map[0][2]
     for nt in nt_alignment_map:
         if nt[0] == "I":
+            if ntRefIndex not in new_nt_alignment_map:
+                new_nt_alignment_map.update({ntRefIndex:tuple()})
+            temp = list(new_nt_alignment_map[ntRefIndex])
+            temp.append(ntQueryIndex)
+            new_nt_alignment_map[ntRefIndex] = tuple(temp)
+            temp = list(new_nt_alignment_map[ntRefIndex-1])
+            temp.append(ntQueryIndex-1)
+            new_nt_alignment_map[ntRefIndex-1] = tuple(temp)
             ntQueryIndex += 1 
         elif nt[0] == "D":
-            new_nt_alignment_map.update({nt[2]:(None,)})   
+            if nt[2] not in new_nt_alignment_map:
+                new_nt_alignment_map.update({nt[2]:tuple()})
+            temp = list(new_nt_alignment_map[nt[2]])
+            temp.append(None)
+            new_nt_alignment_map[nt[2]] = tuple(temp)   
+            ntRefIndex += 1
         else:
-            new_nt_alignment_map.update({nt[2]:(ntQueryIndex,)})
+            if nt[2] not in new_nt_alignment_map:
+                new_nt_alignment_map.update({nt[2]:tuple()})
+            temp = list(new_nt_alignment_map[nt[2]])
+            temp.append(ntQueryIndex)
+            new_nt_alignment_map[nt[2]] = tuple(temp)  
+            ntRefIndex += 1
             ntQueryIndex += 1    
     return new_nt_alignment_map
 

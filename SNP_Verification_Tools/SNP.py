@@ -65,7 +65,6 @@ class SNP:
                 begin = 0
                 end = 61
             i = begin
-            temp = sequence[begin:end+10]
             for x in sequence[begin:end]:
                 if this.checkLeft(0, i, sequence, 0):
                     this.changeACT(sequence, i)
