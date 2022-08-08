@@ -1,5 +1,16 @@
 mycoplasmataceaeList = ["MEG_3185", "MEG_3240", "MEG_5328", "MEG_5330", "MEG_5331"]
 
+mt_and_wt = True #used in case of insertion leading to presence of both mt and wt; if true, mark as resistant; if false, mark as susceptible
+
+geneDict = {}
+argInfoDict = {}
+intrinsicInfoDict = {}
+susceptibleFrameshiftInfoDict = {}
+resistantFrameshiftInfoDict = {}
+meg_3180InfoDict = {}
+meg_6094InfoDict = {}
+
+
 aa = {
     "TTT" : 'F',    "TCT" : 'S',    "TAT" : 'Y',    "TGT" : 'C',
     "TTC" : 'F',    "TCC" : 'S',    "TAC" : 'Y',    "TGC" : 'C',

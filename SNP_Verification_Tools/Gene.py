@@ -26,49 +26,49 @@ class Gene:
             if "Nonstop" in info:
                 if info[:4] == "Mult":
                     snpToAdd = SNP.SNP_Mis(this.translated, info[9:info.find(";")], this.name)
-                    if (snpToAdd.isSnpValid()):
+                    if (snpToAdd.isValid()):
                         this.isThereANonstop = (True, snpToAdd)
                 else:
                     this.isThereANonstop = (True, None)
             elif info[:4] == "Mult":
                 snpToAdd = SNP.SNP_Mult(this.translated, info[5:], this.name)
-                if(snpToAdd.isSnpValid()):
+                if(snpToAdd.isValid()):
                     this.listOfMultSNPs.append(snpToAdd)
             elif info[:3] == "Mis":
                 snpToAdd = SNP.SNP_Mis(this.translated, info[4:], this.name)
-                if(snpToAdd.isSnpValid()):
+                if(snpToAdd.isValid()):
                     this.listOfMisSNPs.append(snpToAdd)
             elif info[:3] == "Del":
                 indelToAdd = InDel.Deletion(this.translated, info[4:], this.name)
-                if(indelToAdd.isSnpValid()):
+                if(indelToAdd.isValid()):
                     this.listOfDel.append(indelToAdd)
             elif info[:3] == "Ins":
-                indelToAdd = InDel.Deletion(this.translated, info[4:], this.name)
-                if(indelToAdd.isSnpValid()):
+                indelToAdd = InDel.Insertion(this.translated, info[4:], this.name)
+                if(indelToAdd.isValid()):
                     this.listOfIns.append(indelToAdd)
             elif info[:5] == "Hyper":
                 snpToAdd = SNP.SNP_Mult(this.translated, info[6:], this.name)
-                if(snpToAdd.isSnpValid()):
+                if(snpToAdd.isValid()):
                     this.listOfHyperSNPs.append(snpToAdd)
             elif info[:3] == "FS-":
                 this.frameshiftInfo = info[3:]
             elif info[:7] == "NucMult":
                 snpToAdd = SNP.SNP_Mult(this.sequence, info[8:], this.name)
-                if(snpToAdd.isSnpValid()):
+                if(snpToAdd.isValid()):
                     this.listOfMultSNPs.append(snpToAdd)
             elif info[:6] == "NucDel":
                 indelToAdd = InDel.Deletion(this.sequence, info[7:], this.name)
-                if(indelToAdd.isSnpValid()):
+                if(indelToAdd.isValid()):
                     this.listOfDel.append(indelToAdd)
             elif info[:3] == "Nuc":
                 snpToAdd = SNP.SNP_Mis(this.sequence, info[4:], this.name)
-                if(snpToAdd.isSnpValid()):
+                if(snpToAdd.isValid()):
                     this.listOfMisSNPs.append(snpToAdd)
             elif info[:4] == "Must":
                 this.listOfMusts = SNP.MustList(info[5:], this.name)
             else: #temp[:3] == "Nonsense" 
-                snpToAdd = SNP.SNP_Non(this.translated, info[4:], this.name)
-                if(snpToAdd.isSnpValid()):
+                snpToAdd = SNP.SNP_Non(this.translated, info[9:], this.name)
+                if(snpToAdd.isValid()):
                     this.listOfNonsenseSNPs.append(snpToAdd)
 
     def aaSequence(this):

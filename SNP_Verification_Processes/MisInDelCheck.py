@@ -1,6 +1,7 @@
 from SNP_Verification_Tools import resistant, Gene, SNP, InDel
 from SNP_Verification_Processes.FrameshiftCheck import addRead
-from SNP_Verification import argInfoDict, meg_3180InfoDict, meg_6094InfoDict, resistantFrameshiftInfoDict, mt_and_wt
+from SNP_Verification_Processes.IntrinsicCheck import intrinsicResistant
+from SNP_Verification_Tools import argInfoDict, meg_3180InfoDict, meg_6094InfoDict, resistantFrameshiftInfoDict, mt_and_wt
 
 def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest):
     frameshiftInfo = gene.getFrameshiftInfo()
@@ -38,10 +39,12 @@ def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest):
             if res == 1: 
                 if frameshiftInfo != None:
                     if gene.getName() == "MEG_6094":
-                        addRead(gene.getName, read.query_name, meg_6094InfoDict, "Has a resistance-conferring missense mutation")
+                        addRead(gene.getName(), read.query_name, meg_6094InfoDict, "Has a resistance-conferring missense mutation")
                     else:
-                        addRead(gene.getName, read.query_name, resistantFrameshiftInfoDict, "Has a resistance-conferring missense mutation")
+                        addRead(gene.getName(), read.query_name, resistantFrameshiftInfoDict, "Has a resistance-conferring missense mutation")
                     return True
+                elif gene.getName() == "MEG_3979":
+                    intrinsicResistant(gene.getName(), read.query_name, "Aquired")
                 resistant(gene.getName(), res, argInfoDict)
                 return True
         return resMtCount
@@ -82,9 +85,9 @@ def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest):
             if count == len(mtInfo[1]):
                 if frameshiftInfo != None:
                     if gene.getName() == "MEG_6094":
-                        addRead(gene.getName, read.query_name, meg_6094InfoDict, "Has a resistance-conferring insertion")
+                        addRead(gene.getName(), read.query_name, meg_6094InfoDict, "Has a resistance-conferring insertion")
                     else:
-                        addRead(gene.getName, read.query_name, resistantFrameshiftInfoDict, "Has a resistance-conferring insertion")
+                        addRead(gene.getName(), read.query_name, resistantFrameshiftInfoDict, "Has a resistance-conferring insertion")
                     return True
                 resistant(gene.getName(), 1, argInfoDict)
                 return True
@@ -107,9 +110,9 @@ def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest):
                 if foundADeletion and (remainingResidueIsEqualToOriginal[0]==remainingResidueIsEqualToOriginal[1]):
                     if frameshiftInfo != None:
                         if gene.getName() == "MEG_6094":
-                            addRead(gene.getName, read.query_name, meg_6094InfoDict, "Has a resistance-conferring deletion")
+                            addRead(gene.getName(), read.query_name, meg_6094InfoDict, "Has a resistance-conferring deletion")
                         else:
-                            addRead(gene.getName, read.query_name, resistantFrameshiftInfoDict, "Has a resistance-conferring deletion")
+                            addRead(gene.getName(), read.query_name, resistantFrameshiftInfoDict, "Has a resistance-conferring deletion")
                         return True
                     resistant(gene.getName(), 1, argInfoDict)
                     return True

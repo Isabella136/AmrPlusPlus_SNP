@@ -2,7 +2,7 @@ from SNP_Verification_Tools import resistant
 from SNP_Verification_Tools import Gene
 from SNP_Verification_Tools import SNP
 from SNP_Verification_Processes.FrameshiftCheck import addRead
-from SNP_Verification import argInfoDict, meg_3180InfoDict, meg_6094InfoDict, resistantFrameshiftInfoDict, mt_and_wt
+from SNP_Verification_Tools import argInfoDict, meg_3180InfoDict, meg_6094InfoDict, resistantFrameshiftInfoDict, mt_and_wt
 
 def nTupleCheck(read, gene, mapOfInterest, seqOfInterest):
     SNPInfo = gene.condensedMultInfo()

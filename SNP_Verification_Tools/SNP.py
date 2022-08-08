@@ -101,7 +101,7 @@ class SNP:
                 return this.checkRight(index + 1, currentPos + 1, sequence, errorMargin + 1)
         else:
             return False
-    def isSnpValid(this):
+    def isValid(this):
         return this.posACT > -1
 
 class SNP_Mis(SNP):
@@ -181,7 +181,7 @@ class MustList:
             this.aaOrNu = "nucleic acids"
         infoList = wtString.split(";")
         for info in infoList:
-            if info == "Nuc":
+            if info[:3] == "Nuc":
                 temp = wtString[:wtString.find(';')][4:]
             else:
                 temp = wtString[:wtString.find(';')][6:]
@@ -191,7 +191,7 @@ class MustList:
             else:
                 this.firstPos = wtToAdd.getPos()
             this.listOfMust.update({wtToAdd.getPos():wtToAdd})
-            this.lastPos = wtToAdd.getPos()
+        this.lastPos = list(this.listOfMust.keys())[-1]
     def getFirstMustBetweenParams(this, begin, end):
         if (end < this.firstPos) or (begin > this.lastPos):
             return None
@@ -208,8 +208,10 @@ class SNP_Mult:
         this.listOfMts = []
         snpsAndDels = snpString.split(";")
         for info in snpsAndDels:
-            if info[:3] != "Del":
+            if (info[:3] == "Mis") or (info[:3] == "Nuc"):
                 this.listOfMts.append(SNP_Mis(sequence, info[4:], name))
+            elif info[:3] == "Ins":
+                this.listOfMts.append(InDel.Insertion(sequence, info[4:], name))
             else: #info[:3] = "Del"
                 this.listOfMts.append(InDel.Deletion(sequence, info[4:], name))
     def condensedInfo(this):
@@ -217,8 +219,8 @@ class SNP_Mult:
         for snp in this.listOfMts:
             toReturn.append(snp.condensedInfo())
         return toReturn
-    def isSnpValid(this):
+    def isValid(this):
         for snp in this.listOfMts:
-            if not(snp.isSnpValid()):
+            if not(snp.isValid()):
                 return False
         return True

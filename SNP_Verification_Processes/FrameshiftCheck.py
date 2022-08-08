@@ -1,5 +1,5 @@
 from SNP_Verification_Tools import disregard, dnaTranslate
-from SNP_Verification import argInfoDict, susceptibleFrameshiftInfoDict, resistantFrameshiftInfoDict, meg_6094InfoDict
+from SNP_Verification_Tools import argInfoDict, susceptibleFrameshiftInfoDict, resistantFrameshiftInfoDict, meg_6094InfoDict
 
 def FrameshiftCheck(read, gene, rRna):
     readFrameshiftInfo = ""
@@ -13,8 +13,8 @@ def FrameshiftCheck(read, gene, rRna):
             return False
         elif frameshiftInfo != None:
             if gene.getName() == "MEG_6094":
-                querySequence = read.querySequence
-                aligned_pairs = read.get_aligned_pairs()
+                querySequence = read.query_sequence
+                aligned_pairs = read.get_aligned_pairs()[read.cigartuples[0][1] if read.cigartuples[0][0] == 4 else 0:len(querySequence)-read.cigartuples[-1][1] if read.cigartuples[-1][0] in range(4,6) else len(querySequence)]
                 shiftCount = 0
                 inCodon531 = False
                 hasCinsertion = False
@@ -68,7 +68,7 @@ def FrameshiftCheck(read, gene, rRna):
 def addRead(name, queryName, frameshiftInfoDict, additionalInformation = None):
     if name not in frameshiftInfoDict:
         frameshiftInfoDict.update({name:list()})
-    if additionalInformation == None:
+    if (additionalInformation == None) or (additionalInformation == ''):
         frameshiftInfoDict[name].append(queryName)
     else:
         frameshiftInfoDict[name].append((queryName, additionalInformation))

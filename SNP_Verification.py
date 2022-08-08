@@ -16,18 +16,10 @@
 
 from SNP_Verification_Tools.Gene import Gene
 from SNP_Verification_Processes import verify
+from SNP_Verification_Tools import geneDict, argInfoDict, intrinsicInfoDict, susceptibleFrameshiftInfoDict, resistantFrameshiftInfoDict, meg_3180InfoDict, meg_6094InfoDict
+import SNP_Verification_Tools
 import pysam
 import sys, getopt
-
-mt_and_wt = True #used in case of insertion leading to presence of both mt and wt; if true, mark as resistant; if false, mark as susceptible
-
-geneDict = {}
-argInfoDict = {}
-intrinsicInfoDict = {}
-susceptibleFrameshiftInfoDict = {}
-resistantFrameshiftInfoDict = {}
-meg_3180InfoDict = {}
-meg_6094InfoDict = {}
 
 snpInfoPrint = lambda a, b, c : a + ": " + b + " resitant reads out of " + c + " total reads\n"
 
@@ -54,7 +46,7 @@ for opt, arg in options:
         outputFolder = arg
     elif opt == "--mt_and_wt":
         if arg == "False":
-            mt_and_wt = False
+            SNP_Verification_Tools.mt_and_wt = False
 if len(inputFile) == 0:
     print("SNP_Verification.py -i <inputFile> -o <outputFolder>")
     sys.exit(-1)
@@ -104,7 +96,7 @@ for name in inputFile:
     #Output Intrinsic Resistance Info
     if len(intrinsicInfoDict) != 0:
         output = open(outputFolder + "/intrinsic_resistance_" + name[name.rfind("/")+1:] + ".csv", "w")
-        output.write("ARG,All nuc/aa required present,Some nuc/aa positions in query,No nuc/aa positions in query,Mutants in nuc/aa positions\n")
+        output.write("ARG,All nuc/aa required present,Some nuc/aa positions in query,No nuc/aa positions in query,Not intrinsic but aquired,Mutants in nuc/aa positions\n")
         for argName in intrinsicInfoDict:
             output.write(argName + ",")
             if "All" in intrinsicInfoDict[argName]:
@@ -122,6 +114,11 @@ for name in inputFile:
                     output.write(query + ";")
                 output.write(intrinsicInfoDict[argName]["NA"][-1] + ",")
             else: output.write(",")
+            if "Aquired" in intrinsicInfoDict[argName]:
+                for query in intrinsicInfoDict[argName]["Aquired"][:-1]:
+                    output.write(query + ";")
+                output.write(intrinsicInfoDict[argName]["Aquired"][-1] + ",")
+            else: output.write(",")
             if "Mutant" in intrinsicInfoDict[argName]:
                 for query in intrinsicInfoDict[argName]["Mutant"][:-1]:
                     output.write(query + ";")
@@ -130,16 +127,46 @@ for name in inputFile:
         intrinsicInfoDict = {}
         output.close()
 
-    #Output Info on Insertion/Deletion Difference
+    #Output Info on Susceptible Frameshift
     if len(susceptibleFrameshiftInfoDict) != 0:
-        output = open(outputFolder + "/insertion_deletion_frameshift_" + name[name.rfind("/")+1:] + ".csv", "w")
-        output.write("ARG,Reads with a frameshift at the end of their sequence\n")
+        output = open(outputFolder + "/susceptible_frameshift_mutations_" + name[name.rfind("/")+1:] + ".csv", "w")
+        output.write("ARG,Reads with a frameshift by the end of their sequence\n")
         for argName in susceptibleFrameshiftInfoDict:
             output.write(argName + ",")
             for query in susceptibleFrameshiftInfoDict[argName][:-1]:
                 output.write(query + ",")
             output.write(susceptibleFrameshiftInfoDict[argName][-1] + "\n")
         susceptibleFrameshiftInfoDict = {}
+        output.close()
+
+    if len(resistantFrameshiftInfoDict) != 0:
+        output = open(outputFolder + "/reads_with_FS_tag_" + name[name.rfind("/")+1:] + ".csv", "w")
+        output.write("ARG,read name, result\n")
+        for argName in resistantFrameshiftInfoDict:
+            for tuple in resistantFrameshiftInfoDict[argName]:
+                output.write(argName + "," + tuple[0] + "," + tuple[1] + "\n")
+        resistantFrameshiftInfoDict = {}
+        output.close()
+    
+    if len(meg_3180InfoDict) != 0:
+        output = open(outputFolder + "/MEG_3180_" + name[name.rfind("/")+1:] + ".txt", "w")
+        if "resistant" in meg_3180InfoDict:
+            output.write("Num of resistant reads: " + str(meg_3180InfoDict["resistant"]) + "\n")
+        if "susceptible" in meg_3180InfoDict:
+            output.write("Num of susceptible reads: " + str(meg_3180InfoDict["susceptible"]) + "\n")
+        for key in meg_3180InfoDict:
+            if type(key) == int:
+                output.write("Num of reads with hypersusceptible double mutation and " + key + "resistance-conferring mutations: " + meg_3180InfoDict[key] + "\n")
+        meg_3180InfoDict = {}
+        output.close()
+
+    if len(meg_6094InfoDict) != 0:
+        output = open(outputFolder + "/MEG_6094_" + name[name.rfind("/")+1:] + ".csv", "w")
+        output.write("read name, result\n")
+        for argName in meg_6094InfoDict:
+            for tuple in meg_6094InfoDict[argName]:
+                output.write(tuple[0] + "," + tuple[1] + "\n")
+        meg_6094InfoDict = {}
         output.close()
 
 sys.exit(0)

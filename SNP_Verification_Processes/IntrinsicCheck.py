@@ -1,13 +1,15 @@
 from SNP_Verification_Tools import resistant
 from SNP_Verification_Tools import Gene
 from SNP_Verification_Tools import SNP
-from SNP_Verification import argInfoDict, intrinsicInfoDict, mt_and_wt
+from SNP_Verification_Tools import intrinsicInfoDict, mt_and_wt
 
-intrinsicArg = ["MEG_1628", "MEG_2694", "MEG_3979", "MEG_3983", "MEG_4092", "MEG_4093",
-                "MEG_4096", "MEG_4279", "MEG_4280", "MEG_4281", "MEG_4282", "MEG_6092",
-                "MEG_7196", "MEG_7306"]
+intrinsicArg = ["MEG_1628", "MEG_2694", "MEG_3983", "MEG_4092", "MEG_4093",
+                "MEG_4096", "MEG_4279", "MEG_4280", "MEG_4281", "MEG_4282", 
+                "MEG_6092", "MEG_7196", "MEG_7306"]
 
 def IntrinsicCheck(read, gene, mapOfInterest, seqOfInterest):
+    if gene.getName() == "MEG_4282":
+        test = True
     begin = list(mapOfInterest.keys())[0]+1
     end = list(mapOfInterest.keys())[-1]+1
     firstInfo = gene.getFirstMustBetweenParams(begin, end)
@@ -48,33 +50,42 @@ def IntrinsicCheck(read, gene, mapOfInterest, seqOfInterest):
         if hasAllMust:
             missingList = None
         messageType = None
-        if all: messageType = "All"
-        intrinsicResistant(gene.getName(), read.query_name, missingList, messageType)
-        if missingList == None:
-            resistant(gene.getName(), 1, argInfoDict)
-            return True
+        if missingList != None:
+            messageType = "Mutant"
+        elif all: messageType = "All"
+        if (gene.getName()== "MEG_3979") and not(all) :
+            return messageType
+        intrinsicResistant(gene.getName(), read.query_name, messageType)
+        return True
+    elif gene.getName()== "MEG_3979" :
+        return "NA"
     elif gene.getName() in intrinsicArg:
-        intrinsicResistant(gene.getName(), read.query_name, None, "NA")
+        intrinsicResistant(gene.getName(), read.query_name, "NA")
+        return True
     return False
 
-def intrinsicResistant(name, queryName, missing, messageType):
+def intrinsicResistant(name, queryName, messageType):
     if name not in intrinsicInfoDict:
         intrinsicInfoDict.update({name:{}})
-    if missing == None:
-        if (messageType == None):
-            if "Some" not in intrinsicInfoDict[name]:
-                intrinsicInfoDict[name].update({"Some":list()})
-            intrinsicInfoDict[name]["Some"].append(queryName)
-        elif messageType == "All":
-            if "All" not in intrinsicInfoDict[name]:
-                intrinsicInfoDict[name].update({"All":list()})
-            intrinsicInfoDict[name]["All"].append(queryName)
-        else:
-            if "NA" not in intrinsicInfoDict[name]:
-                intrinsicInfoDict[name].update({"NA":list()})
-            intrinsicInfoDict[name]["NA"].append(queryName)
-    else:
+    if (messageType == None):
+        if "Some" not in intrinsicInfoDict[name]:
+            intrinsicInfoDict[name].update({"Some":list()})
+        intrinsicInfoDict[name]["Some"].append(queryName)
+    elif messageType == "All":
+        if "All" not in intrinsicInfoDict[name]:
+            intrinsicInfoDict[name].update({"All":list()})
+        intrinsicInfoDict[name]["All"].append(queryName)
+    elif messageType == "NA":
+        if "NA" not in intrinsicInfoDict[name]:
+            intrinsicInfoDict[name].update({"NA":list()})
+        intrinsicInfoDict[name]["NA"].append(queryName)
+    elif messageType == "Mutant":
         if "Mutant" not in intrinsicInfoDict[name]:
             intrinsicInfoDict[name].update({"Mutant":list()})
         intrinsicInfoDict[name]["Mutant"].append(queryName)
+    else:   #if messageType == "Aquired"
+        if "Aquired" not in intrinsicInfoDict[name]:
+            intrinsicInfoDict[name].update({"Aquired":list()})
+        intrinsicInfoDict[name]["Aquired"].append(queryName)
+    
 

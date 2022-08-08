@@ -14,6 +14,7 @@ class InDel:
         posString = mtString[i:mtString.find("_")]
         mtString = mtString[mtString.find("_")+1:]
         this.posList = posString.split("/")
+        this.posList = [int(i) for i in this.posList]
         InDel.establishContext(this, mtString)
     def establishContext(this, mtString) :
         contextList = mtString.split("_")
@@ -82,7 +83,7 @@ class InDel:
             lastPos = pos
             this.posACT.append(i+5+1+diff)
     def isValid(this):
-        return this.posACT > -1
+        return len(this.posACT) != 0
 
 class Insertion(InDel):
     def __init__(this, sequence, mtString, name):
@@ -131,6 +132,6 @@ class Deletion(InDel):
                 break
             i+=1
     def isValid(this):
-        return (this.posACT > -1) and (this.deleted == this.deletionACT)
+        return (len(this.posACT) != 0) and (this.deleted == this.deletionACT)
     def condensedInfo(this):
         return (this.deleted, this.posACT, "-")

@@ -39,7 +39,7 @@ void LiteratureAaNonsense::makeModel(string line) {
     pos = stoi(line.substr(1));
 }
 string LiteratureAaNonsense::condensedInfo() {
-    string toReturn = "Non:";
+    string toReturn = "Nonsense:";
     toReturn += wt_aa;
     toReturn += to_string(pos);
     toReturn += "*";
