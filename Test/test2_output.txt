@@ -1,5 +1,0 @@
-Test2
-MEG_2866: 0 resitant reads out of 6 total reads
-MEG_4132: 2 resitant reads out of 2 total reads
-MEG_5803: 2 resitant reads out of 2 total reads
-MEG_7250: 6 resitant reads out of 6 total reads

@@ -1,4 +1,0 @@
->19|T214I|ARO:3003302|Bartonella bacilliformis gyrB conferring resistance to aminocoumarin|MEG_3246|Drugs|Aminocoumarins|Aminocoumarin-resistant_DNA_topoisomerases|GYRBA|RequiresSNPConfirmation|NA|NA|NA|NA|NA|NA|NA|wt_coherence=TRUE
->20|T214A|ARO:3003302|Bartonella bacilliformis gyrB conferring resistance to aminocoumarin|MEG_3246|Drugs|Aminocoumarins|Aminocoumarin-resistant_DNA_topoisomerases|GYRBA|RequiresSNPConfirmation|NA|NA|NA|NA|NA|NA|NA|wt_coherence=TRUE
->21|R184Q|ARO:3003302|Bartonella bacilliformis gyrB conferring resistance to aminocoumarin|MEG_3246|Drugs|Aminocoumarins|Aminocoumarin-resistant_DNA_topoisomerases|GYRBA|RequiresSNPConfirmation|NA|NA|NA|NA|NA|NA|NA|wt_coherence=TRUE
->22|G125S|ARO:3003302|Bartonella bacilliformis gyrB conferring resistance to aminocoumarin|MEG_3246|Drugs|Aminocoumarins|Aminocoumarin-resistant_DNA_topoisomerases|GYRBA|RequiresSNPConfirmation|NA|NA|NA|NA|NA|NA|NA|wt_coherence=TRUE
