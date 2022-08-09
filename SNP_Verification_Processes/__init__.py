@@ -11,16 +11,15 @@ from SNP_Verification_Tools import argInfoDict, resistantFrameshiftInfoDict, meg
 import pysam
 
 def verify(read, gene):
+    gene.addToOutputInfo(0)
     name = gene.getName()
-    if name == "MEG_3979":
-        x = True
     rRna = gene.rRna()
-    frameshiftCheckResult = FrameshiftCheck(read, gene, rRna)
-    if type(frameshiftCheckResult) == bool: 
-        return frameshiftCheckResult
+    checkResult = FrameshiftCheck(read, gene, rRna)
+    if type(checkResult) == bool: 
+        return checkResult
     seqOfInterest, mapOfInterest = MapQueryToReference(rRna, read, name)
     if not(rRna):
-        nonsense = NonsenseCheck(read, gene, mapOfInterest, seqOfInterest, frameshiftCheckResult)
+        nonsense = NonsenseCheck(read, gene, mapOfInterest, seqOfInterest, checkResult)
         if nonsense != None: return nonsense
     intrinsic = IntrinsicCheck(read, gene, mapOfInterest, seqOfInterest)
     if (intrinsic == True):
@@ -29,8 +28,8 @@ def verify(read, gene):
         return True
     elif (nTupleCheck(read, gene, mapOfInterest, seqOfInterest)):
         return True
-    elif (frameshiftCheckResult != "") and (frameshiftCheckResult != None):
-        addRead(name, read.query_name, resistantFrameshiftInfoDict, frameshiftCheckResult)
+    elif (checkResult != "") and (checkResult != None):
+        addRead(name, read.query_name, resistantFrameshiftInfoDict, checkResult)
         return True
     else: 
         if name == "MEG_3180":

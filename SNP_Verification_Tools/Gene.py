@@ -20,6 +20,9 @@ class Gene:
         this.listOfDel = []
         this.listOfIns = []
         this.listOfMusts = None
+        this.geneTag = 'N'
+        this.outputInfo = dict()
+        this.additionalInfo = list()
 
         infoList = infoString.split('|')
         for info in infoList:
@@ -50,8 +53,10 @@ class Gene:
                 snpToAdd = SNP.SNP_Mult(this.translated, info[6:], this.name)
                 if(snpToAdd.isValid()):
                     this.listOfHyperSNPs.append(snpToAdd)
+                this.geneTag = 'H'
             elif info[:3] == "FS-":
                 this.frameshiftInfo = info[3:]
+                this.geneTag = 'S' if this.name == "MEG_6094" else 'F'
             elif info[:7] == "NucMult":
                 snpToAdd = SNP.SNP_Mult(this.sequence, info[8:], this.name)
                 if(snpToAdd.isValid()):
@@ -66,10 +71,37 @@ class Gene:
                     this.listOfMisSNPs.append(snpToAdd)
             elif info[:4] == "Must":
                 this.listOfMusts = SNP.MustList(info[5:], this.name)
+                this.geneTag = 'I'
             else: #temp[:3] == "Nonsense" 
                 snpToAdd = SNP.SNP_Non(this.translated, info[9:], this.name)
                 if(snpToAdd.isValid()):
                     this.listOfNonsenseSNPs.append(snpToAdd)
+        if (this.geneTag == 'N') or (this.geneTag == 'F'):
+            for i in range(0,11):
+                this.outputInfo.update({i,0})
+        elif (this.geneTag == 'I'):
+            for i in range(0,10):
+                this.outputInfo.update({i,0})
+        else:
+            for i in range(0,12):
+                this.outputInfo.update({i,0})
+
+    def getOutputInfo(this):
+        return this.outputInfo
+    def clearOutputInfo(this):
+        for key in this.outputInfo:
+            this.outputInfo[key] = 0
+    def getGeneTag(this):
+        return this.geneTag
+    def addToOutputInfo(this, index):
+        this.outputInfo[index] += 1
+    def addDetails(this, query_name, info, new = False):
+        if new:
+            this.additionalInfo.append((query_name, info))
+        else:
+            temp = list(this.additionalInfo[-1])
+            temp.append(info)
+            this.additionalInfo[-1] = tuple(temp)
 
     def aaSequence(this):
         return this.translated

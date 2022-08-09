@@ -18,26 +18,25 @@ from SNP_Verification_Tools.Gene import Gene
 from SNP_Verification_Processes import verify
 from SNP_Verification_Tools import geneDict, argInfoDict, intrinsicInfoDict, susceptibleFrameshiftInfoDict, resistantFrameshiftInfoDict, meg_3180InfoDict, meg_6094InfoDict
 import SNP_Verification_Tools
-import pysam
-import sys, getopt
+import pysam, sys, getopt, os
 
 snpInfoPrint = lambda a, b, c : a + ": " + b + " resitant reads out of " + c + " total reads\n"
 
 inputFile = []
 outputFolder = ""
 try:
-    options, args = getopt.getopt(sys.argv[1:], "hwci:o:", ["mt_and_wt="])
+    options, args = getopt.getopt(sys.argv[1:], "hlci:o:", ["mt_and_wt=", "detailed_output="])
 except getopt.GetoptError:
     print("SNP_Verification.py -i <inputFile> -o <outputFolder>")
     sys.exit(-1)
 for opt, arg in options:
     if opt == "-h":
-        print("List of arguments:\n\n\n-c: conditions for redistribution\n-h: help\n-i: input file\n-o: output folder\n-w: warranty disclaimer\n\n--mt_and_wt: true by default, used in case of insertion leading to presence of both mt and wt; if true, mark as resistant; if false, mark as susceptible\n\n")
+        print("List of arguments:\n\n\n-c: conditions for redistribution\n-h: help\n-i: input file\n-o: output folder\n-l: license disclaimer\n\n--mt_and_wt: true by default, used in case of insertion leading to presence of both mt and wt; if true, mark as resistant; if false, mark as susceptible\n--detailed_output: false by default, determines whether a more detailed output will be given\n\n")
         sys.exit()
     elif opt == "-c":
         print("\n\nAMRPlusPlus_SNP_Verification\nCopyright (C) 2022  Nathalie Bonin\n\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\n")
         sys.exit()
-    elif opt == "-w":
+    elif opt == "-l":
         print("\n\nAMRPlusPlus_SNP_Verification\nCopyright (C) 2022  Nathalie Bonin\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\n")
         sys.exit()
     elif opt == "-i":
@@ -47,11 +46,16 @@ for opt, arg in options:
     elif opt == "--mt_and_wt":
         if arg == "False":
             SNP_Verification_Tools.mt_and_wt = False
+    elif opt =="--detailed_output":
+        if arg == "True":
+            SNP_Verification_Tools.detailed = True
 if len(inputFile) == 0:
     inputFile.append("SAM_files/P_TSB_10_3_filtered.sam")
     outputFolder = "Test"
     #print("SNP_Verification.py -i <inputFile> -o <outputFolder>")
     #sys.exit(-1)
+if not os.path.exists(outputFolder):
+    os.mkdir(outputFolder)
 
 SNPinfo = open("extracted_SNP_files/SNPinfo.fasta", "rt")
 isSequence = False
