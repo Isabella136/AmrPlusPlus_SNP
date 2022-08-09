@@ -20,7 +20,17 @@ def verifyNonsense(read, gene, stopLocation, mapOfInterest, frameshiftCheckResul
                 meg_3180InfoDict["susceptible"] = 0
             meg_3180InfoDict["susceptible"] += 1
         elif gene.getName() == "MEG_6094":
-            addRead(gene.getName(), read.query_name, resistantFrameshiftInfoDict, "Nonsense mutation at codon " + str(stopLocation + 1) + " which was NOT previously recorded in literature")
+            values = list(mapOfInterest.values())
+            referenceStopLocation = -1
+            i = 0
+            for tuple in values:
+                if stopLocation in tuple:
+                    referenceStopLocation = list(mapOfInterest.keys())[i]
+                    break
+                i+=1
+            if referenceStopLocation == -1:
+                raise NameError("mapOfInterest and seqOfInterest don't match")
+            addRead(gene.getName(), read.query_name, meg_6094InfoDict, "Nonsense mutation at codon " + str(referenceStopLocation + 1) + " which was NOT previously recorded in literature")
         else:
             disregard(gene.getName(), argInfoDict)
         return False
@@ -38,14 +48,24 @@ def verifyNonsense(read, gene, stopLocation, mapOfInterest, frameshiftCheckResul
                         return True
                     elif frameshiftInfo != None:
                         if frameshiftCheckResult == None: frameshiftCheckResult = ""
-                        frameshiftCheckResult = frameshiftCheckResult + "Nonsense mutation at codon " + str(stopLocation + 1) + " which was previously recorded in literature"
+                        frameshiftCheckResult = frameshiftCheckResult + "Nonsense mutation at codon " + str(snp[1]) + " which was previously recorded in literature"
                         addRead(gene.getName(), read.query_name, resistantFrameshiftInfoDict, frameshiftCheckResult)
                     res = 1
                     toReturn = True
                     break
         if (frameshiftInfo != None) and (res == 0):
+            values = list(mapOfInterest.values())
+            referenceStopLocation = -1
+            i = 0
+            for tuple in values:
+                if stopLocation in tuple:
+                    referenceStopLocation = list(mapOfInterest.keys())[i]
+                    break
+                i+=1
+            if referenceStopLocation == -1:
+                raise NameError("mapOfInterest and seqOfInterest don't match")
             if frameshiftCheckResult == None: frameshiftCheckResult = ""
-            frameshiftCheckResult = frameshiftCheckResult + "Nonsense mutation at codon " + str(stopLocation + 1) + " which was NOT previously recorded in literature"
+            frameshiftCheckResult = frameshiftCheckResult + "Nonsense mutation at codon " + str(referenceStopLocation) + " which was NOT previously recorded in literature"
             addRead(gene.getName(), read.query_name, resistantFrameshiftInfoDict, frameshiftCheckResult)
             return True
         resistant(gene.getName(), res, argInfoDict)

@@ -48,8 +48,10 @@ for opt, arg in options:
         if arg == "False":
             SNP_Verification_Tools.mt_and_wt = False
 if len(inputFile) == 0:
-    print("SNP_Verification.py -i <inputFile> -o <outputFolder>")
-    sys.exit(-1)
+    inputFile.append("SAM_files/P_TSB_10_3_filtered.sam")
+    outputFolder = "Test"
+    #print("SNP_Verification.py -i <inputFile> -o <outputFolder>")
+    #sys.exit(-1)
 
 SNPinfo = open("extracted_SNP_files/SNPinfo.fasta", "rt")
 isSequence = False

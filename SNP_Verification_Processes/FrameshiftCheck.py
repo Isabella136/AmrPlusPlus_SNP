@@ -14,7 +14,7 @@ def FrameshiftCheck(read, gene, rRna):
         elif frameshiftInfo != None:
             if gene.getName() == "MEG_6094":
                 querySequence = read.query_sequence
-                aligned_pairs = read.get_aligned_pairs()[read.cigartuples[0][1] if read.cigartuples[0][0] == 4 else 0:len(querySequence)-read.cigartuples[-1][1] if read.cigartuples[-1][0] in range(4,6) else len(querySequence)]
+                aligned_pairs = read.get_aligned_pairs()[read.cigartuples[0][1] if read.cigartuples[0][0] == 4 else 0:len(querySequence)-read.cigartuples[-1][1] if read.cigartuples[-1][0] == 4 else len(querySequence)]
                 shiftCount = 0
                 inCodon531 = False
                 hasCinsertion = False
@@ -47,9 +47,11 @@ def FrameshiftCheck(read, gene, rRna):
                     valid = False
                 if not(valid):
                     addRead(gene.getName(), read.query_name, meg_6094InfoDict, "Insertions/deletions that lead to a frameshift for the rest of the reference in residues other than 531")
+                    return False
                 elif hasCinsertion:
                     if residue531To534 == "SRTR"[0:len(residue531To534)]:
                         addRead(gene.getName(), read.query_name, meg_6094InfoDict, "Has a C insertion at residue 531")
+                        return True
             else:
                 if (((cigarOpCount[1] - cigarOpCount[2]) % 3) != 0):
                     addRead(gene.getName(), read.query_name, resistantFrameshiftInfoDict, "Insertions/deletions that lead to a frameshift for the rest of the reference")
