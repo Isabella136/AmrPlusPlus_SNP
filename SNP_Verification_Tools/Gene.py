@@ -57,11 +57,11 @@ class Gene:
                 if(snpToAdd.isValid()):
                     this.listOfMultSNPs.append(snpToAdd)
             elif info[:6] == "NucDel":
-                indelToAdd = InDel.Deletion(this.sequence, info[7:], this.name)
+                indelToAdd = InDel.Deletion(this.sequence, info[7:], this.name, True)
                 if(indelToAdd.isValid()):
                     this.listOfDel.append(indelToAdd)
             elif info[:3] == "Nuc":
-                snpToAdd = SNP.SNP_Mis(this.sequence, info[4:], this.name)
+                snpToAdd = SNP.SNP_Mis(this.sequence, info[4:], this.name, True)
                 if(snpToAdd.isValid()):
                     this.listOfMisSNPs.append(snpToAdd)
             elif info[:4] == "Must":

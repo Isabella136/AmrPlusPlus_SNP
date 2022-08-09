@@ -96,10 +96,11 @@ def nTupleCheck(read, gene, mapOfInterest, seqOfInterest):
                     delMut = 0
                     misMut = 0
                     currentResBool = False
-                    if (mapOfInterest.get(mtInfo[1]-1,False)) == False:
-                        continue
+                    if (mapOfInterest.get(mtInfo[1][0]-1,False)) == False:
+                        resBool = False
+                        break
                     remainingResidueIsEqualToOriginal = (False, False)  #1/2M3D2/1M, must be both True or False to be res
-                    for queryIndex in tuple(mapOfInterest[mtInfo[1]-1]):
+                    for queryIndex in tuple(mapOfInterest[mtInfo[1][0]-1]):
                         if queryIndex == "-":
                             delMut += 1
                             currentResBool = True

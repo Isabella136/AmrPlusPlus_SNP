@@ -49,7 +49,7 @@ class SNP:
                     this.rightContext.append(temp)
                 else:
                     temp.append(x)
-    def findACT(this, sequence):
+    def findACT(this, sequence, rRNA):
         this.wtACT = ""
         this.posACT = -1
         if (this.name == "MEG_4057") and (this.posOG == 347):
@@ -66,46 +66,49 @@ class SNP:
                 end = 61
             i = begin
             for x in sequence[begin:end]:
-                if this.checkLeft(0, i, sequence, 0):
+                if this.checkLeft(0, i, sequence, 0, rRNA):
                     this.changeACT(sequence, i)
                     break
                 i += 1
-    def checkLeft(this, index, currentPos, sequence, errorMargin):
+    def checkLeft(this, index, currentPos, sequence, errorMargin, rRNA):
         if (len(this.leftContext) != 0):
             for aa in this.leftContext[index]:
                 if aa == sequence[currentPos]:
                     if index == len(this.leftContext) - 1:
-                        return this.checkRight(0, currentPos + 2, sequence, errorMargin)
+                        return this.checkRight(0, currentPos + 2, sequence, errorMargin, rRNA)
                     else:
-                        return this.checkLeft(index + 1, currentPos + 1, sequence, errorMargin)
+                        return this.checkLeft(index + 1, currentPos + 1, sequence, errorMargin, rRNA)
         else:
-            return this.checkRight(0, currentPos + 2, sequence, errorMargin)
-        if errorMargin < 3:
+            return this.checkRight(0, currentPos + 2, sequence, errorMargin, rRNA)
+        if (errorMargin < 3) and not(rRNA):
             if index == len(this.leftContext) - 1:
-                return this.checkRight(0, currentPos + 2, sequence, errorMargin + 1)
+                return this.checkRight(0, currentPos + 2, sequence, errorMargin + 1, rRNA)
             else:
-                return this.checkLeft(index + 1, currentPos + 1, sequence, errorMargin + 1)
+                return this.checkLeft(index + 1, currentPos + 1, sequence, errorMargin + 1, rRNA)
         else:
             return False
-    def checkRight(this, index, currentPos, sequence, errorMargin):
-        for aa in this.rightContext[index]:
-            if aa == sequence[currentPos]:
-                if index == len(this.rightContext) - 1:
-                    return True
-                else:
-                    return this.checkRight(index + 1, currentPos + 1, sequence, errorMargin)
-        if errorMargin < 3:
+    def checkRight(this, index, currentPos, sequence, errorMargin, rRNA):
+        if (len(this.rightContext) != 0):
+            for aa in this.rightContext[index]:
+                if aa == sequence[currentPos]:
+                    if index == len(this.rightContext) - 1:
+                        return True
+                    else:
+                        return this.checkRight(index + 1, currentPos + 1, sequence, errorMargin, rRNA)
+        else:
+            return True
+        if (errorMargin < 3) and not(rRNA):
             if index == len(this.rightContext) - 1:
                 return True
             else:
-                return this.checkRight(index + 1, currentPos + 1, sequence, errorMargin + 1)
+                return this.checkRight(index + 1, currentPos + 1, sequence, errorMargin + 1, rRNA)
         else:
             return False
     def isValid(this):
         return this.posACT > -1
 
 class SNP_Mis(SNP):
-    def __init__(this, sequence, snpString, name):
+    def __init__(this, sequence, snpString, name, rRNA = False):
         snpStringList = [snpString]
         SNP.__init__(this, snpStringList, name)
         snpString = snpStringList[0]
@@ -118,7 +121,7 @@ class SNP_Mis(SNP):
             this.mtList.append(x)
             i += 1
         SNP.establishContext(this, snpString)
-        SNP.findACT(this, sequence)
+        SNP.findACT(this, sequence, rRNA)
     def condensedInfo(this):
         wt = this.wtOG
         if (this.wtOG != this.wtACT):
@@ -126,12 +129,12 @@ class SNP_Mis(SNP):
         return (wt, this.posACT, this.mtList)
     def changeACT(this, sequence, i):
         try: #if sequence contains mt
-            this.mtList.index(sequence[i+5])
+            this.mtList.index(sequence[i+len(this.leftContext)])
             this.wtACT = this.wtOG
-            this.posACT = i+5+1
+            this.posACT = i+len(this.leftContext)+1
         except ValueError: 
-            this.wtACT = sequence[i+5]
-            this.posACT = i+5+1
+            this.wtACT = sequence[i+len(this.leftContext)]
+            this.posACT = i+len(this.leftContext)+1
 
 class SNP_Non(SNP):
     def __init__(this, sequence, snpString, name):
@@ -140,15 +143,15 @@ class SNP_Non(SNP):
         snpString = snpStringList[0]
         snpString = snpString[2:]
         SNP.establishContext(this, snpString)
-        SNP.findACT(this, sequence)
+        SNP.findACT(this, sequence, False)
     def condensedInfo(this):
         wt = this.wtOG
         if (this.wtOG != this.wtACT):
             wt += this.wtACT
         return (wt, this.posACT, "*")
     def changeACT(this, sequence, i):
-        this.wtACT = sequence[i+5]
-        this.posACT = i+5+1
+        this.wtACT = sequence[i+len(this.leftContext)]
+        this.posACT = i+len(this.leftContext)+1
 
 class Must(SNP):
     def __init__(this, wtString, name):
@@ -182,9 +185,9 @@ class MustList:
         infoList = wtString.split(";")
         for info in infoList:
             if info[:3] == "Nuc":
-                temp = wtString[:wtString.find(';')][4:]
+                temp = info[:info.find(';')][4:]
             else:
-                temp = wtString[:wtString.find(';')][6:]
+                temp = info[:info.find(';')][6:]
             wtToAdd = Must(temp, name)
             if len(this.listOfMust) > 0:
                 this.listOfMust[list(this.listOfMust.keys())[-1]].defineNext(wtToAdd)
@@ -209,7 +212,7 @@ class SNP_Mult:
         snpsAndDels = snpString.split(";")
         for info in snpsAndDels:
             if (info[:3] == "Mis") or (info[:3] == "Nuc"):
-                this.listOfMts.append(SNP_Mis(sequence, info[4:], name))
+                this.listOfMts.append(SNP_Mis(sequence, info[4:], name, True if info[:3]=='Nuc' else False))
             elif info[:3] == "Ins":
                 this.listOfMts.append(InDel.Insertion(sequence, info[4:], name))
             else: #info[:3] = "Del"
