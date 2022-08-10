@@ -15,9 +15,9 @@ def verify(read, gene):
     name = gene.getName()
     rRna = gene.rRna()
     checkResult = FrameshiftCheck(read, gene, rRna)
-    if type(checkResult) == bool: 
-        return checkResult
-    seqOfInterest, mapOfInterest = MapQueryToReference(rRna, read, name)
+    if not(checkResult): 
+        return checkResult                                                                  #!!!!!!!!!!!!!!!!!!!!!!!!!!
+    seqOfInterest, mapOfInterest = MapQueryToReference(rRna, read, name, checkResult)
     if not(rRna):
         nonsense = NonsenseCheck(read, gene, mapOfInterest, seqOfInterest, checkResult)
         if nonsense != None: return nonsense
@@ -40,7 +40,7 @@ def verify(read, gene):
             addRead(name, read.query_name, meg_6094InfoDict, "No resistance-conferring mutations")
         elif name == "MEG_3979":
             intrinsicResistant(name, read.query_name, intrinsic)
-        elif frameshiftCheckResult == "":
+        elif checkResult == "":
             addRead(name, read.query_name, resistantFrameshiftInfoDict, "No resistance-conferring mutations")
         elif gene.listOfMusts != None:
             intrinsicResistant(name, read.query_name, "Mutant")

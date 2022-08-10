@@ -77,13 +77,16 @@ class Gene:
                 if(snpToAdd.isValid()):
                     this.listOfNonsenseSNPs.append(snpToAdd)
         if (this.geneTag == 'N') or (this.geneTag == 'F'):
-            for i in range(0,11):
+            for i in range(0,12):
                 this.outputInfo.update({i,0})
         elif (this.geneTag == 'I'):
             for i in range(0,10):
                 this.outputInfo.update({i,0})
+        elif (this.geneTag == 'S'):
+            for i in range(0,14):
+                this.outputInfo.update({i,0})
         else:
-            for i in range(0,12):
+            for i in range(0,13):
                 this.outputInfo.update({i,0})
 
     def getOutputInfo(this):
@@ -95,13 +98,13 @@ class Gene:
         return this.geneTag
     def addToOutputInfo(this, index):
         this.outputInfo[index] += 1
-    def addDetails(this, query_name, info, new = False):
-        if new:
-            this.additionalInfo.append((query_name, info))
-        else:
+    def addDetails(this, read, info,):
+        if read is this.additionalInfo[-1][0]:
             temp = list(this.additionalInfo[-1])
             temp.append(info)
             this.additionalInfo[-1] = tuple(temp)
+        else:
+            this.additionalInfo.append((read, info))
 
     def aaSequence(this):
         return this.translated
