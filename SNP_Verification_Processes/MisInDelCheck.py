@@ -38,7 +38,7 @@ def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest):
 
     hasHsMt = False
     if gene.getName() == "MEG_3180":
-        for snp in gene.condensedHyperInfo():
+        for snp in gene.condensedHyperInfo()[0]:
             if (mapOfInterest.get(snp[1]-1,False)) == False:
                 break
             for mt in snp[2]:
@@ -46,12 +46,14 @@ def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest):
                     #Regardless of whether the wild-type is also present due to InDels
                     if mt == seqOfInterest[queryIndex]:
                         hasHsMt = True
-                        gene.addDetails(read, "hypersusceptible")
                         break
+                    hasHsMt = False
                 if hasHsMt == True:
                     break
             if not(hasHsMt):
                 break
+        if hasHsMt:
+            gene.addDetails(read, "hypersusceptible")
 
     mtInfoList = gene.condensedMisInDelInfo()
     for mtInfo in mtInfoList:

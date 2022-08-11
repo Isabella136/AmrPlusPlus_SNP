@@ -74,7 +74,7 @@ def mapCigarToAlignment(cigar, aligned_pair, rRna, suppress):   #map has been tr
             else:
                 if not(translatable):
                     translatable = True
-                if (aligned_pair[index][1] == 1601):
+                if suppress and (aligned_pair[index][1] == 1601):
                     suppressingInsertion = False
                     continue
                 queryLength += 1
@@ -110,6 +110,7 @@ def mapCigarToAlignment(cigar, aligned_pair, rRna, suppress):   #map has been tr
                     refLength += 1
                     alignment_map.append(("M", aligned_pair[index][0], aligned_pair[index-1][1]+1, shift, prevShift))
                     index += 1
+                    shift -= 1
                 queryLength += 1
                 alignment_map.append((op, aligned_pair[index][0], aligned_pair[index][1], shift, prevShift))
                 index += 1

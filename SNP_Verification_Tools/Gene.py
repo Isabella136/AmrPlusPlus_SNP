@@ -78,16 +78,16 @@ class Gene:
                     this.listOfNonsenseSNPs.append(snpToAdd)
         if (this.geneTag == 'N') or (this.geneTag == 'F'):
             for i in range(0,12):
-                this.outputInfo.update({i,0})
+                this.outputInfo.update({i:0})
         elif (this.geneTag == 'I'):
             for i in range(0,10):
-                this.outputInfo.update({i,0})
+                this.outputInfo.update({i:0})
         elif (this.geneTag == 'S'):
             for i in range(0,14):
-                this.outputInfo.update({i,0})
+                this.outputInfo.update({i:0})
         else:
             for i in range(0,13):
-                this.outputInfo.update({i,0})
+                this.outputInfo.update({i:0})
 
     def getOutputInfo(this):
         return this.outputInfo
@@ -99,7 +99,7 @@ class Gene:
     def addToOutputInfo(this, index):
         this.outputInfo[index] += 1
     def addDetails(this, read, info):
-        if read is this.additionalInfo[-1][0]:
+        if (len(this.additionalInfo) > 0) and (read is this.additionalInfo[-1][0]):
             temp = list(this.additionalInfo[-1])
             temp.append(info)
             this.additionalInfo[-1] = tuple(temp)
@@ -107,16 +107,21 @@ class Gene:
             this.additionalInfo.append((read, info))
     def getLastTupleInfo(this):
         return this.additionalInfo[-1]
-    def redefineLastTupleInfo(this):
-        toRedefine = this.additionalInfo.pop()
-        toRedefine = list(toRedefine)
-        toRedefine[0] == toRedefine[0].query_name
-        for i in range(1,len(toRedefine)):
-            if type(toRedefine[i]) == tuple:
-                toRedefine[i] = toRedefine[i][-1]
-            elif toRedefine[i] == "hypersusceptible":
-                toRedefine[i] = "Hypersusceptible: " + toRedefine[i][-1][5:]
-        this.additionalInfo.append(toRedefine)
+    def redefineLastTupleInfo(this, read):
+        if len(this.additionalInfo) == 0:
+            this.additionalInfo.append((read.query_name, None))
+        elif read is not this.additionalInfo[-1][0]:
+            this.additionalInfo.append((read.query_name, None))
+        else:
+            toRedefine = this.additionalInfo.pop()
+            toRedefine = list(toRedefine)
+            toRedefine[0] = toRedefine[0].query_name
+            for i in range(1,len(toRedefine)):
+                if type(toRedefine[i]) == tuple:
+                    toRedefine[i] = toRedefine[i][-1]
+                elif toRedefine[i] == "hypersusceptible":
+                    toRedefine[i] = "Hypersusceptible: " + toRedefine[i][-1][5:]
+            this.additionalInfo.append(toRedefine)
     def mustSuppressFrameshift(this):
         if this.geneTag != 'S':
             return False

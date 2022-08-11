@@ -14,7 +14,7 @@ def verify(read, gene):
                                                                                 #Checks for frameshifts (if not rRNA), but also for extended indels;
     checkResult = FrameshiftCheck(read, gene, rRna)                             #for S-tagged, also determines if needs suppression
     if not(checkResult):                                                        #If not F-tagged and has frameshifts till the end of query sequence
-        FinalCount(gene)
+        FinalCount(gene, read)
         return None                                
     
     seqOfInterest, mapOfInterest = MapQueryToReference(rRna, read, gene)        #If S-tagged and needs suppression, seq and map of interest, removes index 1602
@@ -22,17 +22,17 @@ def verify(read, gene):
     if not(rRna):                                                               #rRNA stays as nucleotide sequence; nonsense mutations don't matter   
         checkResult = NonsenseCheck(read, gene, mapOfInterest, seqOfInterest)   #Checks for nonsense previously found in literature and for new nonsense
         if not(checkResult):                                                    #If not F-tagged and has new nonsense, can't determine resistance
-            FinalCount(gene)
+            FinalCount(gene, read)
             return None      
     
     IntrinsicCheck(read, gene, mapOfInterest, seqOfInterest)                    #For I-tagged specifically
     MisInDelCheck(read, gene, mapOfInterest, seqOfInterest)                     #Counts all resistance-conferring mutations
     nTupleCheck(read, gene, mapOfInterest, seqOfInterest)                       #Counts all resistance-conferring mutations
-    FinalCount(gene)    
+    FinalCount(gene, read)    
 
 
-def FinalCount(gene):
-    gene.redefineLastTupleInfo()
+def FinalCount(gene, read):
+    gene.redefineLastTupleInfo(read)
     additionalInfo = gene.getLastTupleInfo()
     def nTypeCount(): 
         insertion = False
@@ -40,8 +40,12 @@ def FinalCount(gene):
         missense  = False
         nTuple    = False
         resistant = False
+        eight     = False
+        nine      = False
         for info in additionalInfo[1:]:
-            if 'Mis:' in info:
+            if None == info:
+                break
+            elif 'Mis:' in info:
                 if not(missense):
                     gene.addToOutputInfo(2)
                     missense = True
@@ -68,15 +72,19 @@ def FinalCount(gene):
                 gene.addToOutputInfo(7)
                 resistant = True
             elif '12+indel:' in info:
-                gene.addToOutputInfo(8)
+                eight = True
             elif '12+fs:' in info:
-                gene.addToOutputInfo(9)
+                nine = True
             elif "stop location at position " in info:
                 gene.addToOutputInfo(10)
             elif 'FS end' == info:
                 gene.addToOutputInfo(11)
         if resistant:
             gene.addToOutputInfo(1)
+            if eight:
+                gene.addToOutputInfo(8)
+            if nine:
+                gene.addToOutputInfo(9)
 
     def fTypeCount():
         insertion = False
@@ -84,8 +92,12 @@ def FinalCount(gene):
         missense  = False
         nTuple    = False
         resistant = False
+        eight     = False
+        nine      = False
         for info in additionalInfo[1:]:
-            if 'Mis:' in info:
+            if None == info:
+                break
+            elif 'Mis:' in info:
                 if not(missense):
                     gene.addToOutputInfo(2)
                     missense = True
@@ -112,9 +124,9 @@ def FinalCount(gene):
                 gene.addToOutputInfo(7)
                 resistant = True
             elif '12+indel:' in info:
-                gene.addToOutputInfo(8)
+                eight = True
             elif '12+fs:' in info:
-                gene.addToOutputInfo(9)
+                nine = True
             elif "stop location at position " in info:
                 gene.addToOutputInfo(10)
                 resistant = True
@@ -123,6 +135,11 @@ def FinalCount(gene):
                 resistant = True
         if resistant:
             gene.addToOutputInfo(1)
+        else:
+            if eight:
+                gene.addToOutputInfo(8)
+            if nine:
+                gene.addToOutputInfo(9)
 
     def hTypeCount(): 
         insertion = False
@@ -132,8 +149,13 @@ def FinalCount(gene):
         nonsense  = False
         nonstop   = False
         resistant = False
+        hyper     = False
+        eight     = False
+        nine      = False
         for info in additionalInfo[1:]:
-            if 'Mis:' in info:
+            if None == info:
+                break
+            elif 'Mis:' in info:
                 missense = True
                 resistant = True
             elif 'Ins:' in info:
@@ -152,30 +174,36 @@ def FinalCount(gene):
                 nonstop = True
                 resistant = True
             elif '12+indel:' in info:
-                gene.addToOutputInfo(8)
+                eight = True
             elif '12+fs:' in info:
-                gene.addToOutputInfo(9)
+                nine = True
             elif "stop location at position " in info:
                 gene.addToOutputInfo(10)
             elif 'FS end' == info:
                 gene.addToOutputInfo(11)
             elif 'Hypersusceptible' in info:
+                hyper = True
+        if resistant :
+            if not(hyper):
+                if missense:
+                    gene.addToOutputInfo(2)
+                elif insertion:
+                    gene.addToOutputInfo(3)
+                elif deletion:
+                    gene.addToOutputInfo(4)
+                elif nonsense:
+                    gene.addToOutputInfo(5)
+                elif nTuple:
+                    gene.addToOutputInfo(6)
+                elif nonstop:
+                    gene.addToOutputInfo(7)
+                if eight:
+                    gene.addToOutputInfo(8)
+                if nine:
+                    gene.addToOutputInfo(9)
+                gene.addToOutputInfo(1)
+            else:
                 gene.addToOutputInfo(12)
-                resistant = False
-        if resistant:
-            if missense:
-                gene.addToOutputInfo(2)
-            elif insertion:
-                gene.addToOutputInfo(3)
-            elif deletion:
-                gene.addToOutputInfo(4)
-            elif nonsense:
-                gene.addToOutputInfo(5)
-            elif nTuple:
-                gene.addToOutputInfo(6)
-            elif nonstop:
-                gene.addToOutputInfo(7)
-            gene.addToOutputInfo(1)
 
     def sTypeCount():
         insertion = False
@@ -183,8 +211,12 @@ def FinalCount(gene):
         missense  = False
         nTuple    = False
         resistant = False
+        eight     = False
+        nine      = False
         for info in additionalInfo[1:]:
-            if 'Mis:' in info:
+            if None == info:
+                break
+            elif 'Mis:' in info:
                 if not(missense):
                     gene.addToOutputInfo(2)
                     missense = True
@@ -211,9 +243,9 @@ def FinalCount(gene):
                 gene.addToOutputInfo(7)
                 resistant = True
             elif '12+indel:' in info:
-                gene.addToOutputInfo(8)
+                eight = True
             elif '12+fs:' in info:
-                gene.addToOutputInfo(9)
+                nine = True
             elif "stop location at position " in info:
                 gene.addToOutputInfo(10)
                 resistant = False
@@ -228,15 +260,27 @@ def FinalCount(gene):
                 resistant = True
         if resistant:
             gene.addToOutputInfo(1)
+            if eight:
+                gene.addToOutputInfo(8)
+            if nine:
+                gene.addToOutputInfo(9)
 
     def iTypeCount(): 
         acquired = False
         some     = False
         none     = False
         mutant   = False
+        six      = False
+        seven    = False
         for info in additionalInfo[1:]:
-            if 'All' == info:
+            if None == info:
+                break
+            elif 'All' == info:
                 gene.addToOutputInfo(1)
+                if six:
+                    gene.addToOutputInfo(6)
+                if seven:
+                    gene.addToOutputInfo(7)
                 break
             elif 'Some' == info:
                 some = True
@@ -247,11 +291,15 @@ def FinalCount(gene):
             elif 'Mis:' in info:
                 gene.addToOutputInfo(5)
                 acquired = True
+                if six:
+                    gene.addToOutputInfo(6)
+                if seven:
+                    gene.addToOutputInfo(7)
                 break
             elif '12+indel:' in info:
-                gene.addToOutputInfo(6)
+                six = True
             elif '12+fs:' in info:
-                gene.addToOutputInfo(7)
+                seven = True
             elif "stop location at position " in info:
                 gene.addToOutputInfo(8)
                 resistant = False
@@ -261,6 +309,10 @@ def FinalCount(gene):
         if not(acquired):
             if some:
                 gene.addToOutputInfo(2)
+                if six:
+                    gene.addToOutputInfo(6)
+                if seven:
+                    gene.addToOutputInfo(7)
             elif none:
                 gene.addToOutputInfo(3)
             elif mutant:

@@ -17,8 +17,8 @@ def FrameshiftCheck(read, gene, rRna):
                     gene.addDetails(read, 'FS end')
                     extendedIndelCheck(read, gene)
                     return True
+        longFrameshiftCheck(read, gene)
     extendedIndelCheck(read, gene)
-    longFrameshiftCheck(read, gene)
     return True
 
 def longFrameshiftCheck(read, gene):
@@ -79,10 +79,10 @@ def MEG_6094Check(read, gene):
         if pair[1] == 1593:
             inCodon531 = False
         if pair[0] == (lastBeforeFull + 3):
-            if inCodon531 or (len(residue531To534) >= 0 and len(residue531To534) < 4):
-                residue531To534 += dnaTranslate(querySequence[lastBeforeFull+1:pair[1]+1])
-            if inCodon531 or (len(residue531To536) >= 0 and len(residue531To536) < 6):
-                residue531To536 += dnaTranslate(querySequence[lastBeforeFull+1:pair[1]+1])
+            if inCodon531 or (len(residue531To534) >= 1 and len(residue531To534) < 4):
+                residue531To534 += dnaTranslate(querySequence[lastBeforeFull+1:pair[0]+1], gene.getName())
+            if inCodon531 or (len(residue531To536) >= 1 and len(residue531To536) < 6):
+                residue531To536 += dnaTranslate(querySequence[lastBeforeFull+1:pair[0]+1], gene.getName())
             lastBeforeFull += 3
     twoInsertionsAfter = ((insertionCountAfterCinsertion%3) == 2)
     deletionAfter = ((deletionCountAfterCinsertion%3) == 1)

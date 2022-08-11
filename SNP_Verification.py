@@ -16,7 +16,7 @@
 
 from SNP_Verification_Tools.Gene import Gene
 from SNP_Verification_Processes import verify
-from SNP_Verification_Tools import geneDict, argInfoDict, intrinsicInfoDict, susceptibleFrameshiftInfoDict, resistantFrameshiftInfoDict, meg_3180InfoDict, meg_6094InfoDict
+from SNP_Verification_Tools import geneDict
 import SNP_Verification_Tools
 import pysam, sys, getopt, os
 
@@ -91,88 +91,20 @@ for name in inputFile:
         verify(read, gene)
     samfile.close() 
 
-    #Output SNP Info
-    output = open(outputFolder + "/" + name[name.rfind("/")+1:] + ".txt", "w")
-    for argName in argInfoDict:
-        output.write(snpInfoPrint(argName, str(argInfoDict[argName][0]), str(argInfoDict[argName][1])))
-    argInfoDict = {
-    }
-    output.close()
-
-    #Output Intrinsic Resistance Info
-    if len(intrinsicInfoDict) != 0:
-        output = open(outputFolder + "/intrinsic_resistance_" + name[name.rfind("/")+1:] + ".csv", "w")
-        output.write("ARG,All nuc/aa required present,Some nuc/aa positions in query,No nuc/aa positions in query,Not intrinsic but aquired,Mutants in nuc/aa positions\n")
-        for argName in intrinsicInfoDict:
-            output.write(argName + ",")
-            if "All" in intrinsicInfoDict[argName]:
-                for query in intrinsicInfoDict[argName]["All"][:-1]:
-                    output.write(query + ";")
-                output.write(intrinsicInfoDict[argName]["All"][-1] + ",")
-            else: output.write(",")
-            if "Some" in intrinsicInfoDict[argName]:
-                for query in intrinsicInfoDict[argName]["Some"][:-1]:
-                    output.write(query + ";")
-                output.write(intrinsicInfoDict[argName]["Some"][-1] + ",")
-            else: output.write(",")
-            if "NA" in intrinsicInfoDict[argName]:
-                for query in intrinsicInfoDict[argName]["NA"][:-1]:
-                    output.write(query + ";")
-                output.write(intrinsicInfoDict[argName]["NA"][-1] + ",")
-            else: output.write(",")
-            if "Aquired" in intrinsicInfoDict[argName]:
-                for query in intrinsicInfoDict[argName]["Aquired"][:-1]:
-                    output.write(query + ";")
-                output.write(intrinsicInfoDict[argName]["Aquired"][-1] + ",")
-            else: output.write(",")
-            if "Mutant" in intrinsicInfoDict[argName]:
-                for query in intrinsicInfoDict[argName]["Mutant"][:-1]:
-                    output.write(query + ";")
-                output.write(intrinsicInfoDict[argName]["Mutant"][-1] + "\n")
-            else: output.write("\n")
-        intrinsicInfoDict = {}
-        output.close()
-
-    #Output Info on Susceptible Frameshift
-    if len(susceptibleFrameshiftInfoDict) != 0:
-        output = open(outputFolder + "/susceptible_frameshift_mutations_" + name[name.rfind("/")+1:] + ".csv", "w")
-        output.write("ARG,Reads with a frameshift by the end of their sequence\n")
-        for argName in susceptibleFrameshiftInfoDict:
-            output.write(argName + ",")
-            for query in susceptibleFrameshiftInfoDict[argName][:-1]:
-                output.write(query + ",")
-            output.write(susceptibleFrameshiftInfoDict[argName][-1] + "\n")
-        susceptibleFrameshiftInfoDict = {}
-        output.close()
-
-    if len(resistantFrameshiftInfoDict) != 0:
-        output = open(outputFolder + "/reads_with_FS_tag_" + name[name.rfind("/")+1:] + ".csv", "w")
-        output.write("ARG,read name, result\n")
-        for argName in resistantFrameshiftInfoDict:
-            for tuple in resistantFrameshiftInfoDict[argName]:
-                output.write(argName + "," + tuple[0] + "," + tuple[1] + "\n")
-        resistantFrameshiftInfoDict = {}
-        output.close()
-    
-    if len(meg_3180InfoDict) != 0:
-        output = open(outputFolder + "/MEG_3180_" + name[name.rfind("/")+1:] + ".txt", "w")
-        if "resistant" in meg_3180InfoDict:
-            output.write("Num of resistant reads: " + str(meg_3180InfoDict["resistant"]) + "\n")
-        if "susceptible" in meg_3180InfoDict:
-            output.write("Num of susceptible reads: " + str(meg_3180InfoDict["susceptible"]) + "\n")
-        for key in meg_3180InfoDict:
-            if type(key) == int:
-                output.write("Num of reads with hypersusceptible double mutation and " + key + "resistance-conferring mutations: " + meg_3180InfoDict[key] + "\n")
-        meg_3180InfoDict = {}
-        output.close()
-
-    if len(meg_6094InfoDict) != 0:
-        output = open(outputFolder + "/MEG_6094_" + name[name.rfind("/")+1:] + ".csv", "w")
-        output.write("read name, result\n")
-        for argName in meg_6094InfoDict:
-            for tuple in meg_6094InfoDict[argName]:
-                output.write(tuple[0] + "," + tuple[1] + "\n")
-        meg_6094InfoDict = {}
-        output.close()
+    outputN = open(outputFolder + "/Normal_Type_Genes_.csv", "w")
+    outputN.write("Gene,Number of reads,Resistant,Missense,Insertion,Deletion,Previously recorded nonsense,N-tuple,Nonstop,12+bp indel,12+ bp frameshift,Newly found nonsense,Frameshift till end")
+    outputN.close()
+    outputF = open(outputFolder + "/Frameshift_Type_Genes.csv", "w")
+    outputF.write("Gene,Number of reads,Resistant,Missense,Insertion,Deletion,Previously recorded nonsense,N-tuple,Nonstop,12+bp indel,12+ bp frameshift,Newly found nonsense,Frameshift till end")
+    outputF.close()
+    outputH = open(outputFolder + "/Hypersusceptible_Mutations_Type_Genes.csv", "w")
+    outputH.write("Gene,Number of reads,Resistant,Missense,Insertion,Deletion,Previously recorded nonsense,N-tuple,Nonstop,12+bp indel,12+ bp frameshift,Newly found nonsense,Frameshift till end,Hypersusceptible mutations + resistance-conferring mutations")
+    outputH.close()
+    outputS = open(outputFolder + "/Suppressible_Frameshift_Type_Genes.csv", "w")
+    outputS.write("Gene,Number of reads,Resistant,Missense,Insertion,Deletion,Previously recorded nonsense,N-tuple,Nonstop,12+bp indel,12+ bp frameshift,Newly found nonsense,Frameshift at end ,Suppressible frameshift at res 531,Frameshift at res 531 that is not suppressible")
+    outputS.close()
+    outputI = open(outputFolder + "/Intrinsic_Resistance_Genes.csv", "w")
+    outputI.write("Gene,Number of reads,All,Some,None,Mutations,Acquired,12+bp indel,12+ bp frameshift,Nonsense,Frameshift till end")
+    outputI.close()
 
 sys.exit(0)
