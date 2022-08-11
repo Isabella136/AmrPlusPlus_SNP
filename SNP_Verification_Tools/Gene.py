@@ -105,6 +105,18 @@ class Gene:
             this.additionalInfo[-1] = tuple(temp)
         else:
             this.additionalInfo.append((read, info))
+    def getLastTupleInfo(this):
+        return this.additionalInfo[-1]
+    def redefineLastTupleInfo(this):
+        toRedefine = this.additionalInfo.pop()
+        toRedefine = list(toRedefine)
+        toRedefine[0] == toRedefine[0].query_name
+        for i in range(1,len(toRedefine)):
+            if type(toRedefine[i]) == tuple:
+                toRedefine[i] = toRedefine[i][-1]
+            elif toRedefine[i] == "hypersusceptible":
+                toRedefine[i] = "Hypersusceptible: " + toRedefine[i][-1][5:]
+        this.additionalInfo.append(toRedefine)
     def mustSuppressFrameshift(this):
         if this.geneTag != 'S':
             return False

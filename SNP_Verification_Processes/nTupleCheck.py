@@ -16,7 +16,7 @@ def nTupleCheck(read, gene, mapOfInterest, seqOfInterest):
                 delMut = 0
                 misMut = 0
                 notValid = False
-                for mtInfo in snpMult:
+                for mtInfo in snpMult[0]:
                     foundDel = False
                     foundWt = False
                     notFound = 0
@@ -69,7 +69,7 @@ def nTupleCheck(read, gene, mapOfInterest, seqOfInterest):
 
             resBool = True
             wtPresent = False                   #can only be true if mt_and_wt is false
-            for mtInfo in snpMult:
+            for mtInfo in snpMult[0]:
                 if mtInfo[2] == "+":
                     count = 0                   #must be equal to len(mtInfo[1]) to be considered resistant
                     for pos in mtInfo[1]:

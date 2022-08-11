@@ -1,5 +1,6 @@
 class InDel:
     def __init__(this, mtString, name, insertion):
+        this.indel = mtString
         this.name = name
         i = 1
         this.inserted = None
@@ -115,7 +116,7 @@ class Insertion(InDel):
                 break
             i+=1
     def condensedInfo(this):
-        return (this.inserted, this.posACT, "+")
+        return (this.inserted, this.posACT, "+", "Ins:" + this.indel)
 
 class Deletion(InDel):
     def __init__(this, sequence, mtString, name, rRNA = False):
@@ -143,4 +144,4 @@ class Deletion(InDel):
     def isValid(this):
         return (len(this.posACT) != 0) and (this.deleted == this.deletionACT)
     def condensedInfo(this):
-        return (this.deleted, this.posACT, "-")
+        return (this.deleted, this.posACT, "-", "Del:" + this.indel)

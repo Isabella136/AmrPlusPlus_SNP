@@ -46,7 +46,7 @@ def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest):
                     #Regardless of whether the wild-type is also present due to InDels
                     if mt == seqOfInterest[queryIndex]:
                         hasHsMt = True
-                        gene.addDetails(read, "has hypersusceptible double mutations")
+                        gene.addDetails(read, "hypersusceptible")
                         break
                 if hasHsMt == True:
                     break

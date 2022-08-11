@@ -3,6 +3,7 @@ class SNP:
     def __init__(this, snpStringList, name):
         this.name = name
         snpString = snpStringList[0]
+        this.snp = snpString
         this.wtOG = snpString[:1]
         snpString = snpString[1:]
         i = 0
@@ -126,7 +127,7 @@ class SNP_Mis(SNP):
         wt = this.wtOG
         if (this.wtOG != this.wtACT):
             wt += this.wtACT
-        return (wt, this.posACT, this.mtList)
+        return (wt, this.posACT, this.mtList, "Mis:" + this.snp)
     def changeACT(this, sequence, i):
         try: #if sequence contains mt
             this.mtList.index(sequence[i+len(this.leftContext)])
@@ -148,7 +149,7 @@ class SNP_Non(SNP):
         wt = this.wtOG
         if (this.wtOG != this.wtACT):
             wt += this.wtACT
-        return (wt, this.posACT, "*")
+        return (wt, this.posACT, "*", "Nonsense:" + this.snp)
     def changeACT(this, sequence, i):
         this.wtACT = sequence[i+len(this.leftContext)]
         this.posACT = i+len(this.leftContext)+1
@@ -208,6 +209,7 @@ class MustList:
 
 class SNP_Mult:
     def __init__(this, sequence, snpString, name):
+        this.mult = snpString
         this.listOfMts = []
         snpsAndDels = snpString.split(";")
         for info in snpsAndDels:
@@ -221,7 +223,7 @@ class SNP_Mult:
         toReturn = []
         for snp in this.listOfMts:
             toReturn.append(snp.condensedInfo())
-        return toReturn
+        return (toReturn, "Mult:" + this.mult)
     def isValid(this):
         for snp in this.listOfMts:
             if not(snp.isValid()):
