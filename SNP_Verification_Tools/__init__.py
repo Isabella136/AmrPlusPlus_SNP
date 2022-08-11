@@ -5,13 +5,6 @@ detailed = False    #determines whether a more detailed output will be given
 
 geneDict = {}
 
-# argInfoDict = {}
-# intrinsicInfoDict = {}
-# susceptibleFrameshiftInfoDict = {}
-# resistantFrameshiftInfoDict = {}
-# meg_3180InfoDict = {}
-# meg_6094InfoDict = {}
-
 
 aa = {
     "TTT" : 'F',    "TCT" : 'S',    "TAT" : 'Y',    "TGT" : 'C',

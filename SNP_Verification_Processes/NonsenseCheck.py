@@ -1,8 +1,6 @@
-from SNP_Verification_Tools import resistant, disregard
-from SNP_Verification_Tools import Gene
-from SNP_Verification_Tools import SNP
-from SNP_Verification_Processes.FrameshiftCheck import addRead
-from SNP_Verification_Tools import argInfoDict, meg_3180InfoDict, resistantFrameshiftInfoDict, meg_6094InfoDict
+from SNP_Verification_Tools.Gene import Gene
+from SNP_Verification_Tools.SNP import SNP
+from SNP_Verification_Tools.InDel import InDel
 
 def NonsenseCheck(read, gene, mapOfInterest, seqOfInterest):
     stopLocation = seqOfInterest.find('*') 

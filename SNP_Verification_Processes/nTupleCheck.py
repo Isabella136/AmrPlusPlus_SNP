@@ -1,14 +1,11 @@
-from SNP_Verification_Tools import resistant
-from SNP_Verification_Tools import Gene
-from SNP_Verification_Tools import SNP
-from SNP_Verification_Processes.FrameshiftCheck import addRead
-from SNP_Verification_Tools import argInfoDict, meg_3180InfoDict, meg_6094InfoDict, resistantFrameshiftInfoDict, mt_and_wt
+from SNP_Verification_Tools.Gene import Gene
+from SNP_Verification_Tools.SNP import SNP
+from SNP_Verification_Tools.InDel import InDel
+from SNP_Verification_Tools import mt_and_wt
 
 def nTupleCheck(read, gene, mapOfInterest, seqOfInterest):
     SNPInfo = gene.condensedMultInfo()
-    if (len(SNPInfo) == 0):
-        return False
-    else:
+    if (len(SNPInfo) != 0):
         codonNotFullyDeleted = 0                #codons that count for one deletion mutation but aren't fully deleted in read; if >1, snpMult is disregarded        
         for snpMult in SNPInfo:
             codonNotFullyDeleted = 0
@@ -68,8 +65,7 @@ def nTupleCheck(read, gene, mapOfInterest, seqOfInterest):
                         break
                 if notValid:
                     continue
-                resistant(gene.getName(), 0 if notValid else 1, argInfoDict)
-                return True
+                gene.addDetails(read, snpMult)
 
             resBool = True
             wtPresent = False                   #can only be true if mt_and_wt is false
@@ -145,15 +141,4 @@ def nTupleCheck(read, gene, mapOfInterest, seqOfInterest):
                     if not(resBool): break
 
             if resBool: 
-                if (gene.getName() == "MEG_3180"):
-                    if "resistant" not in meg_3180InfoDict:
-                        meg_3180InfoDict["resistant"] = 0
-                    meg_3180InfoDict["resistant"] += 1   
-                elif (gene.getName() == "MEG_6094"):
-                    addRead(gene.getName(), read.query_name, meg_6094InfoDict, "Has a resistance-conferring n-tuple mutation")
-                elif (gene.getFrameshiftInfo() != None):
-                    addRead(gene.getName(), read.query_name, resistantFrameshiftInfoDict, "Has a resistance-conferring n-tuple mutation")
-                else:
-                    resistant(gene.getName(), 1, argInfoDict)
-                return True
-    return False
+                gene.addDetails(read, snpMult)

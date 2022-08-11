@@ -1,13 +1,11 @@
-from SNP_Verification_Tools import resistant, Gene, SNP, InDel
-from SNP_Verification_Processes.FrameshiftCheck import addRead
-from SNP_Verification_Processes.IntrinsicCheck import intrinsicResistant
-from SNP_Verification_Tools import argInfoDict, meg_3180InfoDict, meg_6094InfoDict, resistantFrameshiftInfoDict, mt_and_wt
+from SNP_Verification_Tools.Gene import Gene
+from SNP_Verification_Tools.SNP import SNP
+from SNP_Verification_Tools.InDel import InDel
+from SNP_Verification_Tools import mt_and_wt
 
 def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest):
-    frameshiftInfo = gene.getFrameshiftInfo()
-    def missenseCheck(mtInfo):
+    def missenseCheck(mtInfo, nonstop = False):
         res = 0
-        resMtCount = 0                                              #will be used for MEG_3180 if hypersusceptible double mutation is present
         if (mapOfInterest.get(mtInfo[1]-1,False)) != False:
             for mt in mtInfo[2]:
                 firstAndLastTupleIndex = [0,len(mapOfInterest[mtInfo[1]-1]) - 1]
@@ -28,26 +26,15 @@ def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest):
                         elif mtInfo[0] == seqOfInterest[queryIndex]:
                             res = -1
                             break
-                if hasHsMt:
-                    if res == 1:
-                        resMtCount+=1
-                    res = 0
-                elif res == 1: break
+                if res == 1: break
                 elif res == -1:
                     res = 0
                     break
             if res == 1: 
-                if frameshiftInfo != None:
-                    if gene.getName() == "MEG_6094":
-                        addRead(gene.getName(), read.query_name, meg_6094InfoDict, "Has a resistance-conferring missense mutation")
-                    else:
-                        addRead(gene.getName(), read.query_name, resistantFrameshiftInfoDict, "Has a resistance-conferring missense mutation")
-                    return True
-                elif gene.getName() == "MEG_3979":
-                    intrinsicResistant(gene.getName(), read.query_name, "Aquired")
-                resistant(gene.getName(), res, argInfoDict)
-                return True
-        return resMtCount
+                if nonstop:
+                    gene.addDetails(read, "nonstop")
+                else:
+                    gene.addDetails(read, mtInfo)
 
     hasHsMt = False
     if gene.getName() == "MEG_3180":
@@ -59,8 +46,8 @@ def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest):
                     #Regardless of whether the wild-type is also present due to InDels
                     if mt == seqOfInterest[queryIndex]:
                         hasHsMt = True
+                        gene.addDetails(read, "has hypersusceptible double mutations")
                         break
-                    hasHsMt = False
                 if hasHsMt == True:
                     break
             if not(hasHsMt):
@@ -83,14 +70,7 @@ def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest):
                         count += 1
                         break
             if count == len(mtInfo[1]):
-                if frameshiftInfo != None:
-                    if gene.getName() == "MEG_6094":
-                        addRead(gene.getName(), read.query_name, meg_6094InfoDict, "Has a resistance-conferring insertion")
-                    else:
-                        addRead(gene.getName(), read.query_name, resistantFrameshiftInfoDict, "Has a resistance-conferring insertion")
-                    return True
-                resistant(gene.getName(), 1, argInfoDict)
-                return True
+                gene.addDetails(read, mtInfo)
 
         elif mtInfo[2] == "-":
             for pos in mtInfo[1]:
@@ -108,19 +88,10 @@ def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest):
                             else:
                                 remainingResidueIsEqualToOriginal = (True,False)
                 if foundADeletion and (remainingResidueIsEqualToOriginal[0]==remainingResidueIsEqualToOriginal[1]):
-                    if frameshiftInfo != None:
-                        if gene.getName() == "MEG_6094":
-                            addRead(gene.getName(), read.query_name, meg_6094InfoDict, "Has a resistance-conferring deletion")
-                        else:
-                            addRead(gene.getName(), read.query_name, resistantFrameshiftInfoDict, "Has a resistance-conferring deletion")
-                        return True
-                    resistant(gene.getName(), 1, argInfoDict)
-                    return True
+                    gene.addDetails(read, mtInfo)
 
         else:
             resMtCount = missenseCheck(mtInfo)
-            if resMtCount == True:
-                return True
 
     nonstop, alongWithNonstop = gene.getNonstopInfo()
     if nonstop:
@@ -132,26 +103,6 @@ def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest):
                         break
                 if nonstop:
                     if alongWithNonstop == None:
-                        resistant(gene.getName(), 1, argInfoDict)
-                        return True
-                    else: missenseCheck(alongWithNonstop)
-                        
-
-    if gene.getName() == "MEG_3180":
-        if not(hasHsMt) and (resMtCount > 0):
-            if "resistant" not in meg_3180InfoDict:
-                meg_3180InfoDict["resistant"] = 0
-            meg_3180InfoDict["resistant"] += 1    
-            return True
-        elif hasHsMt:
-            if resMtCount > 0:
-                if resMtCount not in meg_3180InfoDict:
-                    meg_3180InfoDict[resMtCount] = 0
-                meg_3180InfoDict[resMtCount] += 1
-                return True
-            else:
-                if "susceptible" not in meg_3180InfoDict:
-                    meg_3180InfoDict["susceptible"] = 0
-                meg_3180InfoDict["susceptible"] += 1
-                return True
-    return False
+                        gene.addDetails(read, "nonstop")
+                    else: 
+                        missenseCheck(alongWithNonstop, True)

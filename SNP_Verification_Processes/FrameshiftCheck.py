@@ -110,11 +110,3 @@ def MEG_6094Check(read, gene):
             gene.addDetails(read, 'FS end')
             return False
     return True
-
-def addRead(name, queryName, frameshiftInfoDict, additionalInformation = None):
-    if name not in frameshiftInfoDict:
-        frameshiftInfoDict.update({name:list()})
-    if (additionalInformation == None) or (additionalInformation == ''):
-        frameshiftInfoDict[name].append(queryName)
-    else:
-        frameshiftInfoDict[name].append((queryName, additionalInformation))

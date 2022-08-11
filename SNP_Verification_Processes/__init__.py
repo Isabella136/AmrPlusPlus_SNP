@@ -1,49 +1,37 @@
 from SNP_Verification_Tools.Gene import Gene
-from SNP_Verification_Tools.SNP import SNP
-from SNP_Verification_Tools import disregard
-from SNP_Verification_Processes.FrameshiftCheck import FrameshiftCheck, addRead
+from SNP_Verification_Processes.FrameshiftCheck import FrameshiftCheck
 from SNP_Verification_Processes.MappingQueryToReference import MapQueryToReference
 from SNP_Verification_Processes.NonsenseCheck import NonsenseCheck
-from SNP_Verification_Processes.IntrinsicCheck import IntrinsicCheck, intrinsicResistant
+from SNP_Verification_Processes.IntrinsicCheck import IntrinsicCheck
 from SNP_Verification_Processes.MisInDelCheck import MisInDelCheck
 from SNP_Verification_Processes.nTupleCheck import nTupleCheck
-from SNP_Verification_Tools import argInfoDict, resistantFrameshiftInfoDict, meg_6094InfoDict, meg_3180InfoDict
 import pysam
 
 def verify(read, gene):
-    gene.addToOutputInfo(0)
-    name = gene.getName()
     rRna = gene.rRna()
-    checkResult = FrameshiftCheck(read, gene, rRna)
-    if not(checkResult): 
-        return checkResult                                                                  #!!!!!!!!!!!!!!!!!!!!!!!!!!
-    seqOfInterest, mapOfInterest = MapQueryToReference(rRna, read, name, checkResult)
-    if not(rRna):
-        nonsense = NonsenseCheck(read, gene, mapOfInterest, seqOfInterest, checkResult)
-        if nonsense != None: return nonsense
-    intrinsic = IntrinsicCheck(read, gene, mapOfInterest, seqOfInterest)
-    if (intrinsic == True):
-        return True
-    elif (MisInDelCheck(read, gene, mapOfInterest, seqOfInterest)):
-        return True
-    elif (nTupleCheck(read, gene, mapOfInterest, seqOfInterest)):
-        return True
-    elif (checkResult != "") and (checkResult != None):
-        addRead(name, read.query_name, resistantFrameshiftInfoDict, checkResult)
-        return True
-    else: 
-        if name == "MEG_3180":
-            if "susceptible" not in meg_3180InfoDict:
-                meg_3180InfoDict["susceptible"] = 0
-            meg_3180InfoDict["susceptible"] += 1
-        elif name == "MEG_6094":
-            addRead(name, read.query_name, meg_6094InfoDict, "No resistance-conferring mutations")
-        elif name == "MEG_3979":
-            intrinsicResistant(name, read.query_name, intrinsic)
-        elif checkResult == "":
-            addRead(name, read.query_name, resistantFrameshiftInfoDict, "No resistance-conferring mutations")
-        elif gene.listOfMusts != None:
-            intrinsicResistant(name, read.query_name, "Mutant")
-        else:
-            disregard(name, argInfoDict)
-    return False
+    gene.addToOutputInfo(0)                                                     #Counts read; other data will be counted in FinalCount method
+
+                                                                                #Checks for frameshifts (if not rRNA), but also for extended indels;
+    checkResult = FrameshiftCheck(read, gene, rRna)                             #for S-tagged, also determines if needs suppression
+    if not(checkResult):                                                        #If not F-tagged and has frameshifts till the end of query sequence
+        FinalCount(gene)                                
+    
+    seqOfInterest, mapOfInterest = MapQueryToReference(rRna, read, gene)        #If S-tagged and needs suppression, seq and map of interest, removes index 1602
+    
+    if not(rRna):                                                               #rRNA stays as nucleotide sequence; nonsense mutations don't matter   
+        checkResult = NonsenseCheck(read, gene, mapOfInterest, seqOfInterest)   #Checks for nonsense previously found in literature and for new nonsense
+        if not(checkResult):                                                    #If not F-tagged and has new nonsense, can't determine resistance
+            FinalCount(gene)
+    
+    IntrinsicCheck(read, gene, mapOfInterest, seqOfInterest)                    #For I-tagged specifically
+    MisInDelCheck(read, gene, mapOfInterest, seqOfInterest)                     #Counts all resistance-conferring mutations
+    nTupleCheck(read, gene, mapOfInterest, seqOfInterest)                       #Counts all resistance-conferring mutations
+    
+
+
+def FinalCount(gene):
+    def nTypeCount()
+    def fTypeCount()
+    def hTypeCount()
+    def sTypeCount()
+    def iTypeCount()
