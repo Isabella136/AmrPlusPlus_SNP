@@ -98,13 +98,19 @@ class Gene:
         return this.geneTag
     def addToOutputInfo(this, index):
         this.outputInfo[index] += 1
-    def addDetails(this, read, info,):
+    def addDetails(this, read, info):
         if read is this.additionalInfo[-1][0]:
             temp = list(this.additionalInfo[-1])
             temp.append(info)
             this.additionalInfo[-1] = tuple(temp)
         else:
             this.additionalInfo.append((read, info))
+    def mustSuppressFrameshift(this):
+        if this.geneTag != 'S':
+            return False
+        elif 'C insert' not in this.additionalInfo:
+            return False
+        return True
 
     def aaSequence(this):
         return this.translated

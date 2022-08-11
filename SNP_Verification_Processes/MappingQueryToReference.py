@@ -12,12 +12,14 @@ def extendCigar(cigar):                                         #example: transf
                 count -= 1
     return toReturn
 
-def MapQueryToReference(rRna, read, name):
+def MapQueryToReference(rRna, read, gene):
     cigar = extendCigar(read.cigarstring)                       #example: transforms 3M2I3M to MMMIIMMM
     aligned_pair = read.get_aligned_pairs()
-    nt_alignment_map = mapCigarToAlignment(cigar, aligned_pair, rRna)   #map has been trimmed to not have broken codons if not rRNA
-    querySeq = read.query_sequence
+    nt_alignment_map = mapCigarToAlignment(cigar, aligned_pair, rRna, gene.mustSuppressFrameshift())   
+    querySeq = read.query_sequence                              #map has been trimmed to not have broken codons if not rRNA
     mapOfInterest = transformNtAlignmentMap(nt_alignment_map)   #makes ntAlignmentMap have same format as aa_alignment_map (useful for rRNA)
+    if gene.mustSuppressFrameshift():                           #nt 1602 is the one that should be removed
+         querySeq = suppressFS(1602, mapOfInterest, querySeq)
     start = nt_alignment_map[0][1]
     i = 1
     while start == None:                                        #trimms query sequence in order to not have broken codons during translation
@@ -31,13 +33,17 @@ def MapQueryToReference(rRna, read, name):
     trimmedQuerySequence = querySeq[start:end+1]                
     seqOfInterest = trimmedQuerySequence
     if not(rRna):
-        aaQuerySequence = dnaTranslate(trimmedQuerySequence, name)
-        aa_alignment_map = aaAlignment(nt_alignment_map)        #for 'F' type of genes, seqOfInterest may extend past mapOfInterest
-        seqOfInterest = aaQuerySequence                         #due to frameshift that extend past the end of query sequence
-        mapOfInterest = aa_alignment_map
+        seqOfInterest = dnaTranslate(trimmedQuerySequence, gene.getName())
+        mapOfInterest = aaAlignment(nt_alignment_map)           #for 'F' type of genes, seqOfInterest may extend past mapOfInterest
+                                                                #due to frameshift that extend past the end of query sequence
     return (seqOfInterest, mapOfInterest)
 
-def mapCigarToAlignment(cigar, aligned_pair, rRna):             #map has been trimmed to not have broken codons if not rRNA
+def suppressFS(ntToDelete, mapOfInterest, querySequence):
+    queryIndexToRemove = mapOfInterest[ntToDelete-1]+1
+    querySequence = querySequence[:queryIndexToRemove] + querySequence[queryIndexToRemove+1:]
+    return querySequence
+
+def mapCigarToAlignment(cigar, aligned_pair, rRna, suppress):   #map has been trimmed to not have broken codons if not rRNA
     alignment_map = []                                          #list of tuples: (opcode, query pos, ref pos, ref nuc shift, and pre ref nuc shift)
     queryLength = 0                                             #length of query sequence that will be kept
     refLength = 0                                               #length of reference sequence
@@ -45,6 +51,7 @@ def mapCigarToAlignment(cigar, aligned_pair, rRna):             #map has been tr
     shift = 0                                                   #previous total insertions - previous total deletions 
     prevShift = 0
     splitIndex = -1                                             #trimmed query seq index; starts counting from index in codon
+    suppressingInsertion = False                                #will only be used if suppress is true
     translatable = False
     for op in cigar:
         if op == "S":
@@ -67,9 +74,12 @@ def mapCigarToAlignment(cigar, aligned_pair, rRna):             #map has been tr
             else:
                 if not(translatable):
                     translatable = True
+                if (aligned_pair[index][1] == 1601):
+                    suppressingInsertion = False
+                    continue
                 queryLength += 1
                 refLength += 1
-                alignment_map.append(("M", aligned_pair[index][0], aligned_pair[index][1], shift, prevShift))
+                alignment_map.append(("M", aligned_pair[index][0], aligned_pair[index][1]+1 if suppressingInsertion else aligned_pair[index][1], shift, prevShift))
                 index += 1
         elif op == "I":
             prevShift = shift
@@ -94,6 +104,12 @@ def mapCigarToAlignment(cigar, aligned_pair, rRna):             #map has been tr
             else:
                 if not(translatable):
                     translatable = True
+                if suppress and (aligned_pair[index][1] > 1590) and not(suppressingInsertion):
+                    suppressingInsertion = True
+                    queryLength += 1
+                    refLength += 1
+                    alignment_map.append(("M", aligned_pair[index][0], aligned_pair[index-1][1]+1, shift, prevShift))
+                    index += 1
                 queryLength += 1
                 alignment_map.append((op, aligned_pair[index][0], aligned_pair[index][1], shift, prevShift))
                 index += 1

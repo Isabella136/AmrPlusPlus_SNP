@@ -52,27 +52,28 @@ def MEG_6094Check(read, gene):
     shiftCount = 0                                                      #If pos, more ins; if neg. more del
     inCodon531 = False
     hasCinsertion = False
-    hasInsertionAfterCinsertion = False
-    hasDeletionAfterCinsertion = False
+    insertionCountAfterCinsertion = 0
+    deletionCountAfterCinsertion = 0
     lastBeforeFull = (3 - (aligned_pairs[0][1]) % 3) % 3 - 1            #Last nt index before first full codon
+    residue531To536 = ""
     residue531To534 = ""
     valid = True
     for pair in aligned_pairs:
         if pair[0] == None:                                             #If deletion
-            if hasCinsertion and not(hasDeletionAfterCinsertion):       #If first deletion since C insertion at codon 531
-                hasDeletionAfterCinsertion = True
+            if hasCinsertion:
+                deletionCountAfterCinsertion += 1
             shiftCount -= 1
         elif pair[1] == None:                                           #If insertion
-            if hasCinsertion and not(hasInsertionAfterCinsertion):
-                hasInsertionAfterCinsertion = True
-            if inCodon531 and ((shiftCount%3)!=0):                      #If in codon 531 and not in frameshift
+            if hasCinsertion:
+                insertionCountAfterCinsertion += 1
+            if inCodon531 and ((shiftCount%3)==0):                      #If in codon 531 and not in frameshift
                 if not(hasCinsertion):
                     shiftCount -= 1
-                hasCinsertion = True
+                    hasCinsertion = True
             shiftCount += 1
-        if hasInsertionAfterCinsertion and hasDeletionAfterCinsertion:
-            hasDeletionAfterCinsertion = False
-            hasInsertionAfterCinsertion = False
+        if (insertionCountAfterCinsertion > 0) and (deletionCountAfterCinsertion > 0):
+            insertionCountAfterCinsertion -= 1                          #Never will have both over 1
+            deletionCountAfterCinsertion -= 1
         if pair[1] == 1590:
             inCodon531 = True
         if pair[1] == 1593:
@@ -80,7 +81,11 @@ def MEG_6094Check(read, gene):
         if pair[0] == (lastBeforeFull + 3):
             if inCodon531 or (len(residue531To534) >= 0 and len(residue531To534) < 4):
                 residue531To534 += dnaTranslate(querySequence[lastBeforeFull+1:pair[1]+1])
+            if inCodon531 or (len(residue531To536) >= 0 and len(residue531To536) < 6):
+                residue531To536 += dnaTranslate(querySequence[lastBeforeFull+1:pair[1]+1])
             lastBeforeFull += 3
+    twoInsertionsAfter = ((insertionCountAfterCinsertion%3) == 2)
+    deletionAfter = ((deletionCountAfterCinsertion%3) == 1)
     if (shiftCount % 3) == 2:
         if not(hasCinsertion):
             valid = False
@@ -89,17 +94,22 @@ def MEG_6094Check(read, gene):
     if not(valid):
         gene.addDetails(read, 'FS end')
         return False                                                    #Should not continue
-    elif hasCinsertion:
-        if ((shiftCount % 3) == 0) and hasDeletionAfterCinsertion:      #Will only be true if hasCinsertion is true and hasInsertionAfter is false
-            gene.addDetails(read, 'C insert + del')
-            return True                                                 #In that case, must not have FS suppression
-        elif residue531To534 == "SRTR"[0:len(residue531To534)]:         #Must have those residues due to insertion
-            gene.addDetails(read, 'C insert')
-            return True                                                 #Read has info in gene.additionalInfo (T) but is still susceptible (F); has insert (T)
+    elif hasCinsertion:                                                 #shiftCount%3 == 0 at residue 531
+        if (residue531To534 == "SRTR"[0:len(residue531To534)]):         #Must have those residues due to insertion
+            if (deletionAfter or twoInsertionsAfter):
+                gene.addDetails(read, 'C insert + del/ins')             #In that case, must not have FS suppression                                                
+            elif (residue531To536 == "SRTRPR"[0:len(residue531To536)]):                                                       
+                gene.addDetails(read, 'C insert')
+            else:
+                gene.addDetails(read, 'C insert + not SRTRPR')          #Suppression can't happen if no PR
+                gene.addDetails(read, 'FS end')
+                return False
+            return True 
         elif (shiftCount % 3) == 0:                                     #Because SRTR is not present, can't make prediction on resistance
-            gene.addDetails(read, 'C insert')
+            gene.addDetails(read, 'C insert + not SRTR')
             gene.addDetails(read, 'FS end')
             return False
+    return True
 
 def addRead(name, queryName, frameshiftInfoDict, additionalInformation = None):
     if name not in frameshiftInfoDict:
