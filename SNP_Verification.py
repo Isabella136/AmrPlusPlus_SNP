@@ -53,7 +53,7 @@ for opt, arg in options:
             if arg != "All":
                 argList = arg.split(',')
 if len(inputFile) == 0:
-    inputFile.append("SAM_files/P_TSB_10_3_filtered.sam")
+    inputFile.append("Test/Test.sam")
     outputFolder = "Sample_Output"
     #print("SNP_Verification.py -i <inputFile> -o <outputFolder>")
     #sys.exit(-1)
@@ -88,7 +88,7 @@ SNPinfo.close()
 for name in inputFile:
     #Analyze SAM file
     fullOutputPath = outputFolder + "/" + name.split('/')[-1][:-4]
-    #pysam.sort("-o", fullOutputPath + "/Sorted_" + name[name.rfind("/")+1:], name)
+    pysam.sort("-o", fullOutputPath + "/Sorted_" + name[name.rfind("/")+1:], name)
     samfile = pysam.AlignmentFile(fullOutputPath + "/Sorted_" + name[name.rfind("/")+1:], "r")
     iter = samfile.fetch()
     for read in iter:

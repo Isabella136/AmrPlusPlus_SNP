@@ -45,6 +45,11 @@ def FinalCount(gene, read):
         for info in additionalInfo[1:]:
             if None == info:
                 break
+            elif 'Mult:' in info:
+                if not(nTuple):
+                    gene.addToOutputInfo(6)
+                    nTuple = True
+                resistant = True
             elif 'Mis:' in info:
                 if not(missense):
                     gene.addToOutputInfo(2)
@@ -62,11 +67,6 @@ def FinalCount(gene, read):
                 resistant = True
             elif 'Nonsense:' in info:
                 gene.addToOutputInfo(5)
-                resistant = True
-            elif 'Mult:' in info:
-                if not(nTuple):
-                    gene.addToOutputInfo(6)
-                    nTuple = True
                 resistant = True
             elif 'nonstop' == info:
                 gene.addToOutputInfo(7)
@@ -97,6 +97,11 @@ def FinalCount(gene, read):
         for info in additionalInfo[1:]:
             if None == info:
                 break
+            elif 'Mult:' in info:
+                if not(nTuple):
+                    gene.addToOutputInfo(6)
+                    nTuple = True
+                resistant = True
             elif 'Mis:' in info:
                 if not(missense):
                     gene.addToOutputInfo(2)
@@ -114,11 +119,6 @@ def FinalCount(gene, read):
                 resistant = True
             elif 'Nonsense:' in info:
                 gene.addToOutputInfo(5)
-                resistant = True
-            elif 'Mult:' in info:
-                if not(nTuple):
-                    gene.addToOutputInfo(6)
-                    nTuple = True
                 resistant = True
             elif 'nonstop' == info:
                 gene.addToOutputInfo(7)
@@ -155,6 +155,9 @@ def FinalCount(gene, read):
         for info in additionalInfo[1:]:
             if None == info:
                 break
+            elif 'Mult:' in info:
+                nTuple = True
+                resistant = True
             elif 'Mis:' in info:
                 missense = True
                 resistant = True
@@ -166,9 +169,6 @@ def FinalCount(gene, read):
                 resistant = True
             elif 'Nonsense:' in info:
                 nonsense = True
-                resistant = True
-            elif 'Mult:' in info:
-                nTuple = True
                 resistant = True
             elif 'nonstop' == info:
                 nonstop = True
@@ -216,6 +216,11 @@ def FinalCount(gene, read):
         for info in additionalInfo[1:]:
             if None == info:
                 break
+            elif 'Mult:' in info:
+                if not(nTuple):
+                    gene.addToOutputInfo(6)
+                    nTuple = True
+                resistant = True
             elif 'Mis:' in info:
                 if not(missense):
                     gene.addToOutputInfo(2)
@@ -233,11 +238,6 @@ def FinalCount(gene, read):
                 resistant = True
             elif 'Nonsense:' in info:
                 gene.addToOutputInfo(5)
-                resistant = True
-            elif 'Mult:' in info:
-                if not(nTuple):
-                    gene.addToOutputInfo(6)
-                    nTuple = True
                 resistant = True
             elif 'nonstop' == info:
                 gene.addToOutputInfo(7)

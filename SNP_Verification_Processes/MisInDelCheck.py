@@ -62,21 +62,33 @@ def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest):
             if len(mtInfo[0])  > 1:
                 if (mapOfInterest.get(mtInfo[1][0]-1,False)) == False:
                     continue
+                fullInsertionString = False
                 for queryIndex in tuple(mapOfInterest[mtInfo[1][0]-1]):
-                    if mtInfo[0][i] != seqOfInterest[queryIndex]:
+                    if queryIndex == '-': continue
+                    if mtInfo[0][0] != seqOfInterest[queryIndex]:
                         continue
-                    for startingIndex in range(2 * mtInfo[1][0] - mtInfo[1][1],mtInfo[1][1]+1, mtInfo[1][1] - mtInfo[1][0]):
-                        fullInsertionString = True
+                    if len(mtInfo[1]) > 1:
+                        for startingIndex in range(2 * mtInfo[1][0] - mtInfo[1][1],mtInfo[1][1]+1, mtInfo[1][1] - mtInfo[1][0]):
+                            fullInsertionString = True
+                            for i in range(len(mtInfo[0])):
+                                if mtInfo[0][i] != seqOfInterest[startingIndex+i]:
+                                    fullInsertionString = False
+                                    break
+                            if fullInsertionString:
+                                count += 1
+                    else:
                         for i in range(len(mtInfo[0])):
-                            if mtInfo[0][i] != seqOfInterest[startingIndex+i]:
+                            if mtInfo[0][i] != seqOfInterest[queryIndex+i]:
                                 fullInsertionString = False
                                 break
                         if fullInsertionString:
                             count += 1
+
             else:
                 if (mapOfInterest.get(mtInfo[1][0]-1,False)) == False:
                     continue
                 for queryIndex in tuple(mapOfInterest[mtInfo[1][0]-1]):
+                    if queryIndex == '-': continue
                     if mtInfo[0] == seqOfInterest[queryIndex]:          #should be first of inserted residue
                         count += 1
                         i = queryIndex - 1
@@ -110,10 +122,10 @@ def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest):
                         if seqOfInterest[queryIndex] == mtInfo[0]:
                             remainingResidueIsEqualToOriginal = (True,False)
                             if ((mapOfInterest.get(pos,False)) != False) and (queryIndex in mapOfInterest[pos]):
-                                if gene.aaSequence[pos] == mtInfo[0]:
+                                if gene.aaSequence()[pos] == mtInfo[0]:
                                     remainingResidueIsEqualToOriginal = (True,True)
                             elif ((mapOfInterest.get(pos-2,False)) != False) and queryIndex in mapOfInterest[pos-2]:
-                                if gene.aaSequence[pos-2] == mtInfo[0]:
+                                if gene.aaSequence()[pos-2] == mtInfo[0]:
                                     remainingResidueIsEqualToOriginal = (True,True)
                 if (misMut > 0) and (delMut > 0):
                     codonNotFullyDeleted += 1
