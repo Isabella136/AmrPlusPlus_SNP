@@ -75,9 +75,9 @@ def FinalCount(gene, read):
                 eight = True
             elif '12+fs:' in info:
                 nine = True
-            elif "stop location at position " in info:
+            elif "Newly found nonsense " in info:
                 gene.addToOutputInfo(10)
-            elif 'FS end' == info:
+            elif 'FS till end' == info:
                 gene.addToOutputInfo(11)
         if resistant:
             gene.addToOutputInfo(1)
@@ -127,10 +127,10 @@ def FinalCount(gene, read):
                 eight = True
             elif '12+fs:' in info:
                 nine = True
-            elif "stop location at position " in info:
+            elif "Newly found nonsense " in info:
                 gene.addToOutputInfo(10)
                 resistant = True
-            elif 'FS end' == info:
+            elif 'FS till end' == info:
                 gene.addToOutputInfo(11)
                 resistant = True
         if resistant:
@@ -177,9 +177,9 @@ def FinalCount(gene, read):
                 eight = True
             elif '12+fs:' in info:
                 nine = True
-            elif "stop location at position " in info:
+            elif "Newly found nonsense " in info:
                 gene.addToOutputInfo(10)
-            elif 'FS end' == info:
+            elif 'FS till end' == info:
                 gene.addToOutputInfo(11)
             elif 'Hypersusceptible' in info:
                 hyper = True
@@ -246,13 +246,13 @@ def FinalCount(gene, read):
                 eight = True
             elif '12+fs:' in info:
                 nine = True
-            elif "stop location at position " in info:
+            elif "Newly found nonsense " in info:
                 gene.addToOutputInfo(10)
                 resistant = False
-            elif 'FS end' == info:
+            elif 'FS till end' == info:
                 gene.addToOutputInfo(11)
                 resistant = False
-            elif 'C insert' == info:
+            elif 'Suppressible C insert' == info:
                 gene.addToOutputInfo(12)
                 resistant = True
             elif 'C insert + del/ins' == info:
@@ -300,10 +300,10 @@ def FinalCount(gene, read):
                 six = True
             elif '12+fs:' in info:
                 seven = True
-            elif "stop location at position " in info:
+            elif "Newly found nonsense " in info:
                 gene.addToOutputInfo(8)
                 resistant = False
-            elif 'FS end' == info:
+            elif 'FS till end' == info:
                 gene.addToOutputInfo(9)
                 resistant = False
         if not(acquired):

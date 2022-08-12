@@ -7,14 +7,14 @@ def FrameshiftCheck(read, gene, rRna):
         frameshiftInfo = gene.getFrameshiftInfo()
         #if (insertions - deletions) %3 != 0, susceptible unless if gene has frameshift info
         if (((cigarOpCount[1] - cigarOpCount[2]) % 3) != 0) and (frameshiftInfo == None): 
-            gene.addDetails(read, 'FS end')
+            gene.addDetails(read, 'FS till end')
             return False                                                            #Should not continue
         elif frameshiftInfo != None:
             if gene.getGeneTag() == 'S':                                            #MEG_6094 can have a C insertion at res 531 if followed by frameshift suppression during translation
                 if not(MEG_6094Check(read, gene)): return False
             else:
                 if (((cigarOpCount[1] - cigarOpCount[2]) % 3) != 0):
-                    gene.addDetails(read, 'FS end')
+                    gene.addDetails(read, 'FS till end')
                     extendedIndelCheck(read, gene)
                     return True
         longFrameshiftCheck(read, gene)
@@ -92,21 +92,21 @@ def MEG_6094Check(read, gene):
     elif (shiftCount % 3) == 1:
         valid = False
     if not(valid):
-        gene.addDetails(read, 'FS end')
+        gene.addDetails(read, 'FS till end')
         return False                                                    #Should not continue
     elif hasCinsertion:                                                 #shiftCount%3 == 0 at residue 531
         if (residue531To534 == "SRTR"[0:len(residue531To534)]):         #Must have those residues due to insertion
             if (deletionAfter or twoInsertionsAfter):
                 gene.addDetails(read, 'C insert + del/ins')             #In that case, must not have FS suppression                                                
             elif (residue531To536 == "SRTRPR"[0:len(residue531To536)]):                                                       
-                gene.addDetails(read, 'C insert')
+                gene.addDetails(read, 'Suppressible C insert')
             else:
                 gene.addDetails(read, 'C insert + not SRTRPR')          #Suppression can't happen if no PR
-                gene.addDetails(read, 'FS end')
+                gene.addDetails(read, 'FS till end')
                 return False
             return True 
         elif (shiftCount % 3) == 0:                                     #Because SRTR is not present, can't make prediction on resistance
             gene.addDetails(read, 'C insert + not SRTR')
-            gene.addDetails(read, 'FS end')
+            gene.addDetails(read, 'FS till end')
             return False
     return True

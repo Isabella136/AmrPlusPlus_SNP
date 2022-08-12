@@ -71,18 +71,35 @@ def nTupleCheck(read, gene, mapOfInterest, seqOfInterest):
             wtPresent = False                   #can only be true if mt_and_wt is false
             for mtInfo in snpMult[0]:
                 if mtInfo[2] == "+":
-                    count = 0                   #must be equal to len(mtInfo[1]) to be considered resistant
-                    for pos in mtInfo[1]:
-                        if (mapOfInterest.get(pos-1,False)) == False:
+                    count = 0                                                   #must be equal to len(mtInfo[1]) to be considered resistant
+                    if len(mtInfo[0] > 1):
+                        if (mapOfInterest.get(mtInfo[1][0]-1,False)) == False:
                             continue
-                        for queryIndex in tuple(mapOfInterest[pos-1]):
-                            fullInsertionString = True
-                            for i in range(len(mtInfo[0])):
-                                if mtInfo[0][i] != seqOfInterest[queryIndex+i]:
-                                    fullInsertionString = False
-                                    break
-                            if fullInsertionString:
+                        for queryIndex in tuple(mapOfInterest[mtInfo[1][0]-1]):
+                            if mtInfo[0][i] != seqOfInterest[queryIndex]:
+                                continue
+                            for startingIndex in range(2 * mtInfo[1][0] - mtInfo[1][1],mtInfo[1][1]+1, mtInfo[1][1] - mtInfo[1][0]):
+                                fullInsertionString = True
+                                for i in range(len(mtInfo[0])):
+                                    if mtInfo[0][i] != seqOfInterest[startingIndex+i]:
+                                        fullInsertionString = False
+                                        break
+                                if fullInsertionString:
+                                    count += 1
+                    else:
+                        if (mapOfInterest.get(mtInfo[1][0]-1,False)) == False:
+                            continue
+                        for queryIndex in tuple(mapOfInterest[mtInfo[1][0]-1]):
+                            if mtInfo[0] == seqOfInterest[queryIndex]:          #should be first of inserted residue
                                 count += 1
+                                i = queryIndex - 1
+                                while seqOfInterest[i] == mtInfo[0]:
+                                    count += 1
+                                    i -= 1
+                                i = queryIndex + 1
+                                while seqOfInterest[i] == mtInfo[0]:
+                                    count += 1
+                                    i += 1
                                 break
                     if count != len(mtInfo[1]):
                         resBool = False
@@ -102,13 +119,18 @@ def nTupleCheck(read, gene, mapOfInterest, seqOfInterest):
                             currentResBool = True
                         else:
                             if seqOfInterest[queryIndex] == mtInfo[0]:
-                                if remainingResidueIsEqualToOriginal[0]:
-                                    remainingResidueIsEqualToOriginal = (True,True)
-                                else:
-                                    remainingResidueIsEqualToOriginal = (True,False)
+                                remainingResidueIsEqualToOriginal = (True,False)
+                                if (mapOfInterest.get(mtInfo[1][0],False)) != False:
+                                    if queryIndex in mapOfInterest[mtInfo[1][0]]:
+                                        remainingResidueIsEqualToOriginal = (True,True)
+                                elif (mapOfInterest.get(mtInfo[1][0]-2,False)) != False:
+                                    if queryIndex in mapOfInterest[mtInfo[1][0]-2]:
+                                        remainingResidueIsEqualToOriginal = (True,True)
                             misMut += 1
+                    if (delMut > 0) & (misMut > 0):
+                        codonNotFullyDeleted += 1
                     if (codonNotFullyDeleted > 1) or ((delMut > 0) and (remainingResidueIsEqualToOriginal[0]!=remainingResidueIsEqualToOriginal[1])):
-                        resBool = False
+                        currentResBool = False
                         break
                     resBool = currentResBool
                     if not(resBool):

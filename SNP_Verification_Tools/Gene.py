@@ -94,6 +94,7 @@ class Gene:
     def clearOutputInfo(this):
         for key in this.outputInfo:
             this.outputInfo[key] = 0
+        this.additionalInfo.clear()
     def getGeneTag(this):
         return this.geneTag
     def addToOutputInfo(this, index):
@@ -128,6 +129,93 @@ class Gene:
         elif 'C insert' not in this.additionalInfo:
             return False
         return True
+    def writeAdditionalInfo(this, file):
+        header = {"Read": None}
+        if not(this.rRna()):
+            header.update({"FS till end": None})
+            header.update({"Newly found nonsense": None})
+            header.update({"12+bp indel": None})
+            header.update({"12+bp frameshift": None})
+        else:
+            header.update({"12+bp indel": None})
+        if this.geneTag == 'I':
+            header.update({"All residues in query": None})
+            header.update({"Some residues in query": None})
+            header.update({"No residues in query": None})
+            header.update({"Mutated residues in query": None})
+        elif this.geneTag == 'S':
+            header.update({"C insert + not SRTR": None})
+            header.update({"C insert + not SRTRPR": None})
+            header.update({"C insert followed by del/ins": None})
+            header.update({"Suppressible C insert": None})
+        condensedInfo = this.condensedHyperInfo()
+        if len(condensedInfo) != 0:
+            header.update({"Hypersusceptible: " + condensedInfo[-1][5:]: None})
+        condensedInfo = this.condensedMisInDelInfo()
+        if len(condensedInfo) != 0:
+            for geneMtInfo in condensedInfo:
+                header.update({geneMtInfo[-1]: None})
+        condensedInfo = this.condensedMultInfo()
+        if len(condensedInfo) != 0:
+            for geneMtInfo in condensedInfo:
+                header.update({geneMtInfo[-1]: None})
+        condensedInfo = this.condensedNonInfo()
+        if len(condensedInfo) != 0:
+            for geneMtInfo in condensedInfo:
+                header.update({geneMtInfo[-1]: None})
+        if this.isThereANonstop[0] == True:
+            snp = this.isThereANonstop[1]
+            if snp == None:
+                header.update({"Nonstop": None})
+            else:
+                header.update({"Nonstop + " + snp.condensedInfo()[-1]: None})
+        
+        def clearHeader():
+            for key in header:
+                header[key] = None
+
+        comma = False
+        for key in header:
+            if comma:
+                file.write(",")
+            else:
+                comma = True
+            file.write(key)
+
+        for read in this.additionalInfo:
+            if read[1] == None: continue
+            file.write("\n")
+            header["Read"] = read[0]
+            for info in read[1:]:
+                if info == "All":
+                    header["All residues in query"] = "T"
+                elif info == "Some":
+                    header["Some residues in query"] = "T"
+                elif info == "NA":
+                    header["No residues in query"] = "T"
+                elif info == "Mutant":
+                    header["Mutated residues in query"] = "T"
+                elif info == "nonstop":
+                    snp = this.isThereANonstop[1]
+                    if snp == None:
+                        header["Nonstop"] = "T"
+                    else:
+                        header["Nonstop + " + snp.condensedInfo()[-1]] = "T"
+                elif "Newly found nonsense" in info:
+                    header["Newly found nonsense"] = "Pos:" + info.split(":")[1]
+                else:
+                    header[info] = "T"
+            comma = False
+            for value in header.values():
+                if comma:
+                    file.write(",")
+                else:
+                    comma = True
+                if value == None:
+                    continue
+                file.write(value)
+            clearHeader()
+            
 
     def aaSequence(this):
         return this.translated
@@ -140,6 +228,8 @@ class Gene:
             condensedInfoList.append(snp.condensedInfo())
         return condensedInfoList
     def condensedHyperInfo(this):
+        if len(this.listOfHyperSNPs) == 0:
+            return []
         return this.listOfHyperSNPs[0].condensedInfo()
     def condensedMisInDelInfo(this):
         condensedInfoList = []

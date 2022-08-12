@@ -58,42 +58,74 @@ def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest):
     mtInfoList = gene.condensedMisInDelInfo()
     for mtInfo in mtInfoList:
         if mtInfo[2] == "+":
-            count = 0                                               #must be equal to len(mtInfo[1]) to be considered resistant
-            for pos in mtInfo[1]:
-                if (mapOfInterest.get(pos-1,False)) == False:
+            count = 0                                                   #must be equal to len(mtInfo[1]) to be considered resistant
+            if len(mtInfo[0])  > 1:
+                if (mapOfInterest.get(mtInfo[1][0]-1,False)) == False:
                     continue
-                for queryIndex in tuple(mapOfInterest[pos-1]):
-                    fullInsertionString = True
-                    for i in range(len(mtInfo[0])):
-                        if mtInfo[0][i] != seqOfInterest[queryIndex+i]:
-                            fullInsertionString = False
-                            break
-                    if fullInsertionString:
+                for queryIndex in tuple(mapOfInterest[mtInfo[1][0]-1]):
+                    if mtInfo[0][i] != seqOfInterest[queryIndex]:
+                        continue
+                    for startingIndex in range(2 * mtInfo[1][0] - mtInfo[1][1],mtInfo[1][1]+1, mtInfo[1][1] - mtInfo[1][0]):
+                        fullInsertionString = True
+                        for i in range(len(mtInfo[0])):
+                            if mtInfo[0][i] != seqOfInterest[startingIndex+i]:
+                                fullInsertionString = False
+                                break
+                        if fullInsertionString:
+                            count += 1
+            else:
+                if (mapOfInterest.get(mtInfo[1][0]-1,False)) == False:
+                    continue
+                for queryIndex in tuple(mapOfInterest[mtInfo[1][0]-1]):
+                    if mtInfo[0] == seqOfInterest[queryIndex]:          #should be first of inserted residue
                         count += 1
+                        i = queryIndex - 1
+                        while seqOfInterest[i] == mtInfo[0][0]:
+                            count += 1
+                            i -= 1
+                        i = queryIndex + 1
+                        while seqOfInterest[i] == mtInfo[0][0]:
+                            count += 1
+                            i += 1
                         break
             if count == len(mtInfo[1]):
                 gene.addDetails(read, mtInfo)
 
         elif mtInfo[2] == "-":
+            codonNotFullyDeleted = 0
+            deletionCount = 0
             for pos in mtInfo[1]:
+                foundADeletion = False
+                misMut = 0
+                delMut = 0
                 if (mapOfInterest.get(pos-1,False)) == False:
                     continue
-                foundADeletion = False
-                remainingResidueIsEqualToOriginal = (False, False)  #1/2M3D2/1M, must be both True or False to be res
+                remainingResidueIsEqualToOriginal = (False, False)      #1/2M3D2/1M, must be both True or False to be res
                 for queryIndex in tuple(mapOfInterest[pos-1]):
                     if (queryIndex == "-") or (queryIndex == None):
                         foundADeletion = True
+                        delMut += 1
                     else:
+                        misMut += 1
                         if seqOfInterest[queryIndex] == mtInfo[0]:
-                            if remainingResidueIsEqualToOriginal[0]:
-                                remainingResidueIsEqualToOriginal = (True,True)
-                            else:
-                                remainingResidueIsEqualToOriginal = (True,False)
-                if foundADeletion and (remainingResidueIsEqualToOriginal[0]==remainingResidueIsEqualToOriginal[1]):
-                    gene.addDetails(read, mtInfo)
+                            remainingResidueIsEqualToOriginal = (True,False)
+                            if ((mapOfInterest.get(pos,False)) != False) and (queryIndex in mapOfInterest[pos]):
+                                if gene.aaSequence[pos] == mtInfo[0]:
+                                    remainingResidueIsEqualToOriginal = (True,True)
+                            elif ((mapOfInterest.get(pos-2,False)) != False) and queryIndex in mapOfInterest[pos-2]:
+                                if gene.aaSequence[pos-2] == mtInfo[0]:
+                                    remainingResidueIsEqualToOriginal = (True,True)
+                if (misMut > 0) and (delMut > 0):
+                    codonNotFullyDeleted += 1
+                    if (codonNotFullyDeleted % 2) == 1:
+                        deletionCount += 1
+                elif foundADeletion:
+                    deletionCount += 1
+            if (deletionCount == 1) and (remainingResidueIsEqualToOriginal[0]==remainingResidueIsEqualToOriginal[1]):
+                gene.addDetails(read, mtInfo)
 
         else:
-            resMtCount = missenseCheck(mtInfo)
+            missenseCheck(mtInfo)
 
     nonstop, alongWithNonstop = gene.getNonstopInfo()
     if nonstop:

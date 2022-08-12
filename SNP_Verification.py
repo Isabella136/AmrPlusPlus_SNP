@@ -24,6 +24,7 @@ snpInfoPrint = lambda a, b, c : a + ": " + b + " resitant reads out of " + c + "
 
 inputFile = []
 outputFolder = ""
+argList = []
 try:
     options, args = getopt.getopt(sys.argv[1:], "hlci:o:", ["mt_and_wt=", "detailed_output="])
 except getopt.GetoptError:
@@ -47,15 +48,23 @@ for opt, arg in options:
         if arg == "False":
             SNP_Verification_Tools.mt_and_wt = False
     elif opt =="--detailed_output":
-        if arg == "True":
+        if arg != "None":
             SNP_Verification_Tools.detailed = True
+            if arg != "All":
+                argList = arg.split(',')
 if len(inputFile) == 0:
     inputFile.append("SAM_files/P_TSB_10_3_filtered.sam")
-    outputFolder = "Test"
+    outputFolder = "Sample_Output"
     #print("SNP_Verification.py -i <inputFile> -o <outputFolder>")
     #sys.exit(-1)
-if not os.path.exists(outputFolder):
+if not(os.path.exists(outputFolder)):
     os.mkdir(outputFolder)
+
+for file in inputFile:
+    if not(os.path.exists(outputFolder + "/" + file.split('/')[-1][:-4])):
+        os.mkdir(outputFolder + "/" + file.split('/')[-1][:-4])
+    if SNP_Verification_Tools.detailed and not(os.path.exists(outputFolder + "/" + file.split('/')[-1][:-4] + "/Detailed_Output")):
+        os.mkdir(outputFolder + "/" + file.split('/')[-1][:-4] + "/Detailed_Output")
 
 SNPinfo = open("extracted_SNP_files/SNPinfo.fasta", "rt")
 isSequence = False
@@ -77,10 +86,10 @@ for line in SNPinfo:
 SNPinfo.close()
 
 for name in inputFile:
-
     #Analyze SAM file
-    pysam.sort("-o", outputFolder + "/Sorted_" + name[name.rfind("/")+1:], name)
-    samfile = pysam.AlignmentFile(outputFolder + "/Sorted_" + name[name.rfind("/")+1:], "r")
+    fullOutputPath = outputFolder + "/" + name.split('/')[-1][:-4]
+    #pysam.sort("-o", fullOutputPath + "/Sorted_" + name[name.rfind("/")+1:], name)
+    samfile = pysam.AlignmentFile(fullOutputPath + "/Sorted_" + name[name.rfind("/")+1:], "r")
     iter = samfile.fetch()
     for read in iter:
         gene = geneDict.get(read.reference_name, False)
@@ -88,23 +97,64 @@ for name in inputFile:
             continue
         elif (read.cigarstring == None):
             continue
+        elif (len(argList) != 0) and (gene.split("|")[0] not in argList):
+            continue
         verify(read, gene)
     samfile.close() 
 
-    outputN = open(outputFolder + "/Normal_Type_Genes_.csv", "w")
+    #Function that appends gene.getOutputInfo() to output file
+    def appendGeneOutputInfo(name, outputInfo, file):
+        file.write("\n" + name)
+        for info in outputInfo.values():
+            file.write("," + str(info))
+
+
+    #Create output files and write headers
+    outputN = open(fullOutputPath + "/Normal_Type_Genes_.csv", "w")
     outputN.write("Gene,Number of reads,Resistant,Missense,Insertion,Deletion,Previously recorded nonsense,N-tuple,Nonstop,12+bp indel,12+ bp frameshift,Newly found nonsense,Frameshift till end")
     outputN.close()
-    outputF = open(outputFolder + "/Frameshift_Type_Genes.csv", "w")
+    outputF = open(fullOutputPath + "/Frameshift_Type_Genes.csv", "w")
     outputF.write("Gene,Number of reads,Resistant,Missense,Insertion,Deletion,Previously recorded nonsense,N-tuple,Nonstop,12+bp indel,12+ bp frameshift,Newly found nonsense,Frameshift till end")
     outputF.close()
-    outputH = open(outputFolder + "/Hypersusceptible_Mutations_Type_Genes.csv", "w")
+    outputH = open(fullOutputPath + "/Hypersusceptible_Mutations_Type_Genes.csv", "w")
     outputH.write("Gene,Number of reads,Resistant,Missense,Insertion,Deletion,Previously recorded nonsense,N-tuple,Nonstop,12+bp indel,12+ bp frameshift,Newly found nonsense,Frameshift till end,Hypersusceptible mutations + resistance-conferring mutations")
     outputH.close()
-    outputS = open(outputFolder + "/Suppressible_Frameshift_Type_Genes.csv", "w")
+    outputS = open(fullOutputPath + "/Suppressible_Frameshift_Type_Genes.csv", "w")
     outputS.write("Gene,Number of reads,Resistant,Missense,Insertion,Deletion,Previously recorded nonsense,N-tuple,Nonstop,12+bp indel,12+ bp frameshift,Newly found nonsense,Frameshift at end ,Suppressible frameshift at res 531,Frameshift at res 531 that is not suppressible")
     outputS.close()
-    outputI = open(outputFolder + "/Intrinsic_Resistance_Genes.csv", "w")
+    outputI = open(fullOutputPath + "/Intrinsic_Resistance_Genes.csv", "w")
     outputI.write("Gene,Number of reads,All,Some,None,Mutations,Acquired,12+bp indel,12+ bp frameshift,Nonsense,Frameshift till end")
     outputI.close()
+
+    for name, gene in geneDict.items():
+        if (len(argList) != 0) and (gene.split("|")[0] not in argList):
+            continue
+        tag = gene.getGeneTag()
+        if tag == 'N':
+            outputN = open(fullOutputPath + "/Normal_Type_Genes_.csv", "a")
+            appendGeneOutputInfo(name, gene.getOutputInfo(), outputN)
+            outputN.close()
+        elif tag == 'F':
+            outputF = open(fullOutputPath + "/Frameshift_Type_Genes.csv", "a")
+            appendGeneOutputInfo(name, gene.getOutputInfo(), outputF)
+            outputF.close()
+        elif tag == 'H':
+            outputH = open(fullOutputPath + "/Hypersusceptible_Mutations_Type_Genes.csv", "a")
+            appendGeneOutputInfo(name, gene.getOutputInfo(), outputH)
+            outputH.close()
+        elif tag == 'S':
+            outputS = open(fullOutputPath + "/Suppressible_Frameshift_Type_Genes.csv", "a")
+            appendGeneOutputInfo(name, gene.getOutputInfo(), outputS)
+            outputS.close()
+        else:
+            outputI = open(fullOutputPath + "/Intrinsic_Resistance_Genes.csv", "a")
+            appendGeneOutputInfo(name, gene.getOutputInfo(), outputI)
+            outputI.close()
+        if SNP_Verification_Tools.detailed:
+            detailedOutput = open(fullOutputPath + "/Detailed_Output/" + name + ".csv", "w")
+            gene.writeAdditionalInfo(detailedOutput)
+            detailedOutput.close()
+        
+        gene.clearOutputInfo()
 
 sys.exit(0)

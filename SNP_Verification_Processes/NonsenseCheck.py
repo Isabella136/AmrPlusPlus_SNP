@@ -30,7 +30,7 @@ def verifyNonsense(read, gene, stopLocation, mapOfInterest):
             i+=1
         if referenceStopLocation == -1:
             referenceStopLocation = list(mapOfInterest.keys())[i-1] + stopLocation - lastQueryIndex
-        gene.addDetails(read, "stop location at position " + str(referenceStopLocation+1))
+        gene.addDetails(read, "Newly found nonsense: " + str(referenceStopLocation+1))
 
     SNPInfo = gene.condensedNonInfo()
     if (len(SNPInfo) == 0) and (gene.getGeneTag() != 'F'):
