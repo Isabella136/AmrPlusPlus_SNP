@@ -68,9 +68,12 @@ def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest):
                     if mtInfo[0][0] != seqOfInterest[queryIndex]:
                         continue
                     if len(mtInfo[1]) > 1:
-                        for startingIndex in range(2 * mtInfo[1][0] - mtInfo[1][1],mtInfo[1][1]+1, mtInfo[1][1] - mtInfo[1][0]):
+                        for startingIndex in range(queryIndex - 3, queryIndex + 4, 3):
                             fullInsertionString = True
                             for i in range(len(mtInfo[0])):
+                                if len(seqOfInterest) <= (startingIndex + i):
+                                    fullInsertionString = False
+                                    break
                                 if mtInfo[0][i] != seqOfInterest[startingIndex+i]:
                                     fullInsertionString = False
                                     break
@@ -89,7 +92,7 @@ def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest):
                     continue
                 for queryIndex in tuple(mapOfInterest[mtInfo[1][0]-1]):
                     if queryIndex == '-': continue
-                    if mtInfo[0] == seqOfInterest[queryIndex]:          #should be first of inserted residue
+                    if mtInfo[0][0] == seqOfInterest[queryIndex]:          #should be first of inserted residue
                         count += 1
                         i = queryIndex - 1
                         while seqOfInterest[i] == mtInfo[0][0]:
@@ -129,11 +132,11 @@ def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest):
                                     remainingResidueIsEqualToOriginal = (True,True)
                 if (misMut > 0) and (delMut > 0):
                     codonNotFullyDeleted += 1
-                    if (codonNotFullyDeleted % 2) == 1:
+                    if ((codonNotFullyDeleted % 2) == 1) and (remainingResidueIsEqualToOriginal[0]==remainingResidueIsEqualToOriginal[1]):
                         deletionCount += 1
                 elif foundADeletion:
                     deletionCount += 1
-            if (deletionCount == 1) and (remainingResidueIsEqualToOriginal[0]==remainingResidueIsEqualToOriginal[1]):
+            if (deletionCount == 1):
                 gene.addDetails(read, mtInfo)
 
         else:

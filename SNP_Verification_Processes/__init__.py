@@ -45,6 +45,9 @@ def FinalCount(gene, read):
         for info in additionalInfo[1:]:
             if None == info:
                 break
+            elif 'nonstop' == info:
+                gene.addToOutputInfo(7)
+                resistant = True
             elif 'Mult:' in info:
                 if not(nTuple):
                     gene.addToOutputInfo(6)
@@ -67,9 +70,6 @@ def FinalCount(gene, read):
                 resistant = True
             elif 'Nonsense:' in info:
                 gene.addToOutputInfo(5)
-                resistant = True
-            elif 'nonstop' == info:
-                gene.addToOutputInfo(7)
                 resistant = True
             elif '12+indel:' in info:
                 eight = True
@@ -97,6 +97,9 @@ def FinalCount(gene, read):
         for info in additionalInfo[1:]:
             if None == info:
                 break
+            elif 'nonstop' == info:
+                gene.addToOutputInfo(7)
+                resistant = True
             elif 'Mult:' in info:
                 if not(nTuple):
                     gene.addToOutputInfo(6)
@@ -119,9 +122,6 @@ def FinalCount(gene, read):
                 resistant = True
             elif 'Nonsense:' in info:
                 gene.addToOutputInfo(5)
-                resistant = True
-            elif 'nonstop' == info:
-                gene.addToOutputInfo(7)
                 resistant = True
             elif '12+indel:' in info:
                 eight = True
@@ -155,9 +155,14 @@ def FinalCount(gene, read):
         for info in additionalInfo[1:]:
             if None == info:
                 break
+            elif 'nonstop' == info:
+                nonstop = True
+                resistant = True
             elif 'Mult:' in info:
                 nTuple = True
                 resistant = True
+            elif 'Hypersusceptible' in info:
+                hyper = True
             elif 'Mis:' in info:
                 missense = True
                 resistant = True
@@ -170,9 +175,6 @@ def FinalCount(gene, read):
             elif 'Nonsense:' in info:
                 nonsense = True
                 resistant = True
-            elif 'nonstop' == info:
-                nonstop = True
-                resistant = True
             elif '12+indel:' in info:
                 eight = True
             elif '12+fs:' in info:
@@ -180,9 +182,7 @@ def FinalCount(gene, read):
             elif "Newly found nonsense " in info:
                 gene.addToOutputInfo(10)
             elif 'FS till end' == info:
-                gene.addToOutputInfo(11)
-            elif 'Hypersusceptible' in info:
-                hyper = True
+                gene.addToOutputInfo(11) 
         if resistant :
             if not(hyper):
                 if missense:
@@ -216,6 +216,9 @@ def FinalCount(gene, read):
         for info in additionalInfo[1:]:
             if None == info:
                 break
+            elif 'nonstop' == info:
+                gene.addToOutputInfo(7)
+                resistant = True
             elif 'Mult:' in info:
                 if not(nTuple):
                     gene.addToOutputInfo(6)
@@ -238,9 +241,6 @@ def FinalCount(gene, read):
                 resistant = True
             elif 'Nonsense:' in info:
                 gene.addToOutputInfo(5)
-                resistant = True
-            elif 'nonstop' == info:
-                gene.addToOutputInfo(7)
                 resistant = True
             elif '12+indel:' in info:
                 eight = True

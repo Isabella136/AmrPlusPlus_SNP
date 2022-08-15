@@ -146,7 +146,7 @@ def multipleSNPTest(snpInfo, gene, SNP_Num):
             if not(lastIsM): #wt435-, wt437-/mt
                 inBetweenH.append(((((snp[1][0] if type(snp[1]) == list else snp[1])*3-3) - lastNt),'M'))
                 lastIsM = True
-                lastIfI = False
+                lastIsI = False
                 lastIsD = False
             else: #wt435mt, wt437-/mt
                 inBetweenH[-1] = (inBetweenH[-1][0] + (((snp[1][0] if type(snp[1]) == list else snp[1])*3-3) - lastNt), 'M')
@@ -175,14 +175,14 @@ def multipleSNPTest(snpInfo, gene, SNP_Num):
                 lastIsD = False
                 lastIsI = False
                 inBetweenH.append((3, 'M'))
-        if (type(snp[1]) == list):
+        if (snp[2]) == "-":
             lastNt = snp[1][0]*3
-        else:
+        elif (snp[2]) != "+":
             lastNt = snp[1]*3
     if lastIsM:
         inBetweenH[-1] = (inBetweenH[-1][0] + end - (snpInfo[-1][1][0] if type(snpInfo[-1][1]) == list else snpInfo[-1][1])*3, 'M')
     elif end > (snpInfo[-1][1][0] if type(snpInfo[-1][1]) == list else snpInfo[-1][1])*3:
-        inBetweenH.append((end - (snpInfo[-1][1][0] if type(snpInfo[-1][1]) == list else snpInfo[-1][1])*3, 'M'))
+        inBetweenH.append((end - lastNt, 'M'))
     cigar = "20H"
     for next in inBetweenH:
         cigar = cigar + str(next[0]) + next[1]
@@ -199,7 +199,7 @@ def multipleSNPTest(snpInfo, gene, SNP_Num):
         if i < (len(snpInfo) - 1):
             SEQ = SEQ + sequence[(snpInfo[i][1][0] if type(snpInfo[i][1]) == list else snpInfo[i][1])*3:(snpInfo[i+1][1][0] if type(snpInfo[i+1][1]) == list else snpInfo[i+1][1])*3-3]
         else:
-            SEQ = SEQ + sequence[(snpInfo[i][1][0] if type(snpInfo[i][1]) == list else snpInfo[i][1])*3:end]
+            SEQ = SEQ + sequence[lastNt:end]
     return SNPTest(SNP_Num, gene.getFullName(), start, end, cigar, SEQ)
 
 def multipleNucleicSNPTest(snpInfo, gene, SNP_Num):
@@ -275,7 +275,7 @@ def deletionTest(snpInfo, gene, SNP_Num):
             cigar = cigar + str(end-(i*3)+1) + "M20H"
         sequence = gene.ntSequence()
         SEQ = sequence[start-1:(i*3-4)] + sequence[(i*3)-1:end]
-        toReturn = toReturn + SNPTest(str(SNP_Num) +"a"+str(i), gene.getFullName(), start, end, cigar, SEQ)
+        toReturn = toReturn + SNPTest(str(SNP_Num) +"b"+str(i), gene.getFullName(), start, end, cigar, SEQ)
         cigar = "20H"
         if i != 1:
             cigar = cigar + str((i*3-2)-(start-1)) + "M3D"
@@ -283,7 +283,7 @@ def deletionTest(snpInfo, gene, SNP_Num):
             cigar = cigar + str(end-(i*3)-1) + "M20H"
         sequence = gene.ntSequence()
         SEQ = sequence[start-1:(i*3-2)] + sequence[(i*3)+1:end]
-        toReturn = toReturn + SNPTest(str(SNP_Num) +"a"+str(i), gene.getFullName(), start, end, cigar, SEQ)
+        toReturn = toReturn + SNPTest(str(SNP_Num) +"c"+str(i), gene.getFullName(), start, end, cigar, SEQ)
     return toReturn
 
 def insertionTest(snpInfo, gene, SNP_Num):
@@ -297,12 +297,12 @@ def insertionTest(snpInfo, gene, SNP_Num):
         if i != 1:
             cigar = cigar + str((i*3-3)-(start-1))+ "M" + str(3 * len(snpInfo[0])) + "I"
         if i != gene.ntSeqLength():
-            cigar = cigar + str(end-i*3) + "M20H"
+            cigar = cigar + str(end-i*3+3) + "M20H"
         sequence = gene.ntSequence()
         inserted = ""
         for aa in snpInfo[0]:
             inserted = inserted + reverseTranslation(aa)
-        SEQ = sequence[start-1:(i*3-3)] + inserted + sequence[(i*3):end]
+        SEQ = sequence[start-1:(i*3-3)] + inserted + sequence[(i*3)-3:end]
         toReturn = toReturn + SNPTest(str(SNP_Num) +"a"+str(i), gene.getFullName(), start, end, cigar, SEQ)
     if (len(snpInfo[1]) > 1) and (len(snpInfo[0]) > 1):
         start = snpInfo[1][0]*3-20
@@ -311,15 +311,15 @@ def insertionTest(snpInfo, gene, SNP_Num):
         if end > gene.ntSeqLength(): end = gene.ntSeqLength()
         cigar = "20H"
         if snpInfo[1][0] != 1:
-            cigar = cigar + str((snpInfo[1][0]*3)-(start-1))+ "M" + 3 * len(snpInfo[0]) + "I"
+            cigar = cigar + str((snpInfo[1][0]*3)-(start-1))+ "M" + str(3 * len(snpInfo[0])) + "I"
         if snpInfo[1][0] != gene.ntSeqLength():
-            cigar = cigar + str(end-snpInfo[1][0]*3+3) + "M20H"
+            cigar = cigar + str(end-snpInfo[1][0]*3) + "M20H"
         sequence = gene.ntSequence()
         inserted = ""
         for aa in snpInfo[0][1:]:
             inserted = inserted + reverseTranslation(aa)
         inserted = inserted + reverseTranslation(snpInfo[0][0])
-        SEQ = sequence[start-1:(snpInfo[1][0]*3)] + inserted + sequence[(snpInfo[1][0]*3+3):end]
+        SEQ = sequence[start-1:(snpInfo[1][0]*3)] + inserted + sequence[(snpInfo[1][0]*3):end]
         toReturn = toReturn + SNPTest(str(SNP_Num) +"a"+str(snpInfo[1]), gene.getFullName(), start, end, cigar, SEQ)
     return toReturn
 

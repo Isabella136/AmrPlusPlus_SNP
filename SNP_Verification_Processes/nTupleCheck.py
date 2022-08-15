@@ -81,9 +81,12 @@ def nTupleCheck(read, gene, mapOfInterest, seqOfInterest):
                             if mtInfo[0][0] != seqOfInterest[queryIndex]:
                                 continue
                             if len(mtInfo[1]) > 1:
-                                for startingIndex in range(2 * mtInfo[1][0] - mtInfo[1][1],mtInfo[1][1]+1, mtInfo[1][1] - mtInfo[1][0]):
+                                for startingIndex in range(queryIndex - 3, queryIndex + 4, 3):
                                     fullInsertionString = True
                                     for i in range(len(mtInfo[0])):
+                                        if len(seqOfInterest) <= (startingIndex + i):
+                                            fullInsertionString = False
+                                            break
                                         if mtInfo[0][i] != seqOfInterest[startingIndex+i]:
                                             fullInsertionString = False
                                             break

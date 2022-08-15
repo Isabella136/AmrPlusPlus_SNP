@@ -49,18 +49,18 @@ class InDel:
             for aa in this.leftContext[index]:
                 if aa == sequence[currentPos]:
                     if index == len(this.leftContext) - 1:
-                        nextPos = currentPos + len(this.posList)
+                        nextPos = currentPos + (this.posList[-1]-this.posList[0]) + 1
                         nextPos = nextPos if this.inserted != None else nextPos+1
                         return InDel.checkRight(this, 0, nextPos , sequence, errorMargin, rRNA)
                     else:
                         return InDel.checkLeft(this, index + 1, currentPos + 1, sequence, errorMargin, rRNA)
         else:
-            nextPos = currentPos + len(this.posList)
+            nextPos = currentPos + (this.posList[-1]-this.posList[0]) + 1
             nextPos = nextPos if this.inserted != None else nextPos+1
             return this.checkRight(0, nextPos, sequence, errorMargin, rRNA)
         if (errorMargin < 3) and not(rRNA):
             if index == len(this.leftContext) - 1:
-                nextPos = currentPos + len(this.posList)
+                nextPos = currentPos + (this.posList[-1]-this.posList[0]) + 1
                 nextPos = nextPos if this.inserted != None else nextPos+1
                 return InDel.checkRight(this, 0, nextPos, sequence, errorMargin + 1, rRNA)
             else:
