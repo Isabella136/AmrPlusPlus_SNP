@@ -204,7 +204,7 @@ MEG_6129,Drugs,Rifampin,Rifampin-resistant_beta-subunit_of_RNA_polymerase_RpoB,R
 MEG_6145,Drugs,Aminoglycosides,Aminoglycoside-resistant_16S_ribosomal_subunit_protein,RRSA,Nuc:T130C,,,,,,,,,,,,,,,
 MEG_6146,Drugs,Aminoglycosides,Aminoglycoside-resistant_16S_ribosomal_subunit_protein,RRSC,Nuc:A794GT,Nuc:G926TAC,Nuc:A1519CGT,,,,,,,,,,,,,
 MEG_6147,Drugs,Aminoglycosides,Aminoglycoside-resistant_16S_ribosomal_subunit_protein,RRSH,Nuc:C1192T,,,,,,,,,,,,,,,
-MEG_6963,Drugs,Tetracyclines,Tetracycline-resistant_16S_ribosomal_subunit_protein,TET16S,Nuc:T570G,Nuc:T572C,NucDel:G595-,,,,,,,,,,,,,
+MEG_6963,Drugs,Tetracyclines,Tetracycline-resistant_16S_ribosomal_subunit_protein,TET16S,Nuc:T570G,Nuc:T572C,NucDel:C595-,,,,,,,,,,,,,
 MEG_6964,Drugs,Tetracyclines,Tetracycline-resistant_16S_ribosomal_subunit_protein,TET16S,Nuc:G1032C,,,,,,,,,,,,,,,
 MEG_7185,Drugs,Tetracyclines,Tetracycline_transcriptional_repressor,TETR,RequiresSNPConfirmation,,,,,,,,,,,,,,,
 MEG_7186,Drugs,Tetracyclines,Tetracycline_transcriptional_repressor,TETR,RequiresSNPConfirmation,,,,,,,,,,,,,,,

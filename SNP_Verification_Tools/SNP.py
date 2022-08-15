@@ -59,18 +59,16 @@ class SNP:
         else:
             begin = this.posOG - 35
             end = this.posOG + 26
-            if end > (len(sequence) - 2 - len(this.rightContext) - len(this.leftContext)):
-                end = len(sequence) - 2 - len(this.rightContext) - len(this.leftContext)
+            if end > (len(sequence) - 1 - len(this.rightContext) - len(this.leftContext)):
+                end = len(sequence) - 1 - len(this.rightContext) - len(this.leftContext)
                 begin = end - 61
             elif begin < 0:
                 begin = 0
                 end = 61
-            i = begin
-            for x in sequence[begin:end]:
+            for i in range(begin, end+1):
                 if this.checkLeft(0, i, sequence, 0, rRNA):
                     this.changeACT(sequence, i)
                     break
-                i += 1
     def checkLeft(this, index, currentPos, sequence, errorMargin, rRNA):
         if (len(this.leftContext) != 0):
             for aa in this.leftContext[index]:

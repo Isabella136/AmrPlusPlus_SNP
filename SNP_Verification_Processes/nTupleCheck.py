@@ -13,14 +13,14 @@ def nTupleCheck(read, gene, mapOfInterest, seqOfInterest):
                 lastPos = 0                     #if firstPos < beginningPos, all remaining positions in between 
                 beginningPos = None             #first and beginning must be deleted
                 firstPos = None
-                delMut = 0
-                misMut = 0
                 notValid = False
                 for mtInfo in snpMult[0]:
                     foundDel = False
                     foundWt = False
                     notFound = 0
                     for pos in mtInfo[1]:
+                        delMut = 0
+                        misMut = 0
                         deletedOrWt = False
                         if (mapOfInterest.get(pos-1,False)) == False:
                             notFound += 1
@@ -28,20 +28,21 @@ def nTupleCheck(read, gene, mapOfInterest, seqOfInterest):
                         for queryIndex in tuple(mapOfInterest[pos-1]):
                             if queryIndex == "-":
                                 if not(deletedOrWt):
-                                    foundDel = True
                                     delMut += 1
                                 deletedOrWt = True
                             else:
                                 misMut += 1
-                                if mtInfo[0] == queryIndex:
-                                    foundDel = False
-                                    delMut = 0
+                                if mtInfo[0] == seqOfInterest[queryIndex]:
+                                    if delMut > 0:
+                                        delMut = 0
                                     deletedOrWt = True
                                     foundWt = True
                         if not(deletedOrWt):
                             notValid = True
                             break
-                        elif foundDel and (delMut > 0):
+                        if delMut > 0:
+                            foundDel = True
+                        if foundDel and (delMut > 0):
                             if beginningPos == None:
                                 beginningPos = pos
                                 lastPos = pos
@@ -58,6 +59,8 @@ def nTupleCheck(read, gene, mapOfInterest, seqOfInterest):
                             elif (firstPos != beginningPos) and (pos < firstPos):
                                 notValid = True
                                 break
+                            else:
+                                lastPos += 1
                         if (delMut > 0) & (misMut > 0):
                             codonNotFullyDeleted += 1
                     if notValid or (codonNotFullyDeleted > 2) or (notFound > 1) or not(foundDel) or not(foundWt):
@@ -78,10 +81,10 @@ def nTupleCheck(read, gene, mapOfInterest, seqOfInterest):
                         fullInsertionString = False
                         for queryIndex in tuple(mapOfInterest[mtInfo[1][0]-1]):
                             if queryIndex == '-': continue
-                            if mtInfo[0][0] != seqOfInterest[queryIndex]:
-                                continue
                             if len(mtInfo[1]) > 1:
-                                for startingIndex in range(queryIndex - 3, queryIndex + 4, 3):
+                                if mtInfo[0][0] != seqOfInterest[queryIndex]:
+                                    continue
+                                for startingIndex in range(queryIndex - len(mtInfo[0]), queryIndex + len(mtInfo[0]) + 1, 3):
                                     fullInsertionString = True
                                     for i in range(len(mtInfo[0])):
                                         if len(seqOfInterest) <= (startingIndex + i):
@@ -93,6 +96,12 @@ def nTupleCheck(read, gene, mapOfInterest, seqOfInterest):
                                     if fullInsertionString:
                                         count += 1
                             else:
+                                if seqOfInterest[queryIndex] in mtInfo[0]:
+                                    for i in range(len(mtInfo[0])):
+                                        if mtInfo[0][i] == seqOfInterest[queryIndex]:
+                                            fullInsertionString = True
+                                            queryIndex -= i
+                                            break
                                 for i in range(len(mtInfo[0])):
                                     if mtInfo[0][i] != seqOfInterest[queryIndex+i]:
                                         fullInsertionString = False
