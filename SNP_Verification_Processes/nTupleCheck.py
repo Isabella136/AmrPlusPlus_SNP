@@ -86,7 +86,7 @@ def nTupleCheck(read, gene, mapOfInterest, seqOfInterest):
                                 for startingIndex in range(queryIndex - len(mtInfo[0]), queryIndex + len(mtInfo[0]) + 1, len(mtInfo[0])):
                                     fullInsertionString = True
                                     for i in range(len(mtInfo[0])):
-                                        if len(seqOfInterest) <= (startingIndex + i):
+                                        if (len(seqOfInterest) <= (startingIndex + i)) or (0>(startingIndex + i)):
                                             fullInsertionString = False
                                             break
                                         if mtInfo[0][i] != seqOfInterest[startingIndex+i]:
@@ -102,6 +102,9 @@ def nTupleCheck(read, gene, mapOfInterest, seqOfInterest):
                                             queryIndex -= i
                                             break
                                 for i in range(len(mtInfo[0])):
+                                    if (len(seqOfInterest) <= (queryIndex + i)) or (0>(queryIndex + i)):
+                                        fullInsertionString = False
+                                        break
                                     if mtInfo[0][i] != seqOfInterest[queryIndex+i]:
                                         fullInsertionString = False
                                         break
@@ -112,14 +115,14 @@ def nTupleCheck(read, gene, mapOfInterest, seqOfInterest):
                             continue
                         for queryIndex in tuple(mapOfInterest[mtInfo[1][0]-1]):
                             if queryIndex == '-': continue
-                            if mtInfo[0] == seqOfInterest[queryIndex]:          #should be first of inserted residue
+                            if mtInfo[0][0] == seqOfInterest[queryIndex]:          #should be first of inserted residue
                                 count += 1
                                 i = queryIndex - 1
-                                while seqOfInterest[i] == mtInfo[0]:
+                                while (i >= 0) and (seqOfInterest[i] == mtInfo[0][0]):
                                     count += 1
                                     i -= 1
                                 i = queryIndex + 1
-                                while seqOfInterest[i] == mtInfo[0]:
+                                while (i < len(seqOfInterest)) and (seqOfInterest[i] == mtInfo[0][0]):
                                     count += 1
                                     i += 1
                                 break
@@ -171,10 +174,24 @@ def nTupleCheck(read, gene, mapOfInterest, seqOfInterest):
                                 if mt_and_wt:
                                     break
                             elif (mtInfo[0] == seqOfInterest[queryIndex]) and not(mt_and_wt):
-                                wtPresent = True
-                                currentResBool = False
-                                resBool = False
-                                break
+                                if ((mapOfInterest.get(mtInfo[1],False)) != False) and (queryIndex in mapOfInterest[mtInfo[1]]):
+                                    if gene.aaSequence()[mtInfo[1]] != mtInfo[0]:
+                                        wtPresent = True
+                                        currentResBool = False
+                                        resBool = False
+                                        break
+                                elif ((mapOfInterest.get(mtInfo[1]-2,False)) != False) and queryIndex in mapOfInterest[mtInfo[1]-2]:
+                                    if gene.aaSequence()[mtInfo[1]-2] != mtInfo[0]:
+                                        wtPresent = True
+                                        currentResBool = False
+                                        resBool = False
+                                        break
+                                else:
+                                    wtPresent = True
+                                    currentResBool = False
+                                    resBool = False
+                                    break
+
                             else:
                                 resBool = False
                         if currentResBool: 

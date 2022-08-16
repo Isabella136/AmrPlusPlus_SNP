@@ -143,6 +143,12 @@ def transformNtAlignmentMap(nt_alignment_map):                  #makes ntAlignme
     new_nt_alignment_map = {}                                   #format of map is {refNt, (correspondingQueryNt1, correspondingQueryNt2)}
     ntQueryIndex = 0
     ntRefIndex = nt_alignment_map[0][2]
+    i = 1
+    while ntRefIndex == None:
+        ntRefIndex = nt_alignment_map[i][2]
+        i+=1
+        if i == len(nt_alignment_map):
+            raise NameError("All Insertion in Alignment")
     for nt in nt_alignment_map:
         if nt[0] == "I":
             if ntRefIndex not in new_nt_alignment_map:
@@ -150,6 +156,8 @@ def transformNtAlignmentMap(nt_alignment_map):                  #makes ntAlignme
             temp = list(new_nt_alignment_map[ntRefIndex])
             temp.append(ntQueryIndex)
             new_nt_alignment_map[ntRefIndex] = tuple(temp)
+            if ntRefIndex - 1 not in new_nt_alignment_map:
+                new_nt_alignment_map.update({ntRefIndex-1:tuple()})
             temp = list(new_nt_alignment_map[ntRefIndex-1])
             temp.append(ntQueryIndex-1)
             new_nt_alignment_map[ntRefIndex-1] = tuple(temp)

@@ -24,8 +24,17 @@ def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest):
                         if mt == seqOfInterest[queryIndex]:
                             res = 1
                         elif mtInfo[0] == seqOfInterest[queryIndex]:
-                            res = -1
-                            break
+                            if ((mapOfInterest.get(mtInfo[1],False)) != False) and (queryIndex in mapOfInterest[mtInfo[1]]):
+                                if gene.aaSequence()[mtInfo[1]] != mtInfo[0]:
+                                    res = -1
+                                    break
+                            elif ((mapOfInterest.get(mtInfo[1]-2,False)) != False) and queryIndex in mapOfInterest[mtInfo[1]-2]:
+                                if gene.aaSequence()[mtInfo[1]-2] != mtInfo[0]:
+                                    res = -1
+                                    break
+                            else:
+                                res = -1
+                                break
                 if res == 1: break
                 elif res == -1:
                     res = 0
@@ -70,7 +79,7 @@ def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest):
                         for startingIndex in range(queryIndex - len(mtInfo[0]), queryIndex + len(mtInfo[0]) + 1, len(mtInfo[0])):
                             fullInsertionString = True
                             for i in range(len(mtInfo[0])):
-                                if len(seqOfInterest) <= (startingIndex + i):
+                                if (len(seqOfInterest) <= (startingIndex + i)) or (0>(startingIndex + i)):
                                     fullInsertionString = False
                                     break
                                 if mtInfo[0][i] != seqOfInterest[startingIndex+i]:
@@ -86,6 +95,9 @@ def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest):
                                     queryIndex -= i
                                     break
                         for i in range(len(mtInfo[0])):
+                            if (len(seqOfInterest) <= (queryIndex + i)) or (0>(queryIndex + i)):
+                                fullInsertionString = False
+                                break
                             if mtInfo[0][i] != seqOfInterest[queryIndex+i]:
                                 fullInsertionString = False
                                 break
@@ -100,11 +112,11 @@ def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest):
                     if mtInfo[0][0] == seqOfInterest[queryIndex]:          #should be first of inserted residue
                         count += 1
                         i = queryIndex - 1
-                        while seqOfInterest[i] == mtInfo[0][0]:
+                        while (i >= 0) and (seqOfInterest[i] == mtInfo[0][0]):
                             count += 1
                             i -= 1
                         i = queryIndex + 1
-                        while seqOfInterest[i] == mtInfo[0][0]:
+                        while (i < len(seqOfInterest)) and (seqOfInterest[i] == mtInfo[0][0]):
                             count += 1
                             i += 1
                         break

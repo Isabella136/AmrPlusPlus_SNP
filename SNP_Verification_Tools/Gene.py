@@ -203,6 +203,10 @@ class Gene:
                         header["Nonstop + " + snp.condensedInfo()[-1]] = "T"
                 elif "Newly found nonsense" in info:
                     header["Newly found nonsense"] = "Pos:" + info.split(":")[1]
+                elif "12+bp indel" in info:
+                    header["12+bp indel"] = "Count:" + info.split(":")[1]
+                elif "12+bp frameshift" in info:
+                    header["12+bp frameshift"] = "Count:" + info.split(":")[1]
                 else:
                     header[info] = "T"
             comma = False

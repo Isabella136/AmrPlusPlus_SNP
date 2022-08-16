@@ -515,12 +515,12 @@ header = """@HD	VN:1.6	SO:coordinate
 geneDict = {}
 
 FullName = []
-FullName.append("MEG_4094|Drugs|Fosfomycin|Fosfomycin_target_mutation|MURA|RequiresSNPConfirmation")
+FullName.append("MEG_4095|Drugs|Fosfomycin|Fosfomycin_target_mutation|MURA|RequiresSNPConfirmation")
 FullName.append("MEG_4130|Drugs|Mycobacterium_tuberculosis-specific_Drug|Isoniazid-resistant_mutant|NDH|RequiresSNPConfirmation")
 FullName.append("MEG_5328|Drugs|Fluoroquinolones|Fluoroquinolone-resistant_DNA_topoisomerases|PARC|RequiresSNPConfirmation")
 FullName.append("MEG_5331|Drugs|Fluoroquinolones|Fluoroquinolone-resistant_DNA_topoisomerases|PARC|RequiresSNPConfirmation")
 FullName.append("MEG_5401|Drugs|betalactams|Penicillin_binding_protein|PBP2|RequiresSNPConfirmation")
-FullName.append("MEG_413|Multi-compound|Drug_and_biocide_resistance|Drug_and_biocide_RND_efflux_regulator|ACRR|RequiresSNPConfirmation")
+FullName.append("MEG_411|Multi-compound|Drug_and_biocide_resistance|Drug_and_biocide_RND_efflux_regulator|ACRR|RequiresSNPConfirmation")
 FullName.append("MEG_6090|Drugs|Rifampin|Rifampin-resistant_beta-subunit_of_RNA_polymerase_RpoB|RPOB|RequiresSNPConfirmation")
 
 
@@ -915,15 +915,15 @@ def InsertionTest1():
     SAM_file = open("Test/Insertion1.sam", "w")
     SAM_file.write(header)
     SNP_Num = 1
-    SAM_file.write(makeTest(SNP_Num, FullName[0], "GLTL", "20H1M3I8M20H", 65 * 3 - 2, 67 * 3)) #Test with mt second
+    SAM_file.write(makeTest(SNP_Num, FullName[0], "TNLR", "20H1M3I8M20H", 369 * 3 - 2, 371 * 3)) #Test with mt second
     SNP_Num  += 1
-    SAM_file.write(makeTest(SNP_Num, FullName[1], "ALII", "20H1M3I8M20H", 18 * 3 - 2, 20 * 3)) #Test with mt first
+    SAM_file.write(makeTest(SNP_Num, FullName[1], "CFRH", "20H1M3I8M20H", 13 * 3 - 2, 15 * 3)) #Test with mt first
     SNP_Num  += 1
     SAM_file.write(makeTest(SNP_Num, FullName[2], "WWSI", "20H1M3I8M20H", 83 * 3 - 2, 85 * 3)) #Test with mt in both
     SNP_Num  += 1
     SAM_file.write(makeTest(SNP_Num, FullName[3], "VINN", "20H1M3I8M20H", 103 * 3 - 2, 105 * 3)) #Test with wt first, mt second
     SNP_Num  += 1
-    SAM_file.write(makeTest(SNP_Num, FullName[4], "TVIA", "20H1M3I8M20H", 316 * 3 - 2, 318 * 3)) #Test with mt first, wt second
+    SAM_file.write(makeTest(SNP_Num, FullName[4], "VARK", "20H1M3I8M20H", 501 * 3 - 2, 503 * 3)) #Test with mt first, wt second
     SAM_file.close()
 def InsertionTest2():
     SAM_file = open("Test/Insertion2_1.sam", "w")
@@ -945,43 +945,43 @@ def InsertionTest3():
     SAM_file = open("Test/Insertion3.sam", "w")
     SAM_file.write(header)
     SNP_Num = 1
-    SAM_file.write(makeTest(SNP_Num, FullName[0], "DGLTL", "20H3M1I3M2I6M20H", 64 * 3 - 2, 67 * 3)) #Test with mt second
+    SAM_file.write(makeTest(SNP_Num, FullName[0], "ATNLR", "20H3M1I3M2I6M20H", 368 * 3 - 2, 371 * 3)) #Test with mt second
     SNP_Num  += 1
-    SAM_file.write(makeTest(SNP_Num, FullName[1], "VALII", "20H3M1I3M2I6M20H", 17 * 3 - 2, 20 * 3)) #Test with mt first
+    SAM_file.write(makeTest(SNP_Num, FullName[1], "PCFRH", "20H3M1I3M2I6M20H", 12 * 3 - 2, 15 * 3)) #Test with mt first
     SNP_Num  += 1
     SAM_file.write(makeTest(SNP_Num, FullName[2], "DWWSI", "20H3M1I3M2I6M20H", 82 * 3 - 2, 85 * 3)) #Test with mt in both
     SNP_Num  += 1
     SAM_file.write(makeTest(SNP_Num, FullName[3], "TVINN", "20H3M1I3M2I6M20H", 102 * 3 - 2, 105 * 3)) #Test with wt first, mt second
     SNP_Num  += 1
-    SAM_file.write(makeTest(SNP_Num, FullName[4], "FTVIA", "20H3M1I3M2I6M20H", 315 * 3 - 2, 318 * 3)) #Test with mt first, wt second
+    SAM_file.write(makeTest(SNP_Num, FullName[4], "TVARK", "20H3M1I3M2I6M20H", 500 * 3 - 2, 503 * 3)) #Test with mt first, wt second
     SAM_file.close()
 def InsertionTest4():
     SAM_file = open("Test/Insertion4_1.sam", "w")
     SAM_file.write(header)
     SNP_Num = 1
-    SAM_file.write(makeTest(SNP_Num, FullName[0], "ADGLT", "20H3M1I6M2I3M20H", 63 * 3 - 2, 66 * 3)) #Test with mt second; second insertion chunk
+    SAM_file.write(makeTest(SNP_Num, FullName[0], "MATNL", "20H3M1I6M2I3M20H", 367 * 3 - 2, 370 * 3)) #Test with mt second; second insertion chunk
     SNP_Num  += 1
-    SAM_file.write(makeTest(SNP_Num, FullName[1], "RVALI", "20H3M1I6M2I3M20H", 16 * 3 - 2, 19 * 3)) #Test with mt first; second insertion chunk
+    SAM_file.write(makeTest(SNP_Num, FullName[1], "PPCFR", "20H3M1I6M2I3M20H", 11 * 3 - 2, 14 * 3)) #Test with mt first; second insertion chunk
     SNP_Num  += 1
     SAM_file.write(makeTest(SNP_Num, FullName[2], "GDWWS", "20H3M1I6M2I3M20H", 81 * 3 - 2, 84 * 3)) #Test with mt in both; second insertion chunk
     SNP_Num  += 1
     SAM_file.write(makeTest(SNP_Num, FullName[3], "RTVIN", "20H3M1I6M2I3M20H", 101 * 3 - 2, 104 * 3)) #Test with wt first, mt second; second insertion chunk
     SNP_Num  += 1
-    SAM_file.write(makeTest(SNP_Num, FullName[4], "PFTVI", "20H3M1I6M2I3M20H", 314 * 3 - 2, 317 * 3)) #Test with mt first, wt second; second insertion chunk
+    SAM_file.write(makeTest(SNP_Num, FullName[4], "GTVAR", "20H3M1I6M2I3M20H", 499 * 3 - 2, 502 * 3)) #Test with mt first, wt second; second insertion chunk
     SAM_file.close()
 
     SAM_file = open("Test/Insertion4_2.sam", "w")
     SAM_file.write(header)
     SNP_Num = 1
-    SAM_file.write(makeTest(SNP_Num, FullName[0], "DGLTL", "20H3M1I6M2I3M20H", 64 * 3 - 2, 67 * 3)) #Test with mt second; first insertion chunk
+    SAM_file.write(makeTest(SNP_Num, FullName[0], "ATNLR", "20H3M1I6M2I3M20H", 368 * 3 - 2, 371 * 3)) #Test with mt second; first insertion chunk
     SNP_Num  += 1
-    SAM_file.write(makeTest(SNP_Num, FullName[1], "VALII", "20H3M1I6M2I3M20H", 17 * 3 - 2, 20 * 3)) #Test with mt first; first insertion chunk
+    SAM_file.write(makeTest(SNP_Num, FullName[1], "PCFRH", "20H3M1I6M2I3M20H", 12 * 3 - 2, 15 * 3)) #Test with mt first; first insertion chunk
     SNP_Num  += 1
     SAM_file.write(makeTest(SNP_Num, FullName[2], "DWWSI", "20H3M1I6M2I3M20H", 82 * 3 - 2, 85 * 3)) #Test with mt in both; first insertion chunk
     SNP_Num  += 1
     SAM_file.write(makeTest(SNP_Num, FullName[3], "TVINN", "20H3M1I6M2I3M20H", 102 * 3 - 2, 105 * 3)) #Test with wt first, mt second; first insertion chunk
     SNP_Num  += 1
-    SAM_file.write(makeTest(SNP_Num, FullName[4], "FTVIA", "20H3M1I6M2I3M20H", 315 * 3 - 2, 318 * 3)) #Test with mt first, wt second; first insertion chunk
+    SAM_file.write(makeTest(SNP_Num, FullName[4], "TVARK", "20H3M1I6M2I3M20H", 500 * 3 - 2, 503 * 3)) #Test with mt first, wt second; first insertion chunk
     SAM_file.close()
 def InsertionTest5():
     SAM_file = open("Test/Insertion5.sam", "w")
