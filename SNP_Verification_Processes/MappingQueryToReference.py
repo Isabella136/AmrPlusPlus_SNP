@@ -20,16 +20,16 @@ def MapQueryToReference(rRna, read, gene):
     mapOfInterest = transformNtAlignmentMap(nt_alignment_map)   #makes ntAlignmentMap have same format as aa_alignment_map (useful for rRNA)
     if gene.mustSuppressFrameshift():                           #nt 1602 is the one that should be removed
          querySeq = suppressFS(1602, mapOfInterest, querySeq)
-    start = nt_alignment_map[0][1]
+    start = mapOfInterest[list(mapOfInterest.keys())[0]][0]
     i = 1
     while start == None:                                        #trimms query sequence in order to not have broken codons during translation
-        start = nt_alignment_map[i][1]                          #for rRNA, the mapCigarToAlignment returns full map, so sequence won't be trimmed
+        start = mapOfInterest[list(mapOfInterest.keys())[i]][0] #for rRNA, the mapCigarToAlignment returns full map, so sequence won't be trimmed
         i += 1
-    end = nt_alignment_map[len(nt_alignment_map)-1][1]
-    i = 2
+    end = mapOfInterest[list(mapOfInterest.keys())[-1]][-1]
+    i = -2
     while end == None:
-        end = nt_alignment_map[len(nt_alignment_map)-i][1]
-        i += 1
+        end = mapOfInterest[list(mapOfInterest.keys())[i]][-1]
+        i -= 1
     trimmedQuerySequence = querySeq[start:end+1]                
     seqOfInterest = trimmedQuerySequence
     if not(rRna):
@@ -39,7 +39,7 @@ def MapQueryToReference(rRna, read, gene):
     return (seqOfInterest, mapOfInterest)
 
 def suppressFS(ntToDelete, mapOfInterest, querySequence):
-    queryIndexToRemove = mapOfInterest[ntToDelete-1]+1
+    queryIndexToRemove = mapOfInterest[ntToDelete-1][0]+1
     querySequence = querySequence[:queryIndexToRemove] + querySequence[queryIndexToRemove+1:]
     return querySequence
 
@@ -53,11 +53,13 @@ def mapCigarToAlignment(cigar, aligned_pair, rRna, suppress):   #map has been tr
     splitIndex = -1                                             #trimmed query seq index; starts counting from index in codon
     suppressingInsertion = False                                #will only be used if suppress is true
     translatable = False
+    refIndex = None
     for op in cigar:
         if op == "S":
             index += 1
         elif (op == "M") | (op == "X") | (op == "="):
             prevShift = shift
+            refIndex = aligned_pair[index][1]
             if not(translatable) and not(rRna):
                 if splitIndex < 0:
                     splitIndex = aligned_pair[index][1] % 3
@@ -76,10 +78,11 @@ def mapCigarToAlignment(cigar, aligned_pair, rRna, suppress):   #map has been tr
                     translatable = True
                 if suppress and (aligned_pair[index][1] == 1601):
                     suppressingInsertion = False
+                    index += 1
                     continue
                 queryLength += 1
                 refLength += 1
-                alignment_map.append(("M", aligned_pair[index][0], aligned_pair[index][1]+1 if suppressingInsertion else aligned_pair[index][1], shift, prevShift))
+                alignment_map.append(("M", aligned_pair[index][0], refIndex+1 if suppressingInsertion else aligned_pair[index][1], shift, prevShift))
                 index += 1
         elif op == "I":
             prevShift = shift
@@ -104,16 +107,17 @@ def mapCigarToAlignment(cigar, aligned_pair, rRna, suppress):   #map has been tr
             else:
                 if not(translatable):
                     translatable = True
-                if suppress and (aligned_pair[index][1] > 1590) and not(suppressingInsertion):
+                if suppress and (refIndex + 1 > 1590) and not(suppressingInsertion):
                     suppressingInsertion = True
                     queryLength += 1
                     refLength += 1
-                    alignment_map.append(("M", aligned_pair[index][0], aligned_pair[index-1][1]+1, shift, prevShift))
+                    alignment_map.append(("M", aligned_pair[index][0], refIndex+1, shift, prevShift))
                     index += 1
                     shift -= 1
-                queryLength += 1
-                alignment_map.append((op, aligned_pair[index][0], aligned_pair[index][1], shift, prevShift))
-                index += 1
+                else:
+                    queryLength += 1
+                    alignment_map.append((op, aligned_pair[index][0], aligned_pair[index][1], shift, prevShift))
+                    index += 1
         elif op == "D":
             prevShift = shift
             shift -= 1

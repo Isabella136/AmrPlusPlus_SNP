@@ -115,6 +115,8 @@ class Insertion(InDel):
                 break
     def condensedInfo(this):
         return (this.inserted, this.posACT, "+", "Ins:" + this.indel)
+    def longIndel(this):
+        return len(this.inserted) >= 4
 
 class Deletion(InDel):
     def __init__(this, sequence, mtString, name, rRNA = False):

@@ -1,3 +1,4 @@
+import string
 from . import SNP
 from . import InDel
 from . import dnaTranslate
@@ -23,6 +24,7 @@ class Gene:
         this.geneTag = 'N'
         this.outputInfo = dict()
         this.additionalInfo = list()
+        this.longIndel = 0
 
         infoList = infoString.split('|')
         for info in infoList:
@@ -95,11 +97,22 @@ class Gene:
         for key in this.outputInfo:
             this.outputInfo[key] = 0
         this.additionalInfo.clear()
+        this.longIndel = 0
     def getGeneTag(this):
         return this.geneTag
     def addToOutputInfo(this, index):
         this.outputInfo[index] += 1
     def addDetails(this, read, info):
+        if (type(info) == tuple):
+            if 'Mult:' in info[-1]:
+                deletionCount = 0
+                for mt in info[0]:
+                    if '-' == mt[2]:
+                        deletionCount +=1
+                if deletionCount >= 4:
+                    this.longIndel += 1
+            elif len(info[0]) >= 4:
+                this.longIndel += 1
         if (len(this.additionalInfo) > 0) and (read is this.additionalInfo[-1][0]):
             temp = list(this.additionalInfo[-1])
             temp.append(info)
@@ -126,7 +139,11 @@ class Gene:
     def mustSuppressFrameshift(this):
         if this.geneTag != 'S':
             return False
-        elif 'C insert' not in this.additionalInfo:
+        elif len(this.additionalInfo) == 0:
+            return False
+        elif type(this.additionalInfo[-1][0]) == string:
+            return False
+        elif 'Suppressible C insert' not in this.additionalInfo[-1][1:]:
             return False
         return True
     def writeAdditionalInfo(this, file):
@@ -150,7 +167,7 @@ class Gene:
             header.update({"Suppressible C insert": None})
         condensedInfo = this.condensedHyperInfo()
         if len(condensedInfo) != 0:
-            header.update({"Hypersusceptible: " + condensedInfo[-1][5:]: None})
+            header.update({"Hypersusceptible:" + condensedInfo[-1][5:]: None})
         condensedInfo = this.condensedMisInDelInfo()
         if len(condensedInfo) != 0:
             for geneMtInfo in condensedInfo:
@@ -204,9 +221,13 @@ class Gene:
                 elif "Newly found nonsense" in info:
                     header["Newly found nonsense"] = "Pos:" + info.split(":")[1]
                 elif "12+bp indel" in info:
-                    header["12+bp indel"] = "Count:" + info.split(":")[1]
+                    count = int(info.split(":")[1][1:]) - this.longIndel
+                    if count > 0:
+                        header["12+bp indel"] = "Count: " + str(count)
                 elif "12+bp frameshift" in info:
                     header["12+bp frameshift"] = "Count:" + info.split(":")[1]
+                elif "Hypersusceptible" in info:
+                    header["Hypersusceptible:" + this.condensedHyperInfo()[-1][5:]] = "T"
                 else:
                     header[info] = "T"
             comma = False

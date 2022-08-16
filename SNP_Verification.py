@@ -53,16 +53,8 @@ for opt, arg in options:
             if arg != "All":
                 argList = arg.split(',')
 if len(inputFile) == 0:
-    inputFile = ["Test/Test2.sam",          "Test/Deletion1.sam",       "Test/Deletion2.sam",       "Test/Deletion3_1.sam", 
-                 "Test/Deletion3_2.sam",    "Test/Deletion4.sam",       "Test/Deletion5.sam",       "Test/Insertion1.sam", 
-                 "Test/Insertion2_1.sam",   "Test/Insertion2_2.sam",    "Test/Insertion2_3.sam",    "Test/Insertion3.sam", 
-                 "Test/Insertion4_1.sam",   "Test/Insertion4_2.sam",    "Test/Insertion5.sam",      "Test/Insertion6.sam",
-                 "Test/InsertionDeletion1_1.sam",                       "Test/InsertionDeletion1_2.sam",
-                 "Test/InsertionDeletion2_1.sam",                       "Test/InsertionDeletion2_2.sam",
-                 "Test/InsertionDeletion3.sam",                         "Test/InsertionDeletion4.sam"]
-    outputFolder = "Sample_Output/mt_and_wt/"
-    #print("SNP_Verification.py -i <inputFile> -o <outputFolder>")
-    #sys.exit(-1)
+    print("SNP_Verification.py -i <inputFile> -o <outputFolder>")
+    sys.exit(-1)
 if not(os.path.exists(outputFolder)):
     os.mkdir(outputFolder)
 

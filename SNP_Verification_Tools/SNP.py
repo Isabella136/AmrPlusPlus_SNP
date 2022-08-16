@@ -210,6 +210,7 @@ class SNP_Mult:
         this.mult = snpString
         this.listOfMts = []
         snpsAndDels = snpString.split(";")
+        this.deletionCount = 0
         for info in snpsAndDels:
             if (info[:3] == "Mis") or (info[:3] == "Nuc"):
                 this.listOfMts.append(SNP_Mis(sequence, info[4:], name, True if info[:3]=='Nuc' else False))
@@ -217,6 +218,7 @@ class SNP_Mult:
                 this.listOfMts.append(InDel.Insertion(sequence, info[4:], name))
             else: #info[:3] = "Del"
                 this.listOfMts.append(InDel.Deletion(sequence, info[4:], name))
+                this.deletionCount += 1
     def condensedInfo(this):
         toReturn = []
         for snp in this.listOfMts:
@@ -227,3 +229,5 @@ class SNP_Mult:
             if not(snp.isValid()):
                 return False
         return True
+    def longIndel(this):
+        return this.deletionCount >= 4

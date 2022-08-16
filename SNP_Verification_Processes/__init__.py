@@ -72,7 +72,8 @@ def FinalCount(gene, read):
                 gene.addToOutputInfo(5)
                 resistant = True
             elif '12+bp indel:' in info:
-                eight = True
+                count = int(info.split(":")[1][1:]) - gene.longIndel
+                eight = count > 0
             elif '12+bp frameshift:' in info:
                 nine = True
             elif "Newly found nonsense " in info:
@@ -124,7 +125,8 @@ def FinalCount(gene, read):
                 gene.addToOutputInfo(5)
                 resistant = True
             elif '12+indel:' in info:
-                eight = True
+                count = int(info.split(":")[1][1:]) - gene.longIndel
+                eight = count > 0
             elif '12+fs:' in info:
                 nine = True
             elif "Newly found nonsense " in info:
@@ -176,7 +178,8 @@ def FinalCount(gene, read):
                 nonsense = True
                 resistant = True
             elif '12+indel:' in info:
-                eight = True
+                count = int(info.split(":")[1][1:]) - gene.longIndel
+                eight = count > 0
             elif '12+fs:' in info:
                 nine = True
             elif "Newly found nonsense " in info:
@@ -243,7 +246,8 @@ def FinalCount(gene, read):
                 gene.addToOutputInfo(5)
                 resistant = True
             elif '12+indel:' in info:
-                eight = True
+                count = int(info.split(":")[1][1:]) - gene.longIndel
+                eight = count > 0
             elif '12+fs:' in info:
                 nine = True
             elif "Newly found nonsense " in info:

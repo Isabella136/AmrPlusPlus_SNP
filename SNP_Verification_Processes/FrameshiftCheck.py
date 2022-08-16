@@ -1,6 +1,7 @@
 from SNP_Verification_Tools import dnaTranslate
 
 def FrameshiftCheck(read, gene, rRna):
+    removeFromLongFrameshiftCheck = [None]
     toReturn = []
     if not(rRna):
         cigarOpCount = read.get_cigar_stats()[0].tolist()
@@ -11,17 +12,17 @@ def FrameshiftCheck(read, gene, rRna):
             return False                                                            #Should not continue
         elif frameshiftInfo != None:
             if gene.getGeneTag() == 'S':                                            #MEG_6094 can have a C insertion at res 531 if followed by frameshift suppression during translation
-                if not(MEG_6094Check(read, gene)): return False
+                if not(MEG_6094Check(read, gene, removeFromLongFrameshiftCheck)): return False
             else:
                 if (((cigarOpCount[1] - cigarOpCount[2]) % 3) != 0):
                     gene.addDetails(read, 'FS till end')
                     extendedIndelCheck(read, gene)
                     return True
-        longFrameshiftCheck(read, gene)
+        longFrameshiftCheck(read, gene, removeFromLongFrameshiftCheck[0])
     extendedIndelCheck(read, gene)
     return True
 
-def longFrameshiftCheck(read, gene):
+def longFrameshiftCheck(read, gene, removeFromLongFrameshiftCheck):
     shiftcount = 0
     longFS = 0
     for cigarTuple in read.cigartuples:
@@ -32,7 +33,9 @@ def longFrameshiftCheck(read, gene):
         elif (cigarTuple[0] == 0):
             if ((shiftcount % 3) != 0) and (cigarTuple[1] >= 12):
                 longFS += 1
-    if longFS > 0:
+    if (longFS > 0) and (gene.mustSuppressFrameshift()) or (removeFromLongFrameshiftCheck == True):
+        longFS -= 1
+    if (longFS > 0):
         gene.addDetails(read, "12+bp frameshift: " + str(longFS))
             
 
@@ -44,7 +47,7 @@ def extendedIndelCheck(read, gene):
     if indel > 0:
         gene.addDetails(read, "12+bp indel: " + str(indel))
 
-def MEG_6094Check(read, gene):
+def MEG_6094Check(read, gene, removeFromLongFrameshiftCheck):
     querySequence = read.query_sequence
     startIndex = read.cigartuples[0][1] if read.cigartuples[0][0] == 4 else 0
     endIndex = len(querySequence)-read.cigartuples[-1][1] if read.cigartuples[-1][0] == 4 else len(querySequence)
@@ -58,18 +61,28 @@ def MEG_6094Check(read, gene):
     residue531To536 = ""
     residue531To534 = ""
     valid = True
+    refIndex = aligned_pairs[0][1]
+    insertionPosition = None
+    temp = removeFromLongFrameshiftCheck[0]
     for pair in aligned_pairs:
+        refIndex += 1
         if pair[0] == None:                                             #If deletion
             if hasCinsertion:
                 deletionCountAfterCinsertion += 1
+                if (temp == None) and ((refIndex - insertionPosition) != 0):
+                    temp = (refIndex - insertionPosition)>= 12
             shiftCount -= 1
         elif pair[1] == None:                                           #If insertion
+            refIndex -= 1
             if hasCinsertion:
                 insertionCountAfterCinsertion += 1
+                if (temp == None) and ((refIndex - insertionPosition) != 0):
+                    temp = (refIndex - insertionPosition) >= 12
             if inCodon531 and ((shiftCount%3)==0):                      #If in codon 531 and not in frameshift
                 if not(hasCinsertion):
                     shiftCount -= 1
                     hasCinsertion = True
+                    insertionPosition = refIndex + 1
             shiftCount += 1
         if (insertionCountAfterCinsertion > 0) and (deletionCountAfterCinsertion > 0):
             insertionCountAfterCinsertion -= 1                          #Never will have both over 1
@@ -84,6 +97,7 @@ def MEG_6094Check(read, gene):
             if inCodon531 or (len(residue531To536) >= 1 and len(residue531To536) < 6):
                 residue531To536 += dnaTranslate(querySequence[lastBeforeFull+1:pair[0]+1], gene.getName())
             lastBeforeFull += 3
+    removeFromLongFrameshiftCheck[0] = temp
     twoInsertionsAfter = ((insertionCountAfterCinsertion%3) == 2)
     deletionAfter = ((deletionCountAfterCinsertion%3) == 1)
     if (shiftCount % 3) == 2:
@@ -97,7 +111,7 @@ def MEG_6094Check(read, gene):
     elif hasCinsertion:                                                 #shiftCount%3 == 0 at residue 531
         if (residue531To534 == "SRTR"[0:len(residue531To534)]):         #Must have those residues due to insertion
             if (deletionAfter or twoInsertionsAfter):
-                gene.addDetails(read, 'C insert + del/ins')             #In that case, must not have FS suppression                                                
+                gene.addDetails(read, 'C insert followed by del/ins')   #In that case, must not have FS suppression                                                
             elif (residue531To536 == "SRTRPR"[0:len(residue531To536)]):                                                       
                 gene.addDetails(read, 'Suppressible C insert')
             else:

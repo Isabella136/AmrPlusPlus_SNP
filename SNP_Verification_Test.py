@@ -522,6 +522,7 @@ FullName.append("MEG_5331|Drugs|Fluoroquinolones|Fluoroquinolone-resistant_DNA_t
 FullName.append("MEG_5401|Drugs|betalactams|Penicillin_binding_protein|PBP2|RequiresSNPConfirmation")
 FullName.append("MEG_411|Multi-compound|Drug_and_biocide_resistance|Drug_and_biocide_RND_efflux_regulator|ACRR|RequiresSNPConfirmation")
 FullName.append("MEG_6090|Drugs|Rifampin|Rifampin-resistant_beta-subunit_of_RNA_polymerase_RpoB|RPOB|RequiresSNPConfirmation")
+FullName.append("MEG_6094|Drugs|Rifampin|Rifampin-resistant_beta-subunit_of_RNA_polymerase_RpoB|RPOB|RequiresSNPConfirmation")
 
 
 def SNPTest(SNP_Num, fullName, start, end, cigar, SEQ):
@@ -563,6 +564,8 @@ def makeTest(SNP_Num, fullName, aa_seq, cigar, start, end):
         nt_seq = nt_seq + reverseTranslation(aa)
     indexStart = (start-1) % 3
     indexEnd = end % 3
+    if ("1I" in cigar) and not(("2I" in cigar) or ("1D" in cigar)):
+        indexEnd = 0
     nt_seq = nt_seq[indexStart:]
     if indexEnd != 0:
         indexEnd = 3 - indexEnd
@@ -910,6 +913,12 @@ def Test2():
     SAM_file.write(multipleSNPTest([('G', 84, ('D',)), ('L', 100, ('P',)), ('A', 115, ('T',)), ('Y', 122, ('N',))], geneDict.get("MEG_4132|Drugs|Mycobacterium_tuberculosis-specific_Drug|Isoniazid-resistant_mutant|NDH|RequiresSNPConfirmation"), SNP_Num))
     SNP_Num+=1
     SAM_file.write(multipleSNPTest([('Q', 10, ('*',)), ('D', 12, ('A',)), ('L', 19, ('P',)), ('C', 14, ('Y',)), ('G', 23, ('V',))], geneDict.get("MEG_5803|Drugs|Mycobacterium_tuberculosis-specific_Drug|Pyrazinamide-resistant_mutant|PNCA|RequiresSNPConfirmation"), SNP_Num))
+    SNP_Num+=1
+    SAM_file.write(multipleSNPTest([('G', 88, ('C',)), ('S', 91, ('P',)), ('T', 80, ('A',)), ('A', 90, ('G',))], geneDict.get("MEG_3180|Drugs|Fluoroquinolones|Fluoroquinolone-resistant_DNA_topoisomerases|GYRA|RequiresSNPConfirmation"), SNP_Num))
+    SNP_Num+=1
+    SAM_file.write(multipleSNPTest([('G', 88, ('C',)), ('S', 91, ('P',)), ('T', 80, ('A',)), ('A', 90, ('V',))], geneDict.get("MEG_3180|Drugs|Fluoroquinolones|Fluoroquinolone-resistant_DNA_topoisomerases|GYRA|RequiresSNPConfirmation"), SNP_Num))
+    SNP_Num+=1
+    SAM_file.write(multipleSNPTest([('G', 88, ('C',)), ('S', 91, ('P',)), ('T', 80, ('A',))], geneDict.get("MEG_3180|Drugs|Fluoroquinolones|Fluoroquinolone-resistant_DNA_topoisomerases|GYRA|RequiresSNPConfirmation"), SNP_Num))
     SAM_file.close()
 def InsertionTest1():
     SAM_file = open("Test/Insertion1.sam", "w")
@@ -1069,20 +1078,29 @@ def DeletionTest5():
     SNP_Num = 1
     SAM_file.write(makeTest(SNP_Num, FullName[6], "FN", "20H3M12D1M20H", 433 * 3 - 2, 438 * 3 - 2)) #Test with deletion mutations
     SAM_file.close()
+def FrameshiftTest():
+    SAM_file = open("Test/Frameshift.sam", "w")
+    SAM_file.write(header)
+    SNP_Num = 1
+    SAM_file.write(makeTest(SNP_Num, FullName[7], "ITHKRRISRTRPRRSDP*T", "20H24M1I32M20H", 524 * 3 - 2, 542 * 3 - 1))
+    SNP_Num += 1
+    SAM_file.write(makeTest(SNP_Num, FullName[7], "ITHKRRISRTRPGGLTRER", "20H24M1I9M1D23M20H", 524 * 3 - 2, 542 * 3))
+    SNP_Num += 1
+    SAM_file.write(makeTest(SNP_Num, FullName[7], "ITHKRRISRTGPGGLTRER", "20H24M1I6M1D26M20H", 524 * 3 - 2, 542 * 3))
+    SNP_Num += 1
+    SAM_file.write(makeTest(SNP_Num, FullName[7], "ITHKRRISRTRPRGLTRER", "20H24M1I15M1D17M20H", 524 * 3 - 2, 542 * 3))
+    SNP_Num += 1
+    SAM_file.write(makeTest(SNP_Num, FullName[7], "ITHKRRISRTRPRQGLTRER", "20H24M1I15M2I18M20H", 524 * 3 - 2, 542 * 3))
+    SNP_Num += 1
+    SAM_file.write(makeTest(SNP_Num, FullName[7], "ITHKRRISRTRPRRSDP*R", "20H24M1I29M1D1M20H", 524 * 3 - 2, 542 * 3 - 2))
+    SNP_Num += 1
+    SAM_file.write(makeTest(SNP_Num, FullName[7], "ITHKRRSSALGPGGLTRER", "20H18M1D3M1I34M20H", 524 * 3 - 2, 542 * 3 - 1))
+    SNP_Num += 1
+    SAM_file.write(makeTest(SNP_Num, FullName[7], "ITHKRCSSALGPGGLTRER", "20H18M1D3M1I34M20H", 524 * 3 - 2, 542 * 3 - 1))
+    SNP_Num += 1
+    SAM_file.write(makeTest(SNP_Num, FullName[7], "ITHKRCISRTRPRRSDP*T", "20H24M1I32M20H", 524 * 3 - 2, 542 * 3 - 1))
+    SNP_Num += 1
+    SAM_file.write(makeTest(SNP_Num, FullName[7], "ITHKRRISRPRPRRSDP*T", "20H24M1I32M20H", 524 * 3 - 2, 542 * 3 - 1))
+    SAM_file.close()
 
-Test2()
-InsertionTest1()
-InsertionTest2()
-InsertionTest3()
-InsertionTest4()
-InsertionTest5()
-InsertionTest6()
-DeletionTest1()
-DeletionTest2()
-DeletionTest3()
-DeletionTest4()
-DeletionTest5()
-InsertionDeletionTest1()
-InsertionDeletionTest2()
-InsertionDeletionTest3()
-InsertionDeletionTest4()
+FrameshiftTest()
