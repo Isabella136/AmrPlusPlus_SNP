@@ -71,9 +71,9 @@ def FinalCount(gene, read):
             elif 'Nonsense:' in info:
                 gene.addToOutputInfo(5)
                 resistant = True
-            elif '12+indel:' in info:
+            elif '12+bp indel:' in info:
                 eight = True
-            elif '12+fs:' in info:
+            elif '12+bp frameshift:' in info:
                 nine = True
             elif "Newly found nonsense " in info:
                 gene.addToOutputInfo(10)

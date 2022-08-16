@@ -62,13 +62,12 @@ def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest):
             if len(mtInfo[0])  > 1:
                 if (mapOfInterest.get(mtInfo[1][0]-1,False)) == False:
                     continue
-                fullInsertionString = False
                 for queryIndex in tuple(mapOfInterest[mtInfo[1][0]-1]):
                     if queryIndex == '-': continue
                     if len(mtInfo[1]) > 1:
                         if mtInfo[0][0] != seqOfInterest[queryIndex]:
                             continue
-                        for startingIndex in range(queryIndex - len(mtInfo[0]), queryIndex + len(mtInfo[0]) + 1, 3):
+                        for startingIndex in range(queryIndex - len(mtInfo[0]), queryIndex + len(mtInfo[0]) + 1, len(mtInfo[0])):
                             fullInsertionString = True
                             for i in range(len(mtInfo[0])):
                                 if len(seqOfInterest) <= (startingIndex + i):
@@ -80,6 +79,7 @@ def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest):
                             if fullInsertionString:
                                 count += 1
                     else:
+                        fullInsertionString = True
                         if seqOfInterest[queryIndex] in mtInfo[0]:
                             for i in range(len(mtInfo[0])):
                                 if mtInfo[0][i] == seqOfInterest[queryIndex]:

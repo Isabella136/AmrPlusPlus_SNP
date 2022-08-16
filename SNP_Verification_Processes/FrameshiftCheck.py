@@ -33,7 +33,7 @@ def longFrameshiftCheck(read, gene):
             if ((shiftcount % 3) != 0) and (cigarTuple[1] >= 12):
                 longFS += 1
     if longFS > 0:
-        gene.addDetails(read, "12+fs: " + str(longFS))
+        gene.addDetails(read, "12+bp frameshift: " + str(longFS))
             
 
 def extendedIndelCheck(read, gene):
@@ -42,7 +42,7 @@ def extendedIndelCheck(read, gene):
         if (cigarTuple[0] in range(1,3)) and (cigarTuple[1] >= 12):
             indel += 1
     if indel > 0:
-        gene.addDetails(read, "12+indel: " + str(indel))
+        gene.addDetails(read, "12+bp indel: " + str(indel))
 
 def MEG_6094Check(read, gene):
     querySequence = read.query_sequence

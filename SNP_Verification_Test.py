@@ -343,19 +343,20 @@ def singleSNPTest(snpInfo, gene, SNP_Num):
     return SNPTest(SNP_Num, gene.getFullName(), start, end, cigar, SEQ)
 
 def singleNucleicSNPTest(snpInfo, gene, SNP_Num):
-    start = snpInfo[1] - 26
-    end = snpInfo[1] + 25
+    snpPos = (snpInfo[1][0] if type(snpInfo[1]) == list else snpInfo[1])
+    start = snpPos - 26
+    end = snpPos + 25
     if start < 1: start = 1
     if end > gene.ntSeqLength(): end = gene.ntSeqLength()
     cigar = "20H" + (end - (start -1)).__str__() + "M20H"
     if snpInfo[2][0] == "-":
         cigar = "20H"
-        if snpInfo[1] != 1:
-            cigar = cigar + ((snpInfo[1])-(start-1)).__str__() + "M1D"
-        if snpInfo[1] != gene.ntSeqLength():
-            cigar = cigar + (end-snpInfo[1]).__str__() + "M20H"
+        if snpPos != 1:
+            cigar = cigar + ((snpPos)-(start-1)).__str__() + "M1D"
+        if snpPos != gene.ntSeqLength():
+            cigar = cigar + (end-snpPos).__str__() + "M20H"
     sequence = gene.ntSequence()
-    SEQ = sequence[start-1:(snpInfo[1]-1)] + snpInfo[2][-1] + sequence[(snpInfo[1]):end]
+    SEQ = sequence[start-1:(snpPos-1)] + snpInfo[2][-1] + sequence[(snpPos):end]
     return SNPTest(SNP_Num, gene.getFullName(), start, end, cigar, SEQ)
 
 SNPinfo = open("extracted_SNP_files/SNPinfo.fasta", "rt")
