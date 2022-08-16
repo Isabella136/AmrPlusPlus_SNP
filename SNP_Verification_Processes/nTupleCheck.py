@@ -1,14 +1,11 @@
-from SNP_Verification_Tools import resistant
-from SNP_Verification_Tools import Gene
-from SNP_Verification_Tools import SNP
-from SNP_Verification_Processes.FrameshiftCheck import addRead
-from SNP_Verification_Tools import argInfoDict, meg_3180InfoDict, meg_6094InfoDict, resistantFrameshiftInfoDict, mt_and_wt
+from SNP_Verification_Tools.Gene import Gene
+from SNP_Verification_Tools.SNP import SNP
+from SNP_Verification_Tools.InDel import InDel
+from SNP_Verification_Tools import mt_and_wt
 
 def nTupleCheck(read, gene, mapOfInterest, seqOfInterest):
     SNPInfo = gene.condensedMultInfo()
-    if (len(SNPInfo) == 0):
-        return False
-    else:
+    if (len(SNPInfo) != 0):
         codonNotFullyDeleted = 0                #codons that count for one deletion mutation but aren't fully deleted in read; if >1, snpMult is disregarded        
         for snpMult in SNPInfo:
             codonNotFullyDeleted = 0
@@ -16,14 +13,14 @@ def nTupleCheck(read, gene, mapOfInterest, seqOfInterest):
                 lastPos = 0                     #if firstPos < beginningPos, all remaining positions in between 
                 beginningPos = None             #first and beginning must be deleted
                 firstPos = None
-                delMut = 0
-                misMut = 0
                 notValid = False
-                for mtInfo in snpMult:
+                for mtInfo in snpMult[0]:
                     foundDel = False
                     foundWt = False
                     notFound = 0
                     for pos in mtInfo[1]:
+                        delMut = 0
+                        misMut = 0
                         deletedOrWt = False
                         if (mapOfInterest.get(pos-1,False)) == False:
                             notFound += 1
@@ -31,20 +28,21 @@ def nTupleCheck(read, gene, mapOfInterest, seqOfInterest):
                         for queryIndex in tuple(mapOfInterest[pos-1]):
                             if queryIndex == "-":
                                 if not(deletedOrWt):
-                                    foundDel = True
                                     delMut += 1
                                 deletedOrWt = True
                             else:
                                 misMut += 1
-                                if mtInfo[0] == queryIndex:
-                                    foundDel = False
-                                    delMut = 0
+                                if mtInfo[0] == seqOfInterest[queryIndex]:
+                                    if delMut > 0:
+                                        delMut = 0
                                     deletedOrWt = True
                                     foundWt = True
                         if not(deletedOrWt):
                             notValid = True
                             break
-                        elif foundDel and (delMut > 0):
+                        if delMut > 0:
+                            foundDel = True
+                        if foundDel and (delMut > 0):
                             if beginningPos == None:
                                 beginningPos = pos
                                 lastPos = pos
@@ -61,6 +59,8 @@ def nTupleCheck(read, gene, mapOfInterest, seqOfInterest):
                             elif (firstPos != beginningPos) and (pos < firstPos):
                                 notValid = True
                                 break
+                            else:
+                                lastPos += 1
                         if (delMut > 0) & (misMut > 0):
                             codonNotFullyDeleted += 1
                     if notValid or (codonNotFullyDeleted > 2) or (notFound > 1) or not(foundDel) or not(foundWt):
@@ -68,25 +68,63 @@ def nTupleCheck(read, gene, mapOfInterest, seqOfInterest):
                         break
                 if notValid:
                     continue
-                resistant(gene.getName(), 0 if notValid else 1, argInfoDict)
-                return True
+                gene.addDetails(read, snpMult)
 
             resBool = True
             wtPresent = False                   #can only be true if mt_and_wt is false
-            for mtInfo in snpMult:
+            for mtInfo in snpMult[0]:
                 if mtInfo[2] == "+":
-                    count = 0                   #must be equal to len(mtInfo[1]) to be considered resistant
-                    for pos in mtInfo[1]:
-                        if (mapOfInterest.get(pos-1,False)) == False:
+                    count = 0                                                   #must be equal to len(mtInfo[1]) to be considered resistant
+                    if len(mtInfo[0]) > 1:
+                        if (mapOfInterest.get(mtInfo[1][0]-1,False)) == False:
                             continue
-                        for queryIndex in tuple(mapOfInterest[pos-1]):
-                            fullInsertionString = True
-                            for i in range(len(mtInfo[0])):
-                                if mtInfo[0][i] != seqOfInterest[queryIndex+i]:
-                                    fullInsertionString = False
-                                    break
-                            if fullInsertionString:
+                        for queryIndex in tuple(mapOfInterest[mtInfo[1][0]-1]):
+                            if queryIndex == '-': continue
+                            if len(mtInfo[1]) > 1:
+                                if mtInfo[0][0] != seqOfInterest[queryIndex]:
+                                    continue
+                                for startingIndex in range(queryIndex - len(mtInfo[0]), queryIndex + len(mtInfo[0]) + 1, len(mtInfo[0])):
+                                    fullInsertionString = True
+                                    for i in range(len(mtInfo[0])):
+                                        if (len(seqOfInterest) <= (startingIndex + i)) or (0>(startingIndex + i)):
+                                            fullInsertionString = False
+                                            break
+                                        if mtInfo[0][i] != seqOfInterest[startingIndex+i]:
+                                            fullInsertionString = False
+                                            break
+                                    if fullInsertionString:
+                                        count += 1
+                            else:
+                                fullInsertionString = True
+                                if seqOfInterest[queryIndex] in mtInfo[0]:
+                                    for i in range(len(mtInfo[0])):
+                                        if mtInfo[0][i] == seqOfInterest[queryIndex]:
+                                            queryIndex -= i
+                                            break
+                                for i in range(len(mtInfo[0])):
+                                    if (len(seqOfInterest) <= (queryIndex + i)) or (0>(queryIndex + i)):
+                                        fullInsertionString = False
+                                        break
+                                    if mtInfo[0][i] != seqOfInterest[queryIndex+i]:
+                                        fullInsertionString = False
+                                        break
+                                if fullInsertionString:
+                                    count += 1
+                    else:
+                        if (mapOfInterest.get(mtInfo[1][0]-1,False)) == False:
+                            continue
+                        for queryIndex in tuple(mapOfInterest[mtInfo[1][0]-1]):
+                            if queryIndex == '-': continue
+                            if mtInfo[0][0] == seqOfInterest[queryIndex]:          #should be first of inserted residue
                                 count += 1
+                                i = queryIndex - 1
+                                while (i >= 0) and (seqOfInterest[i] == mtInfo[0][0]):
+                                    count += 1
+                                    i -= 1
+                                i = queryIndex + 1
+                                while (i < len(seqOfInterest)) and (seqOfInterest[i] == mtInfo[0][0]):
+                                    count += 1
+                                    i += 1
                                 break
                     if count != len(mtInfo[1]):
                         resBool = False
@@ -106,13 +144,18 @@ def nTupleCheck(read, gene, mapOfInterest, seqOfInterest):
                             currentResBool = True
                         else:
                             if seqOfInterest[queryIndex] == mtInfo[0]:
-                                if remainingResidueIsEqualToOriginal[0]:
-                                    remainingResidueIsEqualToOriginal = (True,True)
-                                else:
-                                    remainingResidueIsEqualToOriginal = (True,False)
+                                remainingResidueIsEqualToOriginal = (True,False)
+                                if ((mapOfInterest.get(mtInfo[1][0],False)) != False) and (queryIndex in mapOfInterest[mtInfo[1][0]]):
+                                    if gene.aaSequence()[mtInfo[1][0]] == mtInfo[0]:
+                                        remainingResidueIsEqualToOriginal = (True,True)
+                                elif ((mapOfInterest.get(mtInfo[1][0]-2,False)) != False) and queryIndex in mapOfInterest[mtInfo[1][0]-2]:
+                                    if gene.aaSequence()[mtInfo[1][0]-2] == mtInfo[0]:
+                                        remainingResidueIsEqualToOriginal = (True,True)
                             misMut += 1
+                    if (delMut > 0) & (misMut > 0):
+                        codonNotFullyDeleted += 1
                     if (codonNotFullyDeleted > 1) or ((delMut > 0) and (remainingResidueIsEqualToOriginal[0]!=remainingResidueIsEqualToOriginal[1])):
-                        resBool = False
+                        currentResBool = False
                         break
                     resBool = currentResBool
                     if not(resBool):
@@ -131,10 +174,24 @@ def nTupleCheck(read, gene, mapOfInterest, seqOfInterest):
                                 if mt_and_wt:
                                     break
                             elif (mtInfo[0] == seqOfInterest[queryIndex]) and not(mt_and_wt):
-                                wtPresent = True
-                                currentResBool = False
-                                resBool = False
-                                break
+                                if ((mapOfInterest.get(mtInfo[1],False)) != False) and (queryIndex in mapOfInterest[mtInfo[1]]):
+                                    if gene.aaSequence()[mtInfo[1]] != mtInfo[0]:
+                                        wtPresent = True
+                                        currentResBool = False
+                                        resBool = False
+                                        break
+                                elif ((mapOfInterest.get(mtInfo[1]-2,False)) != False) and queryIndex in mapOfInterest[mtInfo[1]-2]:
+                                    if gene.aaSequence()[mtInfo[1]-2] != mtInfo[0]:
+                                        wtPresent = True
+                                        currentResBool = False
+                                        resBool = False
+                                        break
+                                else:
+                                    wtPresent = True
+                                    currentResBool = False
+                                    resBool = False
+                                    break
+
                             else:
                                 resBool = False
                         if currentResBool: 
@@ -145,15 +202,4 @@ def nTupleCheck(read, gene, mapOfInterest, seqOfInterest):
                     if not(resBool): break
 
             if resBool: 
-                if (gene.getName() == "MEG_3180"):
-                    if "resistant" not in meg_3180InfoDict:
-                        meg_3180InfoDict["resistant"] = 0
-                    meg_3180InfoDict["resistant"] += 1   
-                elif (gene.getName() == "MEG_6094"):
-                    addRead(gene.getName(), read.query_name, meg_6094InfoDict, "Has a resistance-conferring n-tuple mutation")
-                elif (gene.getFrameshiftInfo() != None):
-                    addRead(gene.getName(), read.query_name, resistantFrameshiftInfoDict, "Has a resistance-conferring n-tuple mutation")
-                else:
-                    resistant(gene.getName(), 1, argInfoDict)
-                return True
-    return False
+                gene.addDetails(read, snpMult)

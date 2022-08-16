@@ -3,6 +3,7 @@ class SNP:
     def __init__(this, snpStringList, name):
         this.name = name
         snpString = snpStringList[0]
+        this.snp = snpString
         this.wtOG = snpString[:1]
         snpString = snpString[1:]
         i = 0
@@ -58,18 +59,16 @@ class SNP:
         else:
             begin = this.posOG - 35
             end = this.posOG + 26
-            if end > (len(sequence) - 2 - len(this.rightContext) - len(this.leftContext)):
-                end = len(sequence) - 2 - len(this.rightContext) - len(this.leftContext)
+            if end > (len(sequence) - 1 - len(this.rightContext) - len(this.leftContext)):
+                end = len(sequence) - 1 - len(this.rightContext) - len(this.leftContext)
                 begin = end - 61
             elif begin < 0:
                 begin = 0
                 end = 61
-            i = begin
-            for x in sequence[begin:end]:
+            for i in range(begin, end+1):
                 if this.checkLeft(0, i, sequence, 0, rRNA):
                     this.changeACT(sequence, i)
                     break
-                i += 1
     def checkLeft(this, index, currentPos, sequence, errorMargin, rRNA):
         if (len(this.leftContext) != 0):
             for aa in this.leftContext[index]:
@@ -126,7 +125,7 @@ class SNP_Mis(SNP):
         wt = this.wtOG
         if (this.wtOG != this.wtACT):
             wt += this.wtACT
-        return (wt, this.posACT, this.mtList)
+        return (wt, this.posACT, this.mtList, "Mis:" + this.snp)
     def changeACT(this, sequence, i):
         try: #if sequence contains mt
             this.mtList.index(sequence[i+len(this.leftContext)])
@@ -148,7 +147,7 @@ class SNP_Non(SNP):
         wt = this.wtOG
         if (this.wtOG != this.wtACT):
             wt += this.wtACT
-        return (wt, this.posACT, "*")
+        return (wt, this.posACT, "*", "Nonsense:" + this.snp)
     def changeACT(this, sequence, i):
         this.wtACT = sequence[i+len(this.leftContext)]
         this.posACT = i+len(this.leftContext)+1
@@ -208,8 +207,10 @@ class MustList:
 
 class SNP_Mult:
     def __init__(this, sequence, snpString, name):
+        this.mult = snpString
         this.listOfMts = []
         snpsAndDels = snpString.split(";")
+        this.deletionCount = 0
         for info in snpsAndDels:
             if (info[:3] == "Mis") or (info[:3] == "Nuc"):
                 this.listOfMts.append(SNP_Mis(sequence, info[4:], name, True if info[:3]=='Nuc' else False))
@@ -217,13 +218,16 @@ class SNP_Mult:
                 this.listOfMts.append(InDel.Insertion(sequence, info[4:], name))
             else: #info[:3] = "Del"
                 this.listOfMts.append(InDel.Deletion(sequence, info[4:], name))
+                this.deletionCount += 1
     def condensedInfo(this):
         toReturn = []
         for snp in this.listOfMts:
             toReturn.append(snp.condensedInfo())
-        return toReturn
+        return (toReturn, "Mult:" + this.mult)
     def isValid(this):
         for snp in this.listOfMts:
             if not(snp.isValid()):
                 return False
         return True
+    def longIndel(this):
+        return this.deletionCount >= 4

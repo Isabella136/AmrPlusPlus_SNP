@@ -1,5 +1,6 @@
 class InDel:
     def __init__(this, mtString, name, insertion):
+        this.indel = mtString
         this.name = name
         i = 1
         this.inserted = None
@@ -48,18 +49,18 @@ class InDel:
             for aa in this.leftContext[index]:
                 if aa == sequence[currentPos]:
                     if index == len(this.leftContext) - 1:
-                        nextPos = currentPos + len(this.posList)
+                        nextPos = currentPos + (this.posList[-1]-this.posList[0]) + 1
                         nextPos = nextPos if this.inserted != None else nextPos+1
                         return InDel.checkRight(this, 0, nextPos , sequence, errorMargin, rRNA)
                     else:
                         return InDel.checkLeft(this, index + 1, currentPos + 1, sequence, errorMargin, rRNA)
         else:
-            nextPos = currentPos + len(this.posList)
+            nextPos = currentPos + (this.posList[-1]-this.posList[0]) + 1
             nextPos = nextPos if this.inserted != None else nextPos+1
             return this.checkRight(0, nextPos, sequence, errorMargin, rRNA)
         if (errorMargin < 3) and not(rRNA):
             if index == len(this.leftContext) - 1:
-                nextPos = currentPos + len(this.posList)
+                nextPos = currentPos + (this.posList[-1]-this.posList[0]) + 1
                 nextPos = nextPos if this.inserted != None else nextPos+1
                 return InDel.checkRight(this, 0, nextPos, sequence, errorMargin + 1, rRNA)
             else:
@@ -105,21 +106,21 @@ class Insertion(InDel):
         if begin < 0:
             begin = 0
             end = begin + 60
-        elif end > (len(sequence) - len(this.posList) - len(this.leftContext) - len(this.rightContext)):
-            end = len(sequence) - len(this.posList) - len(this.leftContext) - len(this.rightContext)
+        elif end > (len(sequence) - (this.posList[-1]-this.posList[0]) - len(this.leftContext) - len(this.rightContext)):
+            end = len(sequence) - (this.posList[-1]-this.posList[0]) - len(this.leftContext) - len(this.rightContext)
             begin = end - 60
-        i = begin
-        for x in sequence[begin:end]:
-            if InDel.checkLeft(this, 0, i, sequence, 0):
-                InDel.changeACT(this,i)
+        for i in range(begin, end+1):
+            if this.checkLeft(0, i, sequence, 0):
+                this.changeACT(i)
                 break
-            i+=1
     def condensedInfo(this):
-        return (this.inserted, this.posACT, "+")
+        return (this.inserted, this.posACT, "+", "Ins:" + this.indel)
+    def longIndel(this):
+        return len(this.inserted) >= 4
 
 class Deletion(InDel):
     def __init__(this, sequence, mtString, name, rRNA = False):
-        InDel.__init__(this, mtString, name, rRNA)
+        InDel.__init__(this, mtString, name, False)
         this.findACT(sequence, rRNA)
     def changeACT(this, sequence, i):
         this.deletionACT = sequence[i+len(this.leftContext)]
@@ -131,16 +132,14 @@ class Deletion(InDel):
         if begin < 0:
             begin = 0
             end = begin + 61
-        elif end > (len(sequence) - 1 - len(this.posList) - len(this.leftContext) - len(this.rightContext)):
-            end = len(sequence) - 1 - len(this.posList) - len(this.leftContext) - len(this.rightContext)
+        elif end > (len(sequence) - 1 - (this.posList[-1]-this.posList[0]) - len(this.leftContext) - len(this.rightContext)):
+            end = len(sequence) - 1 - (this.posList[-1]-this.posList[0]) - len(this.leftContext) - len(this.rightContext)
             begin = end - 61
-        i = begin
-        for x in sequence[begin:end]:
-            if InDel.checkLeft(this, 0, i, sequence, 0, rRNA):
-                Deletion.changeACT(this, sequence, i)
+        for i in range(begin, end+1):
+            if this.checkLeft(0, i, sequence, 0):
+                this.changeACT(sequence, i)
                 break
-            i+=1
     def isValid(this):
         return (len(this.posACT) != 0) and (this.deleted == this.deletionACT)
     def condensedInfo(this):
-        return (this.deleted, this.posACT, "-")
+        return (this.deleted, this.posACT, "-", "Del:" + this.indel)
