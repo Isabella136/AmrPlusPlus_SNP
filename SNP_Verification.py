@@ -53,8 +53,11 @@ for opt, arg in options:
             if arg != "All":
                 argList = arg.split(',')
 if len(inputFile) == 0:
-    print("SNP_Verification.py -i <inputFile> -o <outputFolder>")
-    sys.exit(-1)
+    inputFile.append("Test/Frameshift.sam")
+    inputFile.append("Test/Deletion4.sam")
+    outputFolder = "Sample_Output"
+    # print("SNP_Verification.py -i <inputFile> -o <outputFolder>")
+    # sys.exit(-1)
 if not(os.path.exists(outputFolder)):
     os.mkdir(outputFolder)
 

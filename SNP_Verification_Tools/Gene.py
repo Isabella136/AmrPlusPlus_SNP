@@ -203,6 +203,7 @@ class Gene:
             if read[1] == None: continue
             file.write("\n")
             header["Read"] = read[0]
+
             for info in read[1:]:
                 if info == "All":
                     header["All residues in query"] = "T"

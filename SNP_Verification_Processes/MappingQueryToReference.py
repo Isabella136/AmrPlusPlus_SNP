@@ -20,16 +20,18 @@ def MapQueryToReference(rRna, read, gene):
     mapOfInterest = transformNtAlignmentMap(nt_alignment_map)   #makes ntAlignmentMap have same format as aa_alignment_map (useful for rRNA)
     if gene.mustSuppressFrameshift():                           #nt 1602 is the one that should be removed
          querySeq = suppressFS(1602, mapOfInterest, querySeq)
-    start = mapOfInterest[list(mapOfInterest.keys())[0]][0]
+    start = nt_alignment_map[0][1]
     i = 1
     while start == None:                                        #trimms query sequence in order to not have broken codons during translation
-        start = mapOfInterest[list(mapOfInterest.keys())[i]][0] #for rRNA, the mapCigarToAlignment returns full map, so sequence won't be trimmed
+        start = nt_alignment_map[i][1]                          #for rRNA, the mapCigarToAlignment returns full map, so sequence won't be trimmed
         i += 1
-    end = mapOfInterest[list(mapOfInterest.keys())[-1]][-1]
-    i = -2
+    end = nt_alignment_map[len(nt_alignment_map)-1][1]
+    i = 2
     while end == None:
-        end = mapOfInterest[list(mapOfInterest.keys())[i]][-1]
-        i -= 1
+        end = nt_alignment_map[len(nt_alignment_map)-i][1]
+        i += 1
+    if gene.mustSuppressFrameshift():
+        end -= 1
     trimmedQuerySequence = querySeq[start:end+1]                
     seqOfInterest = trimmedQuerySequence
     if not(rRna):

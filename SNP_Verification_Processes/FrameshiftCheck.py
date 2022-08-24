@@ -25,14 +25,19 @@ def FrameshiftCheck(read, gene, rRna):
 def longFrameshiftCheck(read, gene, removeFromLongFrameshiftCheck):
     shiftcount = 0
     longFS = 0
+    fsLength = 0
     for cigarTuple in read.cigartuples:
         if (cigarTuple[0] == 1):
             shiftcount += cigarTuple[1]
         elif (cigarTuple[0] == 2):
             shiftcount -= cigarTuple[1]
         elif (cigarTuple[0] == 0):
-            if ((shiftcount % 3) != 0) and (cigarTuple[1] >= 12):
-                longFS += 1
+            if (shiftcount % 3) != 0:
+                fsLength += cigarTuple[1]
+            elif (shiftcount % 3) == 0:
+                if fsLength >= 12:
+                    longFS += 1
+                fsLength = 0
     if (longFS > 0) and (gene.mustSuppressFrameshift()) or (removeFromLongFrameshiftCheck == True):
         longFS -= 1
     if (longFS > 0):
