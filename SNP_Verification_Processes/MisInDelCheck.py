@@ -160,11 +160,16 @@ def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest):
             missenseCheck(mtInfo)
 
     nonstop, alongWithNonstop = gene.getNonstopInfo()
-    if nonstop:
+    if nonstop and (gene.currentReadHasNonstop == None):                #Only MEG_3594 can fullfill this condition
+        nonstop = False
         if (read.reference_end == gene.ntSeqLength()):
             if (mapOfInterest.get(gene.ntSeqLength()/3-1, False)) != False:
                 for queryIndex in tuple(mapOfInterest[gene.ntSeqLength()/3-1]):
-                    if seqOfInterest[queryIndex] == "*":
+                    #only stop to Ser was found in resistant genes
+                    if seqOfInterest[queryIndex] == "S":
+                        nonstop = True
+                    #regardless of mt_and_wt, presence of stop would make read susceptible
+                    elif seqOfInterest[queryIndex] == "*":              
                         nonstop = False
                         break
                 if nonstop:

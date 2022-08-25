@@ -7,13 +7,15 @@ def FrameshiftCheck(read, gene, rRna):
         cigarOpCount = read.get_cigar_stats()[0].tolist()
         frameshiftInfo = gene.getFrameshiftInfo()
         #if (insertions - deletions) %3 != 0, susceptible unless if gene has frameshift info
-        if (((cigarOpCount[1] - cigarOpCount[2]) % 3) != 0) and (frameshiftInfo == None): 
+        if (((cigarOpCount[1] - cigarOpCount[2]) % 3) != 0) and (gene.getGeneTag() == 'N') and (gene.getName() != "MEG_6142"): 
             gene.addDetails(read, 'FS till end')
             return False                                                            #Should not continue
         elif frameshiftInfo != None:
+            if gene.getName() == "MEG_6142":                                        #Gene has two special cases where frameshift were found to be allowed in the literature
+                pass
             if gene.getGeneTag() == 'S':                                            #MEG_6094 can have a C insertion at res 531 if followed by frameshift suppression during translation
                 if not(MEG_6094Check(read, gene, removeFromLongFrameshiftCheck)): return False
-            else:
+            elif gene.getGeneTag() == 'F':
                 if (((cigarOpCount[1] - cigarOpCount[2]) % 3) != 0):
                     gene.addDetails(read, 'FS till end')
                     extendedIndelCheck(read, gene)
@@ -51,6 +53,41 @@ def extendedIndelCheck(read, gene):
             indel += 1
     if indel > 0:
         gene.addDetails(read, "12+bp indel: " + str(indel))
+
+def MEG_6142Check(read, gene):
+    querySequence = read.query_sequence
+    startIndex = read.cigartuples[0][1] if read.cigartuples[0][0] == 4 else 0
+    endIndex = len(querySequence)-read.cigartuples[-1][1] if read.cigartuples[-1][0] == 4 else len(querySequence)
+    aligned_pairs = read.get_aligned_pairs()[startIndex:endIndex]       #Removes soft-clipping
+    shiftCount = 0                                                      #If pos, more ins; if neg. more del
+    queryIndex = -1
+    stopCodon = ["TAA", "TGA", "TAG"]
+    skipTill291 = False
+    restartAt291 = False
+    for pair in aligned_pairs:
+        if skipTill291:
+            if restartAt291:
+                if pair[0] == None:                                     #If deletion
+                    shiftCount -= 1
+                elif pair[1] == None:
+                    shiftCount += 1
+            if pair[0] != None:
+                queryIndex += 1
+            if pair[1] == 276:
+                if querySequence[queryIndex+1:queryIndex+7] == "AGGAGG":
+                    restartAt291 = True
+        else:
+            if pair[0] == None:                                         #If deletion
+                shiftCount -= 1
+            else:
+                queryIndex += 1
+                if pair[1] == None:                                     #If insertion
+                    shiftCount += 1
+            if pair[1] == 75:
+                if (querySequence[queryIndex+1:queryIndex+4] in stopCodon) and ((shiftCount%3)==2):
+                    skipTill292 = True
+                    shiftCount = 0
+
 
 def MEG_6094Check(read, gene, removeFromLongFrameshiftCheck):
     querySequence = read.query_sequence

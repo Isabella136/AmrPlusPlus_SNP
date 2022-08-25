@@ -25,6 +25,7 @@ class Gene:
         this.outputInfo = dict()
         this.additionalInfo = list()
         this.longIndel = 0
+        this.currentReadNonstop = None
 
         infoList = infoString.split('|')
         for info in infoList:
@@ -58,7 +59,8 @@ class Gene:
                 this.geneTag = 'H'
             elif info[:3] == "FS-":
                 this.frameshiftInfo = info[3:]
-                this.geneTag = 'S' if this.name == "MEG_6094" else 'F'
+                if (this.name != "MEG_6142") and ("miscellaneous" not in info):
+                    this.geneTag = 'S' if this.name == "MEG_6094" else 'F'
             elif info[:7] == "NucMult":
                 snpToAdd = SNP.SNP_Mult(this.sequence, info[8:], this.name)
                 if(snpToAdd.isValid()):
@@ -91,6 +93,10 @@ class Gene:
             for i in range(0,13):
                 this.outputInfo.update({i:0})
 
+    def currentReadHasNonstop(this):
+        return this.currentReadNonstop
+    def foundNonstop(this, foundNonstop):
+        this.currentReadNonstop = foundNonstop
     def getOutputInfo(this):
         return this.outputInfo
     def clearOutputInfo(this):
