@@ -12,7 +12,7 @@ def FrameshiftCheck(read, gene, rRna):
             return False                                                            #Should not continue
         elif frameshiftInfo != None:
             if gene.getName() == "MEG_6142":                                        #Gene has two special cases where frameshift were found to be allowed in the literature
-                pass
+                if not(MEG_6142Check(read, gene)): return False
             if gene.getGeneTag() == 'S':                                            #MEG_6094 can have a C insertion at res 531 if followed by frameshift suppression during translation
                 if not(MEG_6094Check(read, gene, removeFromLongFrameshiftCheck)): return False
             elif gene.getGeneTag() == 'F':
@@ -28,7 +28,14 @@ def longFrameshiftCheck(read, gene, removeFromLongFrameshiftCheck):
     shiftcount = 0
     longFS = 0
     fsLength = 0
+    aligned_pairs = read.get_aligned_pairs()
+    pairIndex = -1
+    reset = gene.currentReadSpecial()
     for cigarTuple in read.cigartuples:
+        pairIndex += cigarTuple[1]
+        if (aligned_pairs[pairIndex][1]>=78) and reset:
+            reset = False
+            fsLength = 0
         if (cigarTuple[0] == 1):
             shiftcount += cigarTuple[1]
         elif (cigarTuple[0] == 2):
@@ -40,7 +47,7 @@ def longFrameshiftCheck(read, gene, removeFromLongFrameshiftCheck):
                 if fsLength >= 12:
                     longFS += 1
                 fsLength = 0
-    if (longFS > 0) and (gene.mustSuppressFrameshift()) or (removeFromLongFrameshiftCheck == True):
+    if (longFS > 0) and (gene.mustSuppressFrameshift() or (removeFromLongFrameshiftCheck == True)):
         longFS -= 1
     if (longFS > 0):
         gene.addDetails(read, "12+bp frameshift: " + str(longFS))
@@ -55,44 +62,56 @@ def extendedIndelCheck(read, gene):
         gene.addDetails(read, "12+bp indel: " + str(indel))
 
 def MEG_6142Check(read, gene):
-    querySequence = read.query_sequence
-    startIndex = read.cigartuples[0][1] if read.cigartuples[0][0] == 4 else 0
-    endIndex = len(querySequence)-read.cigartuples[-1][1] if read.cigartuples[-1][0] == 4 else len(querySequence)
+    querySequence = read.query_alignment_sequence
+    startIndex = read.query_alignment_start
+    endIndex = read.query_alignment_end
     aligned_pairs = read.get_aligned_pairs()[startIndex:endIndex]       #Removes soft-clipping
     shiftCount = 0                                                      #If pos, more ins; if neg. more del
     queryIndex = -1
     stopCodon = ["TAA", "TGA", "TAG"]
-    skipTill291 = False
-    restartAt291 = False
+    deletion76 = False
+    fs482 = False
     for pair in aligned_pairs:
-        if skipTill291:
-            if restartAt291:
-                if pair[0] == None:                                     #If deletion
-                    shiftCount -= 1
-                elif pair[1] == None:
-                    shiftCount += 1
-            if pair[0] != None:
-                queryIndex += 1
-            if pair[1] == 276:
-                if querySequence[queryIndex+1:queryIndex+7] == "AGGAGG":
-                    restartAt291 = True
+        if pair[0] == None:                                             #If deletion
+            shiftCount -= 1
+            if pair[1] in range(74,76):
+                deletion76 = True
         else:
-            if pair[0] == None:                                         #If deletion
-                shiftCount -= 1
-            else:
-                queryIndex += 1
-                if pair[1] == None:                                     #If insertion
-                    shiftCount += 1
-            if pair[1] == 75:
-                if (querySequence[queryIndex+1:queryIndex+4] in stopCodon) and ((shiftCount%3)==2):
-                    skipTill292 = True
-                    shiftCount = 0
+            queryIndex += 1
+            if pair[1] == None:                                         #If insertion
+                shiftCount += 1
+        if (pair[1] == 75) and deletion76:                              #Change if next res isn't stop
+            if (len(querySequence) < queryIndex+4) or (querySequence[queryIndex+1:queryIndex+4] not in stopCodon) or ((shiftCount%3)!=2):
+                deletion76 = False
+        if (pair[1] == 78) and deletion76:
+            shiftCount = 0
+        if (pair[1] == 1442) and ((shiftCount%3)==0):
+            if aligned_pairs[-1][1] == 1445:
+                if len(querySequence) < queryIndex+4:                   #If deletion
+                    fs482 = True
+                elif (querySequence[queryIndex+1:queryIndex+4] not in stopCodon) and (len(querySequence) > queryIndex+4):
+                    fs482 = True
+            
+    if fs482:
+        gene.foundNonstop(True)
+        gene.addDetails(read, "nonstop")
+        if deletion76:
+            gene.hasSpecialCase()
+        return True
+    else:
+        gene.foundNonstop(False)
+        if (shiftCount%3) == 0:
+            if deletion76:
+                gene.hasSpecialCase()
+            return True
+    return False
+        
 
 
 def MEG_6094Check(read, gene, removeFromLongFrameshiftCheck):
-    querySequence = read.query_sequence
-    startIndex = read.cigartuples[0][1] if read.cigartuples[0][0] == 4 else 0
-    endIndex = len(querySequence)-read.cigartuples[-1][1] if read.cigartuples[-1][0] == 4 else len(querySequence)
+    querySequence = read.query_alignment_sequence
+    startIndex = read.query_alignment_start
+    endIndex = read.query_alignment_end
     aligned_pairs = read.get_aligned_pairs()[startIndex:endIndex]       #Removes soft-clipping
     shiftCount = 0                                                      #If pos, more ins; if neg. more del
     inCodon531 = False

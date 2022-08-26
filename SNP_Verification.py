@@ -101,6 +101,7 @@ for filename in inputFile:
         elif (len(argList) != 0) and (gene.split("|")[0] not in argList):
             continue
         verify(read, gene)
+        gene.resetForNextRead()
     samfile.close() 
 
     #Function that appends gene.getOutputInfo() to output file

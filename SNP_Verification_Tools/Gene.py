@@ -26,6 +26,7 @@ class Gene:
         this.additionalInfo = list()
         this.longIndel = 0
         this.currentReadNonstop = None
+        this.meg_6142Special = False
 
         infoList = infoString.split('|')
         for info in infoList:
@@ -97,6 +98,13 @@ class Gene:
         return this.currentReadNonstop
     def foundNonstop(this, foundNonstop):
         this.currentReadNonstop = foundNonstop
+    def hasSpecialCase(this):
+        this.meg_6142Special = True
+    def currentReadSpecial(this):
+        return this.meg_6142Special
+    def resetForNextRead(this):
+        this.currentReadNonstop = None
+        this.meg_6142Special = False
     def getOutputInfo(this):
         return this.outputInfo
     def clearOutputInfo(this):
