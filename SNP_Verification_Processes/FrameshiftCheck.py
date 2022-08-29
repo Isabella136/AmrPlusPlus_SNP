@@ -32,8 +32,10 @@ def longFrameshiftCheck(read, gene, removeFromLongFrameshiftCheck):
     pairIndex = -1
     reset = gene.currentReadSpecial()
     for cigarTuple in read.cigartuples:
+        if cigarTuple[0] in [4,5]:
+            continue
         pairIndex += cigarTuple[1]
-        if (aligned_pairs[pairIndex][1]>=78) and reset:
+        if (aligned_pairs[pairIndex][1] != None) and (aligned_pairs[pairIndex][1]>=78) and reset:
             reset = False
             fsLength = 0
         if (cigarTuple[0] == 1):
@@ -63,9 +65,11 @@ def extendedIndelCheck(read, gene):
 
 def MEG_6142Check(read, gene):
     querySequence = read.query_alignment_sequence
-    startIndex = read.query_alignment_start
-    endIndex = read.query_alignment_end
-    aligned_pairs = read.get_aligned_pairs()[startIndex:endIndex]       #Removes soft-clipping
+    startIndex = read.cigartuples[0][1] if read.cigartuples[0][0] == 4 else 0
+    endIndex = -1 * read.cigartuples[-1][1] if read.cigartuples[-1][0] == 4 else 0
+    aligned_pairs = read.get_aligned_pairs()[startIndex:]               #Removes soft-clipping
+    if endIndex != 0:
+        aligned_pairs[:endIndex]
     shiftCount = 0                                                      #If pos, more ins; if neg. more del
     queryIndex = -1
     stopCodon = ["TAA", "TGA", "TAG"]
@@ -104,15 +108,18 @@ def MEG_6142Check(read, gene):
             if deletion76:
                 gene.hasSpecialCase()
             return True
+    gene.addDetails(read, 'FS till end')
     return False
         
 
 
 def MEG_6094Check(read, gene, removeFromLongFrameshiftCheck):
     querySequence = read.query_alignment_sequence
-    startIndex = read.query_alignment_start
-    endIndex = read.query_alignment_end
-    aligned_pairs = read.get_aligned_pairs()[startIndex:endIndex]       #Removes soft-clipping
+    startIndex = read.cigartuples[0][1] if read.cigartuples[0][0] == 4 else 0
+    endIndex = -1 * read.cigartuples[-1][1] if read.cigartuples[-1][0] == 4 else 0
+    aligned_pairs = read.get_aligned_pairs()[startIndex:]               #Removes soft-clipping
+    if endIndex != 0:
+        aligned_pairs[:endIndex]
     shiftCount = 0                                                      #If pos, more ins; if neg. more del
     inCodon531 = False
     hasCinsertion = False

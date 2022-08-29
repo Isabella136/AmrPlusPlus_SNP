@@ -53,11 +53,8 @@ for opt, arg in options:
             if arg != "All":
                 argList = arg.split(',')
 if len(inputFile) == 0:
-    inputFile.append("Test/Frameshift.sam")
-    inputFile.append("Test/Deletion4.sam")
-    outputFolder = "Sample_Output"
-    # print("SNP_Verification.py -i <inputFile> -o <outputFolder>")
-    # sys.exit(-1)
+    print("SNP_Verification.py -i <inputFile> -o <outputFolder>")
+    sys.exit(-1)
 if not(os.path.exists(outputFolder)):
     os.mkdir(outputFolder)
 
@@ -112,7 +109,7 @@ for filename in inputFile:
 
 
     #Create output files and write headers
-    outputN = open(fullOutputPath + "/Normal_Type_Genes_.csv", "w")
+    outputN = open(fullOutputPath + "/Normal_Type_Genes.csv", "w")
     outputN.write("Gene,Number of reads,Resistant,Missense,Insertion,Deletion,Previously recorded nonsense,N-tuple,Nonstop,12+bp indel,12+ bp frameshift,Newly found nonsense,Frameshift till end")
     outputN.close()
     outputF = open(fullOutputPath + "/Frameshift_Type_Genes.csv", "w")
@@ -133,7 +130,7 @@ for filename in inputFile:
             continue
         tag = gene.getGeneTag()
         if tag == 'N':
-            outputN = open(fullOutputPath + "/Normal_Type_Genes_.csv", "a")
+            outputN = open(fullOutputPath + "/Normal_Type_Genes.csv", "a")
             appendGeneOutputInfo(name, gene.getOutputInfo(), outputN)
             outputN.close()
         elif tag == 'F':

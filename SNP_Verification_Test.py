@@ -523,7 +523,7 @@ FullName.append("MEG_5401|Drugs|betalactams|Penicillin_binding_protein|PBP2|Requ
 FullName.append("MEG_411|Multi-compound|Drug_and_biocide_resistance|Drug_and_biocide_RND_efflux_regulator|ACRR|RequiresSNPConfirmation")
 FullName.append("MEG_6090|Drugs|Rifampin|Rifampin-resistant_beta-subunit_of_RNA_polymerase_RpoB|RPOB|RequiresSNPConfirmation")
 FullName.append("MEG_6094|Drugs|Rifampin|Rifampin-resistant_beta-subunit_of_RNA_polymerase_RpoB|RPOB|RequiresSNPConfirmation")
-
+FullName.append("MEG_6142|Drugs|Mycobacterium_tuberculosis-specific_Drug|Pyrazinamide-resistant_mutant|RPSA|RequiresSNPConfirmation")
 
 def SNPTest(SNP_Num, fullName, start, end, cigar, SEQ):
     line1 = []
@@ -565,6 +565,16 @@ def makeTest(SNP_Num, fullName, aa_seq, cigar, start, end):
     indexStart = (start-1) % 3
     indexEnd = end % 3
     if ("1I" in cigar) and not(("2I" in cigar) or ("1D" in cigar)):
+        if indexEnd != 0:
+            indexEnd = 0
+        else:
+            indexEnd = 1
+    if ("1D" in cigar) and not(("2D" in cigar) or ("1I" in cigar)):
+        if indexEnd == 0:
+            indexEnd = 2
+        else:
+            indexEnd = 0
+    if ("2D" in cigar) and not(("2I" in cigar) or ("1D" in cigar)):
         indexEnd = 0
     nt_seq = nt_seq[indexStart:]
     if indexEnd != 0:
@@ -1082,25 +1092,72 @@ def FrameshiftTest():
     SAM_file = open("Test/Frameshift.sam", "w")
     SAM_file.write(header)
     SNP_Num = 1
-    SAM_file.write(makeTest(SNP_Num, FullName[7], "ITHKRRISRTRPRRSDP*T", "20H24M1I32M20H", 524 * 3 - 2, 542 * 3 - 1))
+    SAM_file.write(makeTest(SNP_Num, FullName[7], "ITHKRRISRTRPRRSDP*T", "20H24M1I32M20H", 524 * 3 - 2, 542 * 3 - 1))   #Res
     SNP_Num += 1
-    SAM_file.write(makeTest(SNP_Num, FullName[7], "ITHKRRISRTRPGGLTRER", "20H24M1I9M1D23M20H", 524 * 3 - 2, 542 * 3))
+    SAM_file.write(makeTest(SNP_Num, FullName[7], "ITHKRRISRTRPGGLTRER", "20H24M1I9M1D23M20H", 524 * 3 - 2, 542 * 3))   #Res*
     SNP_Num += 1
-    SAM_file.write(makeTest(SNP_Num, FullName[7], "ITHKRRISRTGPGGLTRER", "20H24M1I6M1D26M20H", 524 * 3 - 2, 542 * 3))
+    SAM_file.write(makeTest(SNP_Num, FullName[7], "ITHKRRISRTGPGGLTRER", "20H24M1I6M1D26M20H", 524 * 3 - 2, 542 * 3))   #Sus
     SNP_Num += 1
-    SAM_file.write(makeTest(SNP_Num, FullName[7], "ITHKRRISRTRPRGLTRER", "20H24M1I15M1D17M20H", 524 * 3 - 2, 542 * 3))
+    SAM_file.write(makeTest(SNP_Num, FullName[7], "ITHKRRISRTRPRGLTRER", "20H24M1I15M1D17M20H", 524 * 3 - 2, 542 * 3))  #Res*
     SNP_Num += 1
-    SAM_file.write(makeTest(SNP_Num, FullName[7], "ITHKRRISRTRPRQGLTRER", "20H24M1I15M2I18M20H", 524 * 3 - 2, 542 * 3))
+    SAM_file.write(makeTest(SNP_Num, FullName[7], "ITHKRRISRTRPRQGLTRER", "20H24M1I15M2I18M20H", 524 * 3 - 2, 542 * 3)) #Res*
     SNP_Num += 1
-    SAM_file.write(makeTest(SNP_Num, FullName[7], "ITHKRRISRTRPRRSDP*R", "20H24M1I29M1D1M20H", 524 * 3 - 2, 542 * 3 - 2))
+    SAM_file.write(makeTest(SNP_Num, FullName[7], "ITHKRRISRTRPRRSDP*R", "20H24M1I29M1D1M20H", 524 * 3 - 2, 542 * 3 - 2))#Sus
     SNP_Num += 1
-    SAM_file.write(makeTest(SNP_Num, FullName[7], "ITHKRRSSALGPGGLTRER", "20H18M1D3M1I34M20H", 524 * 3 - 2, 542 * 3 - 1))
+    SAM_file.write(makeTest(SNP_Num, FullName[7], "ITHKRRSSALGPGGLTRER", "20H18M1D3M1I34M20H", 524 * 3 - 2, 542 * 3 - 1))#Sus
     SNP_Num += 1
-    SAM_file.write(makeTest(SNP_Num, FullName[7], "ITHKRCSSALGPGGLTRER", "20H18M1D3M1I34M20H", 524 * 3 - 2, 542 * 3 - 1))
+    SAM_file.write(makeTest(SNP_Num, FullName[7], "ITHKRCSSALGPGGLTRER", "20H18M1D3M1I34M20H", 524 * 3 - 2, 542 * 3 - 1))#Res
     SNP_Num += 1
-    SAM_file.write(makeTest(SNP_Num, FullName[7], "ITHKRCISRTRPRRSDP*T", "20H24M1I32M20H", 524 * 3 - 2, 542 * 3 - 1))
+    SAM_file.write(makeTest(SNP_Num, FullName[7], "ITHKRCISRTRPRRSDP*T", "20H24M1I32M20H", 524 * 3 - 2, 542 * 3 - 1))   #Res
     SNP_Num += 1
-    SAM_file.write(makeTest(SNP_Num, FullName[7], "ITHKRRISRPRPRRSDP*T", "20H24M1I32M20H", 524 * 3 - 2, 542 * 3 - 1))
+    SAM_file.write(makeTest(SNP_Num, FullName[7], "ITHKRRISRPRPRRSDP*T", "20H24M1I32M20H", 524 * 3 - 2, 542 * 3 - 1))   #Sus
+    SNP_Num += 1
+    SAM_file.write(makeTest(SNP_Num, FullName[7], "ITHKRRISRTRPGGLTRER", "20H3M1D17M1I3M1I9M1D23M20H", 524 * 3 - 2, 542 * 3))   #Res* and 12+ fs
+    SNP_Num += 1
+    SAM_file.write(makeTest(SNP_Num, FullName[7], "ITHKRRISRTRPRGLTRER", "20H3M1D17M1I3M1I15M1D17M20H", 524 * 3 - 2, 542 * 3))  #Res* and 12+ fs
+    SAM_file.close()
+def NonstopTest():
+    SAM_file = open("Test/Nonstop.sam", "w")
+    SAM_file.write(header)
+    SNP_Num = 1
+    SAM_file.write(makeTest(SNP_Num, FullName[8], "GSAS", "20H12M20H", 479 * 3 - 2, 482 * 3))       #sus
+    SNP_Num += 1
+    SAM_file.write(makeTest(SNP_Num, FullName[8], "GSAE", "20H9M1D2M20H", 479 * 3 - 2, 482 * 3))    #res
+    SNP_Num += 1
+    SAM_file.write(makeTest(SNP_Num, FullName[8], "GSA*K", "20H10M1I2M20H", 479 * 3 - 2, 482 * 3))  #sus
+    SNP_Num += 1
+    SAM_file.write(makeTest(SNP_Num, FullName[8], "GSALK", "20H10M1I2M20H", 479 * 3 - 2, 482 * 3))  #sus
+    SAM_file.close()
+def DeletionTest6():
+    SAM_file = open("Test/Deletion6.sam", "w")
+    SAM_file.write(header)
+    SNP_Num = 1
+    SAM_file.write(makeTest(SNP_Num, FullName[8], "AA*T", "20H5M1D7M20H", 24 * 3 - 2, 28 * 3 - 2))    #valid
+    SNP_Num += 1
+    SAM_file.write(makeTest(SNP_Num, FullName[8], "AARQ", "20H5M2D7M20H", 24 * 3 - 2, 28 * 3 - 1))    #FStillend
+    SNP_Num += 1
+    SAM_file.write(makeTest(SNP_Num, FullName[8], "AA*S", "20H5M1D4M1I2M20H", 24 * 3 - 2, 27 * 3))    #FStillend
+    SNP_Num += 1
+    SAM_file.write(makeTest(SNP_Num, FullName[8], "AQ*T", "20H2M1D10M20H", 24 * 3 - 2, 28 * 3 - 2))   #FStillend
     SAM_file.close()
 
-FrameshiftTest()
+# NonstopTest()
+# FrameshiftTest()
+# Test1()
+# Test2()
+# InsertionDeletionTest1()
+# InsertionDeletionTest2()
+# InsertionDeletionTest3()
+# InsertionDeletionTest4()
+# InsertionTest1()
+# InsertionTest2()
+# InsertionTest3()
+# InsertionTest4()
+# InsertionTest5()
+# InsertionTest6()
+# DeletionTest1()
+# DeletionTest2()
+# DeletionTest3()
+# DeletionTest4()
+# DeletionTest5()
+DeletionTest6()
