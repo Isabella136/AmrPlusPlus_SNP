@@ -98,6 +98,7 @@ for filename in inputFile:
         elif (len(argList) != 0) and (gene.split("|")[0] not in argList):
             continue
         verify(read, gene)
+        gene.resetForNextRead()
     samfile.close() 
 
     #Function that appends gene.getOutputInfo() to output file
@@ -108,7 +109,7 @@ for filename in inputFile:
 
 
     #Create output files and write headers
-    outputN = open(fullOutputPath + "/Normal_Type_Genes_.csv", "w")
+    outputN = open(fullOutputPath + "/Normal_Type_Genes.csv", "w")
     outputN.write("Gene,Number of reads,Resistant,Missense,Insertion,Deletion,Previously recorded nonsense,N-tuple,Nonstop,12+bp indel,12+ bp frameshift,Newly found nonsense,Frameshift till end")
     outputN.close()
     outputF = open(fullOutputPath + "/Frameshift_Type_Genes.csv", "w")
@@ -129,7 +130,7 @@ for filename in inputFile:
             continue
         tag = gene.getGeneTag()
         if tag == 'N':
-            outputN = open(fullOutputPath + "/Normal_Type_Genes_.csv", "a")
+            outputN = open(fullOutputPath + "/Normal_Type_Genes.csv", "a")
             appendGeneOutputInfo(name, gene.getOutputInfo(), outputN)
             outputN.close()
         elif tag == 'F':

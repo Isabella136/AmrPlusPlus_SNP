@@ -18,7 +18,10 @@ def verify(read, gene):
         return None                                
     
     seqOfInterest, mapOfInterest = MapQueryToReference(rRna, read, gene)        #If S-tagged and needs suppression, seq and map of interest, removes index 1602
-    
+    if seqOfInterest == False:
+        FinalCount(gene, read)
+        return None
+
     if not(rRna):                                                               #rRNA stays as nucleotide sequence; nonsense mutations don't matter   
         checkResult = NonsenseCheck(read, gene, mapOfInterest, seqOfInterest)   #Checks for nonsense previously found in literature and for new nonsense
         if not(checkResult):                                                    #If not F-tagged and has new nonsense, can't determine resistance
@@ -76,16 +79,19 @@ def FinalCount(gene, read):
                 eight = count > 0
             elif '12+bp frameshift:' in info:
                 nine = True
-            elif "Newly found nonsense " in info:
+            elif "Newly found nonsense" in info:
                 gene.addToOutputInfo(10)
             elif 'FS till end' == info:
                 gene.addToOutputInfo(11)
         if resistant:
+            gene.addDetails(read.query_name, "res")
             gene.addToOutputInfo(1)
             if eight:
                 gene.addToOutputInfo(8)
             if nine:
                 gene.addToOutputInfo(9)
+        else:
+            gene.addDetails(read.query_name, "sus")
 
     def fTypeCount():
         insertion = False
@@ -129,7 +135,7 @@ def FinalCount(gene, read):
                 eight = count > 0
             elif '12+fs:' in info:
                 nine = True
-            elif "Newly found nonsense " in info:
+            elif "Newly found nonsense" in info:
                 gene.addToOutputInfo(10)
                 resistant = True
             elif 'FS till end' == info:
@@ -137,7 +143,9 @@ def FinalCount(gene, read):
                 resistant = True
         if resistant:
             gene.addToOutputInfo(1)
+            gene.addDetails(read.query_name, "res")
         else:
+            gene.addDetails(read.query_name, "sus")
             if eight:
                 gene.addToOutputInfo(8)
             if nine:
@@ -182,11 +190,12 @@ def FinalCount(gene, read):
                 eight = count > 0
             elif '12+fs:' in info:
                 nine = True
-            elif "Newly found nonsense " in info:
+            elif "Newly found nonsense" in info:
                 gene.addToOutputInfo(10)
             elif 'FS till end' == info:
                 gene.addToOutputInfo(11) 
         if resistant :
+            gene.addDetails(read.query_name, "res")
             if not(hyper):
                 if missense:
                     gene.addToOutputInfo(2)
@@ -207,6 +216,8 @@ def FinalCount(gene, read):
                 gene.addToOutputInfo(1)
             else:
                 gene.addToOutputInfo(12)
+        else:
+            gene.addDetails(read.query_name, "sus")
 
     def sTypeCount():
         insertion = False
@@ -216,6 +227,8 @@ def FinalCount(gene, read):
         resistant = False
         eight     = False
         nine      = False
+        supr      = False
+        followed  = False
         for info in additionalInfo[1:]:
             if None == info:
                 break
@@ -250,24 +263,31 @@ def FinalCount(gene, read):
                 eight = count > 0
             elif '12+fs:' in info:
                 nine = True
-            elif "Newly found nonsense " in info:
+            elif "Newly found nonsense" in info:
                 gene.addToOutputInfo(10)
                 resistant = False
             elif 'FS till end' == info:
                 gene.addToOutputInfo(11)
                 resistant = False
             elif 'Suppressible C insert' == info:
-                gene.addToOutputInfo(12)
+                supr = True
                 resistant = True
-            elif 'C insert + del/ins' == info:
-                gene.addToOutputInfo(13)
+            elif 'C insert followed by del/ins' == info:
+                followed = True
                 resistant = True
         if resistant:
+            gene.addDetails(read.query_name, "res")
             gene.addToOutputInfo(1)
             if eight:
                 gene.addToOutputInfo(8)
             if nine:
                 gene.addToOutputInfo(9)
+            if supr:
+                gene.addToOutputInfo(12)
+            if followed:
+                gene.addToOutputInfo(13)
+        else:
+            gene.addDetails(read.query_name, "sus")
 
     def iTypeCount(): 
         acquired = False
@@ -276,11 +296,14 @@ def FinalCount(gene, read):
         mutant   = False
         six      = False
         seven    = False
+        _all     = False
         for info in additionalInfo[1:]:
             if None == info:
                 break
             elif 'All' == info:
                 gene.addToOutputInfo(1)
+                _all = True
+                gene.addDetails(read.query_name, "res")
                 if six:
                     gene.addToOutputInfo(6)
                 if seven:
@@ -294,6 +317,7 @@ def FinalCount(gene, read):
                 mutant = True
             elif 'Mis:' in info:
                 gene.addToOutputInfo(5)
+                gene.addDetails(read.query_name, "res")
                 acquired = True
                 if six:
                     gene.addToOutputInfo(6)
@@ -304,23 +328,26 @@ def FinalCount(gene, read):
                 six = True
             elif '12+fs:' in info:
                 seven = True
-            elif "Newly found nonsense " in info:
+            elif "Newly found nonsense" in info:
                 gene.addToOutputInfo(8)
-                resistant = False
             elif 'FS till end' == info:
                 gene.addToOutputInfo(9)
-                resistant = False
         if not(acquired):
             if some:
+                gene.addDetails(read.query_name, "res")
                 gene.addToOutputInfo(2)
                 if six:
                     gene.addToOutputInfo(6)
                 if seven:
                     gene.addToOutputInfo(7)
             elif none:
+                gene.addDetails(read.query_name, "sus")
                 gene.addToOutputInfo(3)
             elif mutant:
+                gene.addDetails(read.query_name, "sus")
                 gene.addToOutputInfo(4)
+            elif not _all:
+                gene.addDetails(read.query_name, "sus")
 
     tag = gene.getGeneTag()
     if tag == 'N':

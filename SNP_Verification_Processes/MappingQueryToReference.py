@@ -15,21 +15,25 @@ def extendCigar(cigar):                                         #example: transf
 def MapQueryToReference(rRna, read, gene):
     cigar = extendCigar(read.cigarstring)                       #example: transforms 3M2I3M to MMMIIMMM
     aligned_pair = read.get_aligned_pairs()
-    nt_alignment_map = mapCigarToAlignment(cigar, aligned_pair, rRna, gene.mustSuppressFrameshift())   
+    nt_alignment_map = mapCigarToAlignment(cigar, aligned_pair, rRna, gene.mustSuppressFrameshift(), gene.currentReadSpecial())   
+    if len(nt_alignment_map) == 0:                              #for meg_6142, if has deletion at bp 76 and query stops before bp 80
+        return (False, False)
     querySeq = read.query_sequence                              #map has been trimmed to not have broken codons if not rRNA
     mapOfInterest = transformNtAlignmentMap(nt_alignment_map)   #makes ntAlignmentMap have same format as aa_alignment_map (useful for rRNA)
     if gene.mustSuppressFrameshift():                           #nt 1602 is the one that should be removed
          querySeq = suppressFS(1602, mapOfInterest, querySeq)
-    start = mapOfInterest[list(mapOfInterest.keys())[0]][0]
+    start = nt_alignment_map[0][1]
     i = 1
     while start == None:                                        #trimms query sequence in order to not have broken codons during translation
-        start = mapOfInterest[list(mapOfInterest.keys())[i]][0] #for rRNA, the mapCigarToAlignment returns full map, so sequence won't be trimmed
+        start = nt_alignment_map[i][1]                          #for rRNA, the mapCigarToAlignment returns full map, so sequence won't be trimmed
         i += 1
-    end = mapOfInterest[list(mapOfInterest.keys())[-1]][-1]
-    i = -2
+    end = nt_alignment_map[len(nt_alignment_map)-1][1]
+    i = 2
     while end == None:
-        end = mapOfInterest[list(mapOfInterest.keys())[i]][-1]
-        i -= 1
+        end = nt_alignment_map[len(nt_alignment_map)-i][1]
+        i += 1
+    if gene.mustSuppressFrameshift():
+        end -= 1
     trimmedQuerySequence = querySeq[start:end+1]                
     seqOfInterest = trimmedQuerySequence
     if not(rRna):
@@ -43,7 +47,7 @@ def suppressFS(ntToDelete, mapOfInterest, querySequence):
     querySequence = querySequence[:queryIndexToRemove] + querySequence[queryIndexToRemove+1:]
     return querySequence
 
-def mapCigarToAlignment(cigar, aligned_pair, rRna, suppress):   #map has been trimmed to not have broken codons if not rRNA
+def mapCigarToAlignment(cigar, aligned_pair, rRna, suppress, special):   #map has been trimmed to not have broken codons if not rRNA
     alignment_map = []                                          #list of tuples: (opcode, query pos, ref pos, ref nuc shift, and pre ref nuc shift)
     queryLength = 0                                             #length of query sequence that will be kept
     refLength = 0                                               #length of reference sequence
@@ -60,6 +64,11 @@ def mapCigarToAlignment(cigar, aligned_pair, rRna, suppress):   #map has been tr
         elif (op == "M") | (op == "X") | (op == "="):
             prevShift = shift
             refIndex = aligned_pair[index][1]
+            if special :                                        #For MEG_6142, if has deletion at bp 76, 
+                if refIndex < 79:                               #ignores till bp 80 (reference index 79)
+                    continue
+                else:
+                    special = False
             if not(translatable) and not(rRna):
                 if splitIndex < 0:
                     splitIndex = aligned_pair[index][1] % 3
@@ -87,6 +96,11 @@ def mapCigarToAlignment(cigar, aligned_pair, rRna, suppress):   #map has been tr
         elif op == "I":
             prevShift = shift
             shift += 1
+            if special :
+                if refIndex < 78:
+                    continue
+                else:
+                    special = False
             if not(translatable) and not(rRna):
                 if splitIndex < 0:
                     temp = aligned_pair[index][1]
@@ -121,6 +135,12 @@ def mapCigarToAlignment(cigar, aligned_pair, rRna, suppress):   #map has been tr
         elif op == "D":
             prevShift = shift
             shift -= 1
+            refIndex = aligned_pair[index][1]
+            if special :
+                if refIndex < 79:
+                    continue
+                else:
+                    special = False
             if not(translatable) and not(rRna):
                 if ((splitIndex % 3) != 2) and (splitIndex != -1):
                     index += 1

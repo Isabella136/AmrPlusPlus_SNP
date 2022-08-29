@@ -25,6 +25,8 @@ class Gene:
         this.outputInfo = dict()
         this.additionalInfo = list()
         this.longIndel = 0
+        this.currentReadNonstop = None
+        this.meg_6142Special = False
 
         infoList = infoString.split('|')
         for info in infoList:
@@ -58,7 +60,8 @@ class Gene:
                 this.geneTag = 'H'
             elif info[:3] == "FS-":
                 this.frameshiftInfo = info[3:]
-                this.geneTag = 'S' if this.name == "MEG_6094" else 'F'
+                if (this.name != "MEG_6142"):
+                    this.geneTag = 'S' if this.name == "MEG_6094" else 'F'
             elif info[:7] == "NucMult":
                 snpToAdd = SNP.SNP_Mult(this.sequence, info[8:], this.name)
                 if(snpToAdd.isValid()):
@@ -91,6 +94,17 @@ class Gene:
             for i in range(0,13):
                 this.outputInfo.update({i:0})
 
+    def currentReadHasNonstop(this):
+        return this.currentReadNonstop
+    def foundNonstop(this, foundNonstop):
+        this.currentReadNonstop = foundNonstop
+    def hasSpecialCase(this):
+        this.meg_6142Special = True
+    def currentReadSpecial(this):
+        return this.meg_6142Special
+    def resetForNextRead(this):
+        this.currentReadNonstop = None
+        this.meg_6142Special = False
     def getOutputInfo(this):
         return this.outputInfo
     def clearOutputInfo(this):
@@ -113,7 +127,7 @@ class Gene:
                     this.longIndel += 1
             elif len(info[0]) >= 4:
                 this.longIndel += 1
-        if (len(this.additionalInfo) > 0) and (read is this.additionalInfo[-1][0]):
+        if (len(this.additionalInfo) > 0) and ((read is this.additionalInfo[-1][0]) or isinstance(read, str)):
             temp = list(this.additionalInfo[-1])
             temp.append(info)
             this.additionalInfo[-1] = tuple(temp)
@@ -203,8 +217,11 @@ class Gene:
             if read[1] == None: continue
             file.write("\n")
             header["Read"] = read[0]
+
             for info in read[1:]:
-                if info == "All":
+                if info in ["res", "sus"]:
+                    continue
+                elif info == "All":
                     header["All residues in query"] = "T"
                 elif info == "Some":
                     header["Some residues in query"] = "T"
@@ -221,11 +238,13 @@ class Gene:
                 elif "Newly found nonsense" in info:
                     header["Newly found nonsense"] = "Pos:" + info.split(":")[1]
                 elif "12+bp indel" in info:
-                    count = int(info.split(":")[1][1:]) - this.longIndel
-                    if count > 0:
-                        header["12+bp indel"] = "Count: " + str(count)
+                    if ((this.geneTag == 'F') and (read[-1] == "sus")) or ((this.geneTag != 'F') and (read[-1] == "res")):
+                        count = int(info.split(":")[1][1:]) - this.longIndel
+                        if count > 0:
+                            header["12+bp indel"] = "Count: " + str(count)
                 elif "12+bp frameshift" in info:
-                    header["12+bp frameshift"] = "Count:" + info.split(":")[1]
+                    if ((this.geneTag == 'F') and (read[-1] == "sus")) or ((this.geneTag != 'F') and (read[-1] == "res")):
+                        header["12+bp frameshift"] = "Count:" + info.split(":")[1]
                 elif "Hypersusceptible" in info:
                     header["Hypersusceptible:" + this.condensedHyperInfo()[-1][5:]] = "T"
                 else:
