@@ -1,9 +1,8 @@
 from SNP_Verification_Tools.Gene import Gene
 from SNP_Verification_Tools.SNP import SNP
 from SNP_Verification_Tools.InDel import InDel
-from SNP_Verification_Tools import mt_and_wt
 
-def IntrinsicCheck(read, gene, mapOfInterest, seqOfInterest):
+def IntrinsicCheck(read, gene, mapOfInterest, seqOfInterest, config):
     if gene.getGeneTag() != 'I':
         return True
     begin = list(mapOfInterest.keys())[0]+1
@@ -23,15 +22,15 @@ def IntrinsicCheck(read, gene, mapOfInterest, seqOfInterest):
                     if tupleIndex not in firstAndLastTupleIndex:
                         continue
                 if (queryIndex == None) or (queryIndex == '-'):
-                    if not(mt_and_wt):
+                    if not(config.getboolean('SETTINGS', 'MT_AND_WT')):
                         hasMust = False
                         break
                 elif must.getWt() == seqOfInterest[queryIndex]:
                     hasMust = True
-                    if mt_and_wt:
+                    if config.getboolean('SETTINGS', 'MT_AND_WT'):
                         break
                 else:
-                    if not(mt_and_wt):
+                    if not(config.getboolean('SETTINGS', 'MT_AND_WT')):
                         hasMust = False
                         break
             if not(hasMust): 

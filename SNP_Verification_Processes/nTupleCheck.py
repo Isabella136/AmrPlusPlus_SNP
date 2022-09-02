@@ -1,9 +1,8 @@
 from SNP_Verification_Tools.Gene import Gene
 from SNP_Verification_Tools.SNP import SNP
 from SNP_Verification_Tools.InDel import InDel
-from SNP_Verification_Tools import mt_and_wt
 
-def nTupleCheck(read, gene, mapOfInterest, seqOfInterest):
+def nTupleCheck(read, gene, mapOfInterest, seqOfInterest, config):
     SNPInfo = gene.condensedMultInfo()
     if (len(SNPInfo) != 0):
         codonNotFullyDeleted = 0                #codons that count for one deletion mutation but aren't fully deleted in read; if >1, snpMult is disregarded        
@@ -171,9 +170,9 @@ def nTupleCheck(read, gene, mapOfInterest, seqOfInterest):
                             if queryIndex == '-': continue
                             if mt == seqOfInterest[queryIndex]:
                                 currentResBool = True
-                                if mt_and_wt:
+                                if config.getboolean('SETTINGS', 'MT_AND_WT'):
                                     break
-                            elif (mtInfo[0] == seqOfInterest[queryIndex]) and not(mt_and_wt):
+                            elif (mtInfo[0] == seqOfInterest[queryIndex]) and not(config.getboolean('SETTINGS', 'MT_AND_WT')):
                                 if ((mapOfInterest.get(mtInfo[1],False)) != False) and (queryIndex in mapOfInterest[mtInfo[1]]):
                                     if gene.aaSequence()[mtInfo[1]] != mtInfo[0]:
                                         wtPresent = True
