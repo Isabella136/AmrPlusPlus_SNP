@@ -1,0 +1,15 @@
+Gene,Number of reads,All,Some,None,Mutations,Acquired,12+bp indel,12+ bp frameshift,Nonsense,Frameshift till end
+MEG_1628|Drugs|Phenicol|Chloramphenicol_acetyltransferases|CATB|RequiresSNPConfirmation,2,1,0,1,0,0,0,0,0,0
+MEG_2694|Drugs|Multi-drug_resistance|Multi-drug_ABC_efflux_pumps|EATAV|RequiresSNPConfirmation,0,0,0,0,0,0,0,0,0,0
+MEG_3979|Drugs|MLS|Macrolide-resistant_23S_rRNA_mutation|MLS23S|RequiresSNPConfirmation,0,0,0,0,0,0,0,0,0,0
+MEG_3983|Drugs|MLS|Macrolide-resistant_23S_rRNA_mutation|MLS23S|RequiresSNPConfirmation,0,0,0,0,0,0,0,0,0,0
+MEG_4092|Drugs|Fosfomycin|Fosfomycin_target_mutation|MURA|RequiresSNPConfirmation,0,0,0,0,0,0,0,0,0,0
+MEG_4093|Drugs|Fosfomycin|Fosfomycin_target_mutation|MURA|RequiresSNPConfirmation,0,0,0,0,0,0,0,0,0,0
+MEG_4096|Drugs|Fosfomycin|Fosfomycin_target_mutation|MURA|RequiresSNPConfirmation,0,0,0,0,0,0,0,0,0,0
+MEG_4279|Drugs|betalactams|Mutant_porin_proteins|OMP36|RequiresSNPConfirmation,6,0,2,4,0,0,0,0,0,0
+MEG_4280|Drugs|betalactams|Mutant_porin_proteins|OMP36|RequiresSNPConfirmation,8,0,0,8,0,0,0,0,0,0
+MEG_4281|Drugs|betalactams|Mutant_porin_proteins|OMP36|RequiresSNPConfirmation,6,0,2,4,0,0,0,0,0,0
+MEG_4282|Drugs|betalactams|Mutant_porin_proteins|OMP36|RequiresSNPConfirmation,2,0,0,2,0,0,0,0,0,0
+MEG_6092|Drugs|Rifampin|Rifampin-resistant_beta-subunit_of_RNA_polymerase_RpoB|RPOB|RequiresSNPConfirmation,0,0,0,0,0,0,0,0,0,0
+MEG_7196|Drugs|Tetracyclines|Tetracycline_resistance_MFS_efflux_regulator|TETRM|RequiresSNPConfirmation,4,0,1,2,1,0,0,0,0,0
+MEG_7306|Drugs|Elfamycins|EF-Tu_inhibition|TUFAB|RequiresSNPConfirmation,2,0,0,2,0,0,0,0,0,0

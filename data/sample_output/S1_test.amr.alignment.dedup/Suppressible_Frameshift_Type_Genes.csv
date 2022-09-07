@@ -1,0 +1,2 @@
+Gene,Number of reads,Resistant,Missense,Insertion,Deletion,Previously recorded nonsense,N-tuple,Nonstop,12+bp indel,12+ bp frameshift,Newly found nonsense,Frameshift at end ,Suppressible frameshift at res 531,Frameshift at res 531 that is not suppressible
+MEG_6094|Drugs|Rifampin|Rifampin-resistant_beta-subunit_of_RNA_polymerase_RpoB|RPOB|RequiresSNPConfirmation,28,0,0,0,0,0,0,0,0,0,1,0,0,0
