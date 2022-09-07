@@ -18,62 +18,151 @@ from SNP_Verification_Tools.Gene import Gene
 from SNP_Verification_Processes import verify
 from SNP_Verification_Tools import geneDict
 import SNP_Verification_Tools
-import pysam, sys, getopt, os, configparser
+import pysam, sys, getopt, os, configparser, shutil, numpy
+import pandas as pd
 
 argList = []
 configFile = "config.ini"
 config = configparser.ConfigParser()
-inputFile = ""
-outputFolder = ""
-mt_and_wt = ""
-detailed_output = ""
 
 try:
-    options, args = getopt.getopt(sys.argv[1:], "hlrci:o:", ["mt_and_wt=", "detailed_output="])
+    options, args = getopt.getopt(sys.argv[1:], "hlrac:i:o:", ["mt_and_wt=", "detailed_output=", "count_matrix=", "count_matrix_final="])
 except getopt.GetoptError:
-    print("SNP_Verification.py -i <inputFile> -o <outputFolder>")
+    print("""
+        ERROR - this is the list of arguments recognized by the program:
+
+        -a: amrplusplus; is either true or false
+        -c: config file; if this argument is used, must be the first listed
+        -h: help
+        -i: input file
+        -l: license disclaimer
+        -o: output folder
+        -r: conditions for redistribution
+        
+        --mt_and_wt:            true by default, used in case of insertion leading to presence of both mt and wt; if true, mark as resistant; if false, mark as susceptible
+        --detailed_output:      false by default, determines whether a more detailed output will be given; can be either false, 'all', or include a list of accessions seperated by commas
+        --count_matrix:         count matrix that will be updated if amrplusplus is true
+        --count_matrix_final:   the file where the updated count matrix will be found if amrplusplus is true
+        
+        """)
     sys.exit(-1)
+
+i = 0
+output = False
 for opt, arg in options:
     if opt == "-h":
-        print("List of arguments:\n\n\n-c:config.file\n-h: help\n-i: input file\n-l: license disclaimer\n-o: output folder\n-r: conditions for redistribution\n\n--mt_and_wt: true by default, used in case of insertion leading to presence of both mt and wt; if true, mark as resistant; if false, mark as susceptible\n--detailed_output: false by default, determines whether a more detailed output will be given\n\n")
+        print("""
+        List of arguments:
+
+        -a: amrplusplus; is either true or false
+        -c: config file; if this argument is used, must be the first listed
+        -h: help
+        -i: input file
+        -l: license disclaimer
+        -o: output folder
+        -r: conditions for redistribution
+        
+        --mt_and_wt:            true by default, used in case of insertion leading to presence of both mt and wt; if true, mark as resistant; if false, mark as susceptible
+        --detailed_output:      false by default, determines whether a more detailed output will be given; can be either false, 'all', or include a list of accessions seperated by commas
+        --count_matrix:         count matrix that will be updated if amrplusplus is true
+        --count_matrix_final:   the file where the updated count matrix will be found if amrplusplus is true
+        
+        """)
         sys.exit()
     elif opt == "-r":
-        print("\n\nAMRPlusPlus_SNP_Verification\nCopyright (C) 2022  Nathalie Bonin\n\nThis program is free software: you can redistribute it and/or modify\nit under the terms of the GNU General Public License as published by\nthe Free Software Foundation, either version 3 of the License, or\n(at your option) any later version.\n\n")
+        print("""
+        
+        AMRPlusPlus_SNP_Verification
+        Copyright (C) 2022  Nathalie Bonin
+        
+        This program is free software: you can redistribute it and/or modify
+        it under the terms of the GNU General Public License as published by
+        the Free Software Foundation, either version 3 of the License, or
+        (at your option) any later version.
+        
+        """)
         sys.exit()
     elif opt == "-l":
-        print("\n\nAMRPlusPlus_SNP_Verification\nCopyright (C) 2022  Nathalie Bonin\n\nThis program is distributed in the hope that it will be useful,\nbut WITHOUT ANY WARRANTY; without even the implied warranty of\nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\nGNU General Public License for more details.\n\n")
+        print("""
+        
+        AMRPlusPlus_SNP_Verification
+        Copyright (C) 2022  Nathalie Bonin
+        
+        This program is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        GNU General Public License for more details.
+        
+        """)
         sys.exit()
     elif opt == "-c":
+        if i > 0:
+            print("ERROR: config file must be the first argument listed")
+            sys.exit(-1)
         configFile = arg
+        config.read(configFile)
     elif opt == "-i":
-        inputFile = arg
+        if i == 0:
+            config.read(configFile)
+        config['SOURCE_FILES']['SAM_INPUT'] = arg
+        if output:
+            temp = config['OUTPUT_FILES']['OUTPUT_FOLDER'][:config['OUTPUT_FILES']['OUTPUT_FOLDER'].rfind('/')]
+            config['OUTPUT_FILES']['OUTPUT_FOLDER'] = temp + "/" + config['SOURCE_FILES']['SAM_INPUT'].split('/')[-1].split('.')[0]  
     elif opt == "-o":
-        outputFolder = arg
+        if i == 0:
+            config.read(configFile)
+        config['OUTPUT_FILES']['OUTPUT_FOLDER'] = arg + "/" + config['SOURCE_FILES']['SAM_INPUT'].split('/')[-1].split('.')[0] 
+        output = True
+    elif opt == "-a":
+        if i == 0:
+            config.read(configFile)
+        config['SETTINGS']['AMRPLUSPLUS'] = 'true'
     elif opt == "--mt_and_wt":
-        mt_and_wt = arg
+        if i == 0:
+            config.read(configFile)
+        if arg not in ['true', 'false']:
+            print("ERROR: mt_and_wt argument can only be either 'true' or 'false'")
+            sys.exit(-1)
+        config['SETTINGS']['MT_AND_WT'] = arg
     elif opt =="--detailed_output":
+        if i == 0:
+            config.read(configFile)
         if arg != "false":
-            detailed_output = "true"
-            if arg != "All":
+            config['SETTINGS']['DETAILED'] = "true"
+            if arg != "all":
                 argList = arg.split(',')
+    elif opt == "--count_matrix=":
+        if i == 0:
+            config.read(configFile)
+        if config['OUTPUT_FILES']['COUNT_MATRIX_FINAL'] == config['SOURCE_FILES']['COUNT_MATRIX']:
+            config['OUTPUT_FILES']['COUNT_MATRIX_FINAL'] = arg
+        config['SOURCE_FILES']['COUNT_MATRIX'] = arg
+    elif opt == "--count_matrix_final=":
+        if i == 0:
+            config.read(configFile)
+        config['OUTPUT_FILES']['COUNT_MATRIX_FINAL'] = arg
+    i += 1
 
-config.read(configFile)
-if len(inputFile) > 0:
-    config['SOURCE_FILES']['SAM_INPUT'] = inputFile
-if len(outputFolder) > 0:
-    config['OUTPUT_FILES']['OUTPUT_FOLDER'] = outputFolder + "/" + config['SOURCE_FILES']['SAM_INPUT'].split('/')[-1][:-4]
-if len(mt_and_wt) > 0:
-    config['SETTINGS']['MT_AND_WT'] = mt_and_wt
-if len(detailed_output) > 0:
-    config['SETTINGS']['DETAILED'] = detailed_output
+if i == 0:
+    config.read(configFile)
+else:
+    newConfigFile = configFile[:configFile.rfind('.')]
+    underscore = newConfigFile.rfind('_0')
+    if (underscore != -1) and newConfigFile[underscore+2:].isnumeric:
+        newConfigFile = newConfigFile[:underscore+2] + str(int(newConfigFile[underscore+2:]) + 1)
+    else:
+        newConfigFile = newConfigFile + '_01'
+    newConfigFile = newConfigFile + '.ini'
 
-with open(configFile, 'w') as configFile:
-    config.write(configFile)
+    with open(newConfigFile, 'w') as configFileTemp:
+        config.write(configFileTemp)
 
 if not(os.path.exists(config['OUTPUT_FILES']['OUTPUT_FOLDER'])):
     os.mkdir(config['OUTPUT_FILES']['OUTPUT_FOLDER'])
 if config.getboolean('SETTINGS', 'DETAILED') and not(os.path.exists(config['OUTPUT_FILES']['OUTPUT_FOLDER'] + config['OUTPUT_FILES']['DETAILED_FOLDER'])):
     os.mkdir(config['OUTPUT_FILES']['OUTPUT_FOLDER'] + config['OUTPUT_FILES']['DETAILED_FOLDER'])
+if not(os.path.exists(config['TEMP_FILES']['TEMP_SAM_SORTED'][:config['TEMP_FILES']['TEMP_SAM_SORTED'].rfind('/')])):
+    os.mkdir(config['TEMP_FILES']['TEMP_SAM_SORTED'][:config['TEMP_FILES']['TEMP_SAM_SORTED'].rfind('/')])
 
 SNPinfo = open(config['SOURCE_FILES']['SNP_INFO_FASTA'], "rt")
 isSequence = False
@@ -111,10 +200,16 @@ for read in iter:
 samfile.close() 
 
 #Function that appends gene.getOutputInfo() to output file
-def appendGeneOutputInfo(name, outputInfo, file):
+def appendGeneOutputInfo(name, outputInfo, file, countMatrix):
     file.write("\n" + name)
     for info in outputInfo.values():
         file.write("," + str(info))
+    if type(countMatrix) == pd.DataFrame:
+        if name in list(countMatrix['gene_accession'].values):
+            index = countMatrix['gene_accession'][countMatrix['gene_accession']==name].index[0]
+            prevResCount = countMatrix.loc[index, config['SOURCE_FILES']['SAM_INPUT'].split('/')[-1].split('.')[0]]
+            if prevResCount != 0:
+                countMatrix.loc[index, config['SOURCE_FILES']['SAM_INPUT'].split('/')[-1].split('.')[0]] = outputInfo[1]
 
 
 #Create output files and write headers
@@ -134,29 +229,35 @@ outputI = open(config['OUTPUT_FILES']['OUTPUT_FOLDER'] + config['OUTPUT_FILES'][
 outputI.write("Gene,Number of reads,All,Some,None,Mutations,Acquired,12+bp indel,12+ bp frameshift,Nonsense,Frameshift till end")
 outputI.close()
 
+countMatrix = None
+if config.getboolean('SETTINGS', 'AMRPLUSPLUS'):
+    if config['OUTPUT_FILES']['COUNT_MATRIX_FINAL'] != config['SOURCE_FILES']['COUNT_MATRIX']:
+        shutil.copyfile(config['SOURCE_FILES']['COUNT_MATRIX'], config['OUTPUT_FILES']['COUNT_MATRIX_FINAL'])
+    countMatrix = pd.read_csv(config['OUTPUT_FILES']['COUNT_MATRIX_FINAL'])
+
 for name, gene in geneDict.items():
     if (len(argList) != 0) and (gene.split("|")[0] not in argList):
         continue
     tag = gene.getGeneTag()
     if tag == 'N':
         outputN = open(config['OUTPUT_FILES']['OUTPUT_FOLDER'] + config['OUTPUT_FILES']['NORMAL_TYPE_OUTPUT'], "a")
-        appendGeneOutputInfo(name, gene.getOutputInfo(), outputN)
+        appendGeneOutputInfo(name, gene.getOutputInfo(), outputN, countMatrix)
         outputN.close()
     elif tag == 'F':
         outputF = open(config['OUTPUT_FILES']['OUTPUT_FOLDER'] + config['OUTPUT_FILES']['FRAMESHIFT_TYPE_OUTPUT'], "a")
-        appendGeneOutputInfo(name, gene.getOutputInfo(), outputF)
+        appendGeneOutputInfo(name, gene.getOutputInfo(), outputF, countMatrix)
         outputF.close()
     elif tag == 'H':
         outputH = open(config['OUTPUT_FILES']['OUTPUT_FOLDER'] + config['OUTPUT_FILES']['HYPERSUSCEPTIBLE_TYPE_OUTPUT'], "a")
-        appendGeneOutputInfo(name, gene.getOutputInfo(), outputH)
+        appendGeneOutputInfo(name, gene.getOutputInfo(), outputH, countMatrix)
         outputH.close()
     elif tag == 'S':
         outputS = open(config['OUTPUT_FILES']['OUTPUT_FOLDER'] + config['OUTPUT_FILES']['SUPPRESSIBLE_TYPE_OUTPUT'], "a")
-        appendGeneOutputInfo(name, gene.getOutputInfo(), outputS)
+        appendGeneOutputInfo(name, gene.getOutputInfo(), outputS, countMatrix)
         outputS.close()
     else:
         outputI = open(config['OUTPUT_FILES']['OUTPUT_FOLDER'] + config['OUTPUT_FILES']['INTRINSIC_TYPE_OUTPUT'], "a")
-        appendGeneOutputInfo(name, gene.getOutputInfo(), outputI)
+        appendGeneOutputInfo(name, gene.getOutputInfo(), outputI, countMatrix)
         outputI.close()
     if config.getboolean('SETTINGS', 'DETAILED') and (gene.getOutputInfo()[0] > 0):
         detailedOutput = open(config['OUTPUT_FILES']['OUTPUT_FOLDER'] + config['OUTPUT_FILES']['DETAILED_FOLDER'] + "/" + name + ".csv", "w")

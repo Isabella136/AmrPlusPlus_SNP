@@ -138,7 +138,7 @@ MEG_3588,Drugs,Lipopeptides,Daptomycin-resistant_mutant,LIAFSR,Mis:T194I_LLEHS_F
 MEG_3589,Drugs,Lipopeptides,Daptomycin-resistant_mutant,LIAFSR,Mis:E192G_KSETP_MFRKQ,Mis:T120A_IDKEI_KIKEK
 MEG_3590,Drugs,Lipopeptides,Daptomycin-resistant_mutant,LIAFSR,Mis:W73C_AILKD_PEAKI
 MEG_3591,Drugs,Lipopeptides,Daptomycin-resistant_mutant,LIAFSR,Mis:L27I_QIVNN_GLLLL,Mis:L39F_IFGIF_IYLAM,Mis:I144T_YEWDD_NIAII
-MEG_3594,Drugs,Multi-drug_resistance,Multi-drug_ABC_efflux_pumps,LMRA,Mult:Mis:Q52P_PGGKE_LAIEA;Nonstop:189
+MEG_3594,Drugs,Multi-drug_resistance,Multi-drug_ABC_efflux_pumps,LMRA,Mult:Mis:Q52P_PGGKE_LAIEA;Nonstop:189S
 MEG_3626,Drugs,Lipopeptides,Colistin-resistant_mutant,LPXA,FS-target_synthesis,Mis:G68D_QFASV_EVCQD,Mis:Q72K_VGEVC_DLKYK,Mis:H159D_GNSGI_QFCKI,Nonsense:Q234*_VQAID_IKSEI
 MEG_3627,Drugs,Lipopeptides,Colistin-resistant_mutant,LPXC,FS-target_synthesis,Mis:P30L_MINFI_HTVDG
 MEG_3740,Drugs,Multi-drug_resistance,MDR_23S_rRNA_mutation,MDR23S,Nuc:A2071CGT_GACGG_AAGAC,Nuc:A2072GC_ACGGA_AGACC
@@ -300,7 +300,7 @@ MEG_6135,Drugs,Rifampin,Rifampin-resistant_beta-subunit_of_RNA_polymerase_RpoB,R
 MEG_6136,Drugs,Rifampin,Rifampin-resistant_beta-subunit_of_RNA_polymerase_RpoB,RPOB,Mis:H481N_LAELT_KRRLS,Mis:Q468K_SSQLS_FMDQA,Mis:A473T_QFMDQ_NPLAE,Mis:Q465R_FFGSS_LSQFM,Mis:L466S_FGSSQ_SQFMD,Mis:A477T_QANPL_ELTHK
 MEG_6138,Drugs,Glycopeptides,Vancomycin-resistant_mutation,RPOC,Mis:D245Y_PMVQL_GGRFA
 MEG_6139,Drugs,Lipopeptides,Daptomycin-resistant_beta-subunit_of_RNA_polymerase_RpoC,RPOCL,Mis:Q961K_GLPRI_EIFEA,Mis:F632S_IIAEV_NRFSI
-MEG_6142,Drugs,Mycobacterium_tuberculosis-specific_Drug,Pyrazinamide-resistant_mutant,RPSA,FS-stop_codon_pos_26,Mis:D342N_VVAVG_DAMVK,Mis:D343N_VAVGD_AMVKV,Mis:A344P_AVGDD_MVKVI,Mis:I351F_VKVID_DLERR,Mis:E325K_LVHIS_LAERH,Mis:G341R_QVVAV_DDAMV,Mis:S324F_GLVHI_ELAER,Mis:D123A_ALKEK_EAVKG,Del:A436/437/438_QMEKF_EAAGR,Mis:A381V_AKYGM_DSYDE,Mis:A412V_FEKQR_EWEAR,Mis:A440T_FAAAE_AGRGA,Nonstop:482
+MEG_6142,Drugs,Mycobacterium_tuberculosis-specific_Drug,Pyrazinamide-resistant_mutant,RPSA,FS-stop_codon_pos_26,Mis:D342N_VVAVG_DAMVK,Mis:D343N_VAVGD_AMVKV,Mis:A344P_AVGDD_MVKVI,Mis:I351F_VKVID_DLERR,Mis:E325K_LVHIS_LAERH,Mis:G341R_QVVAV_DDAMV,Mis:S324F_GLVHI_ELAER,Mis:D123A_ALKEK_EAVKG,Del:A436/437/438_QMEKF_EAAGR,Mis:A381V_AKYGM_DSYDE,Mis:A412V_FEKQR_EWEAR,Mis:A440T_FAAAE_AGRGA,Nonstop:482fs
 MEG_6143,Drugs,Tetracyclines,Tetracycline_resistance_ribosomal_protection_proteins,RPSJ,Mis:V57LM_LRSPH_NKTSR
 MEG_6144,Drugs,Aminoglycosides,Aminoglycoside-resistant_16S_ribosomal_subunit_protein,RPSL,Mis:K88RQ_RGGRV_DLPGV,Mis:K43R_YTTTP_KPNSA,Mis:T40I_TRVYT_TPKKP
 MEG_6145,Drugs,Aminoglycosides,Aminoglycoside-resistant_16S_ribosomal_subunit_protein,RRSA,Nuc:T130C_GACTT_CATGA

@@ -1,4 +1,4 @@
-S1_test,S2_test,S3_test
+gene_accession,S1_test,S2_test,S3_test
 MEG_2777|Drugs|MLS|23S_rRNA_methyltransferases|ERM37,0,0,8.0
 MEG_1920|Drugs|betalactams|Class_C_betalactamases|CMY,0,0,12.0
 MEG_4781|Drugs|betalactams|Class_D_betalactamases|OXA,0,0,10.0
