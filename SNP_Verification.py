@@ -48,6 +48,7 @@ except getopt.GetoptError:
     sys.exit(-1)
 
 i = 0
+confChanged = False
 output = False
 for opt, arg in options:
     if opt == "-h":
@@ -101,6 +102,7 @@ for opt, arg in options:
             sys.exit(-1)
         configFile = arg
         config.read(configFile)
+        confChanged = True
     elif opt == "-i":
         if i == 0:
             config.read(configFile)
@@ -143,7 +145,7 @@ for opt, arg in options:
         config['OUTPUT_FILES']['COUNT_MATRIX_FINAL'] = arg
     i += 1
 
-if i == 0:
+if (i == 0) or ((i == 1) and confChanged):
     config.read(configFile)
 else:
     newConfigFile = configFile[:configFile.rfind('.')]
