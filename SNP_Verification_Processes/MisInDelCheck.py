@@ -1,9 +1,8 @@
 from SNP_Verification_Tools.Gene import Gene
 from SNP_Verification_Tools.SNP import SNP
 from SNP_Verification_Tools.InDel import InDel
-from SNP_Verification_Tools import mt_and_wt
 
-def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest):
+def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest, config):
     def missenseCheck(mtInfo, nonstop = False):
         res = 0
         if (mapOfInterest.get(mtInfo[1]-1,False)) != False:
@@ -16,7 +15,7 @@ def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest):
                         if tupleIndex not in firstAndLastTupleIndex:
                             continue
                     if (queryIndex == '-') or (queryIndex == None): continue
-                    elif mt_and_wt:
+                    elif config.getboolean('SETTINGS', 'MT_AND_WT'):
                         if mt == seqOfInterest[queryIndex]:
                             res = 1
                             break

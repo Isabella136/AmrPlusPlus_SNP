@@ -12,8 +12,8 @@ SNPInfoExtraction/*.vcxproj*
 SNPInfoExtraction/*.sln
 SNPInfoExtraction/Source
 Test/P_BPW_50_2_filtered.sam
-*.sam
 *.csv#
 *.json
 Sample_Output/
 Test/
+temp/sorted.sam

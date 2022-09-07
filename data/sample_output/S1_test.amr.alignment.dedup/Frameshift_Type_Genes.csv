@@ -1,0 +1,26 @@
+Gene,Number of reads,Resistant,Missense,Insertion,Deletion,Previously recorded nonsense,N-tuple,Nonstop,12+bp indel,12+ bp frameshift,Newly found nonsense,Frameshift till end
+MEG_411|Multi-compound|Drug_and_biocide_resistance|Drug_and_biocide_RND_efflux_regulator|ACRR|RequiresSNPConfirmation,0,0,0,0,0,0,0,0,0,0,0,0
+MEG_413|Multi-compound|Drug_and_biocide_resistance|Drug_and_biocide_RND_efflux_regulator|ACRR|RequiresSNPConfirmation,0,0,0,0,0,0,0,0,0,0,0,0
+MEG_414|Multi-compound|Drug_and_biocide_resistance|Drug_and_biocide_RND_efflux_regulator|ACRR|RequiresSNPConfirmation,0,0,0,0,0,0,0,0,0,0,0,0
+MEG_2710|Drugs|Mycobacterium_tuberculosis-specific_Drug|Ethambutol_resistant_arabinosyltransferase|EMBB|RequiresSNPConfirmation,26,1,0,0,0,0,0,0,0,0,1,0
+MEG_2866|Drugs|Mycobacterium_tuberculosis-specific_Drug|Ethionamide-resistant_mutant|ETHA|RequiresSNPConfirmation,10,2,0,0,0,0,0,0,0,0,2,0
+MEG_3135|Drugs|Aminoglycosides|Aminoglycoside-resistant_gidB|GIDB|RequiresSNPConfirmation,0,0,0,0,0,0,0,0,0,0,0,0
+MEG_3143|Drugs|Fosfomycin|Fosfomycin_target_mutation|GLPT|RequiresSNPConfirmation,0,0,0,0,0,0,0,0,0,0,0,0
+MEG_3144|Drugs|Fosfomycin|Fosfomycin_target_mutation|GLPT|RequiresSNPConfirmation,0,0,0,0,0,0,0,0,0,0,0,0
+MEG_3430|Drugs|Mycobacterium_tuberculosis-specific_Drug|Ethambutol-resistant_mutant|INIA|RequiresSNPConfirmation,10,0,0,0,0,0,0,0,0,0,0,0
+MEG_3446|Drugs|Mycobacterium_tuberculosis-specific_Drug|Isoniazid-resistant_mutant|KATG|RequiresSNPConfirmation,0,0,0,0,0,0,0,0,0,0,0,0
+MEG_3626|Drugs|Lipopeptides|Colistin-resistant_mutant|LPXA|RequiresSNPConfirmation,0,0,0,0,0,0,0,0,0,0,0,0
+MEG_3627|Drugs|Lipopeptides|Colistin-resistant_mutant|LPXC|RequiresSNPConfirmation,0,0,0,0,0,0,0,0,0,0,0,0
+MEG_3931|Multi-compound|Drug_and_biocide_resistance|Drug_and_biocide_RND_efflux_regulator|MEXS|RequiresSNPConfirmation,8,1,0,0,0,0,0,0,0,0,1,0
+MEG_4130|Drugs|Mycobacterium_tuberculosis-specific_Drug|Isoniazid-resistant_mutant|NDH|RequiresSNPConfirmation,8,0,0,0,0,0,0,0,0,0,0,0
+MEG_4131|Drugs|Mycobacterium_tuberculosis-specific_Drug|Isoniazid-resistant_mutant|NDH|RequiresSNPConfirmation,6,0,0,0,0,0,0,0,0,0,0,0
+MEG_4161|Drugs|Multi-drug_resistance|Multi-drug_RND_efflux_pumps|NFXB|RequiresSNPConfirmation,0,0,0,0,0,0,0,0,0,0,0,0
+MEG_4296|Drugs|betalactams|Mutant_porin_proteins|OPRD|RequiresSNPConfirmation,4,1,0,0,0,0,0,0,0,0,1,0
+MEG_5803|Drugs|Mycobacterium_tuberculosis-specific_Drug|Pyrazinamide-resistant_mutant|PNCA|RequiresSNPConfirmation,2,1,1,0,0,0,0,0,0,0,0,0
+MEG_6045|Drugs|Multi-drug_resistance|Multi-drug_RND_efflux_regulator|RAMR|RequiresSNPConfirmation,0,0,0,0,0,0,0,0,0,0,0,0
+MEG_6046|Drugs|Multi-drug_resistance|Multi-drug_RND_efflux_regulator|RAMR|RequiresSNPConfirmation,2,0,0,0,0,0,0,0,0,0,0,0
+MEG_6090|Drugs|Rifampin|Rifampin-resistant_beta-subunit_of_RNA_polymerase_RpoB|RPOB|RequiresSNPConfirmation,28,4,3,0,0,0,0,0,0,0,1,0
+MEG_7250|Drugs|Mycobacterium_tuberculosis-specific_Drug|Para-aminosalicylic_acid_resistant_mutant|THYA|RequiresSNPConfirmation,0,0,0,0,0,0,0,0,0,0,0,0
+MEG_7258|Drugs|Aminoglycosides|Aminoglycoside-resistant_tlyA|TLYA|RequiresSNPConfirmation,0,0,0,0,0,0,0,0,0,0,0,0
+MEG_7329|Drugs|Fosfomycin|Fosfomycin_target_mutation|UHPT|RequiresSNPConfirmation,0,0,0,0,0,0,0,0,0,0,0,0
+MEG_7333|Drugs|Glycopeptides|VanA-type_resistance_protein|VAN|RequiresSNPConfirmation,0,0,0,0,0,0,0,0,0,0,0,0

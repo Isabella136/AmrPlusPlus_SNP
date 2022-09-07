@@ -7,7 +7,7 @@ from SNP_Verification_Processes.MisInDelCheck import MisInDelCheck
 from SNP_Verification_Processes.nTupleCheck import nTupleCheck
 import pysam
 
-def verify(read, gene):
+def verify(read, gene, config):
     rRna = gene.rRna()
     gene.addToOutputInfo(0)                                                     #Counts read; other data will be counted in FinalCount method
 
@@ -28,9 +28,9 @@ def verify(read, gene):
             FinalCount(gene, read)
             return None      
     
-    IntrinsicCheck(read, gene, mapOfInterest, seqOfInterest)                    #For I-tagged specifically
-    MisInDelCheck(read, gene, mapOfInterest, seqOfInterest)                     #Counts all resistance-conferring mutations
-    nTupleCheck(read, gene, mapOfInterest, seqOfInterest)                       #Counts all resistance-conferring mutations
+    IntrinsicCheck(read, gene, mapOfInterest, seqOfInterest, config)            #For I-tagged specifically
+    MisInDelCheck(read, gene, mapOfInterest, seqOfInterest, config)             #Counts all resistance-conferring mutations
+    nTupleCheck(read, gene, mapOfInterest, seqOfInterest, config)               #Counts all resistance-conferring mutations
     FinalCount(gene, read)    
 
 
