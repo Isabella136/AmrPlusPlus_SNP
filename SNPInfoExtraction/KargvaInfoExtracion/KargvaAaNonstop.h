@@ -32,7 +32,7 @@ InfoPipe* KargvaAaNonstop::Clone() {
 	return new KargvaAaNonstop(*this);
 }
 void KargvaAaNonstop::makeModel(string line) {
-	pos = findTermination();
+	pos = findTermination() + 1;
 }
 void KargvaAaNonstop::addToModel(string line) {
 	throw std::exception("should not have been called: model type is nonstop");

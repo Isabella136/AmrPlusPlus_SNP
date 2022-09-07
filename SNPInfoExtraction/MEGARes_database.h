@@ -23,7 +23,7 @@ MEGARes_database::MEGARes_database(const MEGARes_database& other) {
 MEGARes_database::MEGARes_database()
 {
 	ifstream megaresSearch;
-	megaresSearch.open("../MEGARes_database.fasta");
+	megaresSearch.open("../data/megares_database_v3.00(2).fasta");
 	string line = "";
 	string sequence = "";
 	while (std::getline(megaresSearch, line)) {
