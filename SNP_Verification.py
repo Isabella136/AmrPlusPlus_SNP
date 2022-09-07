@@ -265,5 +265,6 @@ for name, gene in geneDict.items():
         detailedOutput.close()
     
     gene.clearOutputInfo()
-
+if type(countMatrix) == pd.DataFrame:
+    countMatrix.to_csv(config['OUTPUT_FILES']['COUNT_MATRIX_FINAL'], index=False)
 sys.exit(0)
