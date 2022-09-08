@@ -3,9 +3,7 @@
 *.pyc
 *.ipch
 .vs/*
-SAM_files/*P_BPW_50_2*
-SAM_files/*S_BPW_50_1*
-SAM_files/*S_BPW_50_2*
+SAM_files/*
 SNPInfoExtraction/.vs/*
 SNPInfoExtraction/x64/*
 SNPInfoExtraction/*.vcxproj*
