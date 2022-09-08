@@ -111,11 +111,12 @@ class Gene:
         for key in this.outputInfo:
             this.outputInfo[key] = 0
         this.additionalInfo.clear()
-        this.longIndel = 0
     def getGeneTag(this):
         return this.geneTag
     def addToOutputInfo(this, index):
         this.outputInfo[index] += 1
+        if index == 0:
+            this.longIndel = 0
     def addDetails(this, read, info):
         if (type(info) == tuple):
             if 'Mult:' in info[-1]:
