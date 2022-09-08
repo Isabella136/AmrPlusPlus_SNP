@@ -7,7 +7,7 @@ The **AMRPlusPlus_SNP** repository contains multiple progams used to either extr
 
 ### For Mac and Linux
 
-1. If not already done so, install latest version of Python3 and of the pysam module
+1. If not already done so, install latest version of Python3 and of the pysam and pandas modules
 2. Open terminal
 3. Install the AMRPlusPlus_SNP repo by typing `gh repo clone https://github.com/Isabella136/AmrPlusPlus_SNP`
 4. Run the SNP_Verification.py program by typing `python3 ./SNP_Verification.py -i <inputFile> -o <outputFolder>`
