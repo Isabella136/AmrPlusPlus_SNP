@@ -211,7 +211,10 @@ def appendGeneOutputInfo(name, outputInfo, file, countMatrix):
             index = countMatrix['gene_accession'][countMatrix['gene_accession']==name].index[0]
             prevResCount = countMatrix.loc[index, config['SOURCE_FILES']['SAM_INPUT'].split('/')[-1].split('.')[0]]
             if prevResCount != 0:
-                countMatrix.loc[index, config['SOURCE_FILES']['SAM_INPUT'].split('/')[-1].split('.')[0]] = outputInfo[1]
+                newCount = outputInfo[1]
+                if len(outputInfo) == 10:                                   #If gene is intrinsic
+                    newCount += (outputInfo[2] + outputInfo[5])             #Adds 'some' and 'acquired' counts
+                countMatrix.loc[index, config['SOURCE_FILES']['SAM_INPUT'].split('/')[-1].split('.')[0]] = newCount
 
 
 #Create output files and write headers
