@@ -19,9 +19,20 @@
 *Nuc* stands for nucleic; although the .sam input contains DNA reads, most mutations in protein-coding genes such as MEG_1730 are reported in their amino-acid form.  
 That being said, not all genes in MEGARes are proteing-coding, as seen with MEG_1 and MEG_3740.
 Indeed, the 16S and 23S subunits of the ribosome are RNA sequences, and it would therefore be useless to use the amino-acid form when describing mutations.  
-To identify which mutations belong to rRNA-coding sequences, the SNP_Verification program needs to recognize the *Nuc* notation at the start of a mutation label.
+To identify which mutations belong to rRNA-coding sequences, the SNP_Verification program needs to recognize the *Nuc* notation at the start of a mutation label.  
+Finally, some rRNA gene have been shown to contain more than one resistance-conferring mutation at the same base; base pair 2071 in MEG_3740 can either be mutated in a C, a G, or a T.
 ## The *Mis* notation, or the original SNP
+| Accession Number | Type  | Class            | Mechanism                                              | Group  | Mutations                |                         |                       |                       |                       |                       |
+|------------------|-------|------------------|--------------------------------------------------------|--------|--------------------------|-------------------------|-----------------------|-----------------------|-----------------------|-----------------------|
+| MEG_3178         | Drugs | Fluoroquinolones | Fluoroquinolone-resistant_DNA_topoisomerases           | GYRA   | Mis:S83L_HPHGD_AVYDT     |                         |                       |                       |                       |                       |
+| MEG_3244         | Drugs | Aminocoumarins   | Aminocoumarin-resistant_DNA_topoisomerases             | GYRBA  | Mis:R136CHS_ELVIQ_EGKIH  | Mis:G164V_ETEKT_TMVRF   |                       |                       |                       |                       |
+| MEG_6136         | Drugs | Rifampin         | Rifampin-resistant_beta-subunit_of_RNA_polymerase_RpoB | RPOB   | Mis:H481N_LAELT_KRRLS    | Mis:Q468K_SSQLS_FMDQA   | Mis:A473T_QFMDQ_NPLAE | Mis:Q465R_FFGSS_LSQFM | Mis:L466S_FGSSQ_SQFMD | Mis:A477T_QANPL_ELTHK |
 
+Single-nucleotide polymorphism, or SNPs for short, are exactly what their name implies—a mutation that changed one base pair from the original sequence.  
+At times, a SNP can cause a missense mutation which would lead to a change in one amino acid in the protein sequence.  
+This is the case for MEG_3178 where the S83L missense mutation was caused by a SNP in the DNA sequence.  
+Some of those genes have more than one missense mutation that results in antimicrobial resistance; such is the case with MEG_6136, which can have one of six different missense mutations.  
+Finally, some of those genes also have more than one resistance-conferring missense mutation at the same position; R136 in MEG_3244 can either be mutated into a C, an H, or an S.
 ## *Nonsense*, an unexpected stop codon
 ## *Nonstop* and the reason why we don't have a *Non* notation
 ## *Hyper*: why nonresistant SNPs are included
