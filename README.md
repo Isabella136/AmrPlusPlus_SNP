@@ -10,7 +10,7 @@ The **AMRPlusPlus_SNP** repository contains multiple progams used to either extr
 1. If not already done so, install latest version of Python3 and of the pysam and pandas modules
 2. Open terminal
 3. Install the AMRPlusPlus_SNP repo by typing `gh repo clone https://github.com/Isabella136/AmrPlusPlus_SNP`
-4. Run the SNP_Verification.py program by typing `python3 /SNP_Verification.py`
+4. Run the SNP_Verification.py program by typing `python3 SNP_Verification.py`
 
 ### For Windows
 
@@ -36,11 +36,10 @@ Currently, pysam is difficult to install on Windows, therefore it is recommended
 Contains all SNP information extracted from `SNPInfoExtraction` (see `in-depth` branch), the megares database, and sample input/output.
 
 ### *SNP_Verification_Process* and *SNP_Verification_Tools* Folder
-Contains the `SNP_Verification` program that verifies SAM files (such as the ones in the *SAM_files* folder) for resistance-conferring SNPs.  
-Uses all of the SNP information saved in the *extracted_SNP_files* folder.  
-Is currently in the Testing phase
+Contains the `SNP_Verification` program that verifies SAM files for resistance-conferring SNPs.  
+Uses all of the SNP information saved in the *data* folder.  
 
 ## More Information
 - [Genes Issues](https://github.com/Isabella136/AmrPlusPlus_SNP/blob/main/genes-issues.md)
-- [Usage]()
+- [Usage](https://github.com/Isabella136/AmrPlusPlus_SNP/blob/main/usage.md)
 - [SNP Info Guide](https://github.com/Isabella136/AmrPlusPlus_SNP/blob/main/data/SNPInfoGuide.md)
