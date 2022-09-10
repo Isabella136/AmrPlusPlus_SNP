@@ -50,6 +50,7 @@ except getopt.GetoptError:
 i = 0
 confChanged = False
 output = False
+countMatrixFinal = False
 for opt, arg in options:
     if opt == "-h":
         print("""
@@ -109,7 +110,9 @@ for opt, arg in options:
         config['SOURCE_FILES']['SAM_INPUT'] = arg
         if output:
             temp = config['OUTPUT_FILES']['OUTPUT_FOLDER'][:config['OUTPUT_FILES']['OUTPUT_FOLDER'].rfind('/')]
-            config['OUTPUT_FILES']['OUTPUT_FOLDER'] = temp + "/" + config['SOURCE_FILES']['SAM_INPUT'].split('/')[-1].split('.')[0]  
+            config['OUTPUT_FILES']['OUTPUT_FOLDER'] = temp + "/" + config['SOURCE_FILES']['SAM_INPUT'].split('/')[-1].split('.')[0]
+        else:
+            config['OUTPUT_FILES']['OUTPUT_FOLDER'] = config['OUTPUT_FILES']['OUTPUT_FOLDER'] + "/" + config['SOURCE_FILES']['SAM_INPUT'].split('/')[-1].split('.')[0]
     elif opt == "-o":
         if i == 0:
             config.read(configFile)
@@ -136,13 +139,14 @@ for opt, arg in options:
     elif opt == "--count_matrix=":
         if i == 0:
             config.read(configFile)
-        if config['OUTPUT_FILES']['COUNT_MATRIX_FINAL'] == config['SOURCE_FILES']['COUNT_MATRIX']:
+        if not(countMatrixFinal):
             config['OUTPUT_FILES']['COUNT_MATRIX_FINAL'] = arg
         config['SOURCE_FILES']['COUNT_MATRIX'] = arg
     elif opt == "--count_matrix_final=":
         if i == 0:
             config.read(configFile)
         config['OUTPUT_FILES']['COUNT_MATRIX_FINAL'] = arg
+        countMatrixFinal = True
     i += 1
 
 if (i == 0) or ((i == 1) and confChanged):
@@ -160,7 +164,7 @@ else:
         config.write(configFileTemp)
 
 if not(os.path.exists(config['OUTPUT_FILES']['OUTPUT_FOLDER'])):
-    os.mkdir(config['OUTPUT_FILES']['OUTPUT_FOLDER'])
+    os.makedirs(config['OUTPUT_FILES']['OUTPUT_FOLDER'])
 if config.getboolean('SETTINGS', 'DETAILED') and not(os.path.exists(config['OUTPUT_FILES']['OUTPUT_FOLDER'] + config['OUTPUT_FILES']['DETAILED_FOLDER'])):
     os.mkdir(config['OUTPUT_FILES']['OUTPUT_FOLDER'] + config['OUTPUT_FILES']['DETAILED_FOLDER'])
 if not(os.path.exists(config['TEMP_FILES']['TEMP_SAM_SORTED'][:config['TEMP_FILES']['TEMP_SAM_SORTED'].rfind('/')])):
