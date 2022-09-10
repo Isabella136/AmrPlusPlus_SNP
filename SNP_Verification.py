@@ -199,7 +199,7 @@ for read in iter:
         continue
     elif (read.cigarstring == None):
         continue
-    elif (len(argList) != 0) and (gene.split("|")[0] not in argList):
+    elif (len(argList) != 0) and (gene.getName().split("|")[0] not in argList):
         continue
     verify(read, gene, config)
     gene.resetForNextRead()
@@ -245,7 +245,7 @@ if config.getboolean('SETTINGS', 'AMRPLUSPLUS'):
     countMatrix = pd.read_csv(config['OUTPUT_FILES']['COUNT_MATRIX_FINAL'])
 
 for name, gene in geneDict.items():
-    if (len(argList) != 0) and (gene.split("|")[0] not in argList):
+    if (len(argList) != 0) and (gene.getName().split("|")[0] not in argList):
         continue
     tag = gene.getGeneTag()
     if tag == 'N':
