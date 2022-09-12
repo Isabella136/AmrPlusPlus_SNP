@@ -136,20 +136,20 @@ for opt, arg in options:
             config['SETTINGS']['DETAILED'] = "true"
             if arg != "all":
                 argList = arg.split(',')
-    elif opt == "--count_matrix=":
+    elif opt == "--count_matrix":
         if i == 0:
             config.read(configFile)
         if not(countMatrixFinal):
             config['OUTPUT_FILES']['COUNT_MATRIX_FINAL'] = arg
         config['SOURCE_FILES']['COUNT_MATRIX'] = arg
-    elif opt == "--count_matrix_final=":
+    elif opt == "--count_matrix_final":
         if i == 0:
             config.read(configFile)
         config['OUTPUT_FILES']['COUNT_MATRIX_FINAL'] = arg
         countMatrixFinal = True
     i += 1
 
-if (i == 0) or ((i == 1) and confChanged):
+if (i == 0):
     config.read(configFile)
 else:
     newConfigFile = configFile[:configFile.rfind('.')]
