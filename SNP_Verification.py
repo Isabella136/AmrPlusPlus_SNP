@@ -165,6 +165,15 @@ else:
 
 if not(os.path.exists(config['OUTPUT_FILES']['OUTPUT_FOLDER'])):
     os.makedirs(config['OUTPUT_FILES']['OUTPUT_FOLDER'])
+if config.getboolean('SETTINGS', 'AMRPLUSPLUS'):
+    if config['OUTPUT_FILES']['COUNT_MATRIX_FINAL'].find('/') != -1:
+        if not(os.path.exists(config['OUTPUT_FILES']['COUNT_MATRIX_FINAL'][:config['OUTPUT_FILES']['COUNT_MATRIX_FINAL'].find('/')])):
+            os.makedirs(config['OUTPUT_FILES']['COUNT_MATRIX_FINAL'][:config['OUTPUT_FILES']['COUNT_MATRIX_FINAL'].find('/')])
+            with open(config['OUTPUT_FILES']['COUNT_MATRIX_FINAL'], 'w') as fp: pass
+        elif not(os.path.exists(config['OUTPUT_FILES']['COUNT_MATRIX_FINAL'])):
+            with open(config['OUTPUT_FILES']['COUNT_MATRIX_FINAL'], 'w') as fp: pass
+    elif not(os.path.exists(config['OUTPUT_FILES']['COUNT_MATRIX_FINAL'])):
+        with open(config['OUTPUT_FILES']['COUNT_MATRIX_FINAL'], 'w') as fp: pass
 if config.getboolean('SETTINGS', 'DETAILED') and not(os.path.exists(config['OUTPUT_FILES']['OUTPUT_FOLDER'] + config['OUTPUT_FILES']['DETAILED_FOLDER'])):
     os.mkdir(config['OUTPUT_FILES']['OUTPUT_FOLDER'] + config['OUTPUT_FILES']['DETAILED_FOLDER'])
 if not(os.path.exists(config['TEMP_FILES']['TEMP_SAM_SORTED'][:config['TEMP_FILES']['TEMP_SAM_SORTED'].rfind('/')])):
