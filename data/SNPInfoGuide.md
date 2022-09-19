@@ -1,14 +1,14 @@
 # SNP Info Guide - Understanding the SNP Info annotation scheme
 ## Table of Contents
-- [What does *Nuc* mean?](https://github.com/Isabella136/AmrPlusPlus_SNP/new/main/data/SNPInfoGuide.md#what-does-nuc-mean)
-- [The *Mis* notation, or the original SNP](https://github.com/Isabella136/AmrPlusPlus_SNP/new/main/data/SNPInfoGuide.md#the-mis-notation-or-the-original-snp)
-- [*Nonsense*, an unexpected stop codon](https://github.com/Isabella136/AmrPlusPlus_SNP/new/main/data/SNPInfoGuide.md#nonsense-an-unexpected-stop-codon)
-- [*Nonstop* and and its different reasons for existing](https://github.com/Isabella136/AmrPlusPlus_SNP/edit/main/data/SNPInfoGuide.md#nonstop-and-its-different-reasons-for-existing)
-- [*Hyper*: why nonresistant SNPs are included](https://github.com/Isabella136/AmrPlusPlus_SNP/new/main/data/SNPInfoGuide.md#hyper-why-nonresistant-snps-are-included)
-- [Straying away from SNPs with *Ins* and *Del*](https://github.com/Isabella136/AmrPlusPlus_SNP/new/main/data/SNPInfoGuide.md#straying-away-from-snps-with-ins-and-del)
-- [*Mult* because not all mutations come in ones](https://github.com/Isabella136/AmrPlusPlus_SNP/new/main/data/SNPInfoGuide.md#mult-because-not-all-mutations-come-in-ones)
-- [So what about *Must*?](https://github.com/Isabella136/AmrPlusPlus_SNP/new/main/data/SNPInfoGuide.md#so-what-about-must)
-- [*FS*, the new label that requires confirmation](https://github.com/Isabella136/AmrPlusPlus_SNP/edit/main/data/SNPInfoGuide.md#fs-the-new-label-that-requires-confirmation)
+- [What does *Nuc* mean?](https://github.com/Isabella136/AmrPlusPlus_SNP/new/main/data#what-does-nuc-mean)
+- [The *Mis* notation, or the original SNP](https://github.com/Isabella136/AmrPlusPlus_SNP/new/main/data#the-mis-notation-or-the-original-snp)
+- [*Nonsense*, an unexpected stop codon](https://github.com/Isabella136/AmrPlusPlus_SNP/new/main/data#nonsense-an-unexpected-stop-codon)
+- [*Nonstop* and and its different reasons for existing](https://github.com/Isabella136/AmrPlusPlus_SNP/edit/main/data#nonstop-and-its-different-reasons-for-existing)
+- [*Hyper*: why nonresistant SNPs are included](https://github.com/Isabella136/AmrPlusPlus_SNP/new/main/data#hyper-why-nonresistant-snps-are-included)
+- [Straying away from SNPs with *Ins* and *Del*](https://github.com/Isabella136/AmrPlusPlus_SNP/new/main/data#straying-away-from-snps-with-ins-and-del)
+- [*Mult* because not all mutations come in ones](https://github.com/Isabella136/AmrPlusPlus_SNP/new/main/data#mult-because-not-all-mutations-come-in-ones)
+- [So what about *Must*?](https://github.com/Isabella136/AmrPlusPlus_SNP/new/main/data#so-what-about-must)
+- [*FS*, the new label that requires confirmation](https://github.com/Isabella136/AmrPlusPlus_SNP/edit/main/data#fs-the-new-label-that-requires-confirmation)
 
 ## What does *Nuc* mean?
 | Accession Number | Type  | Class                 | Mechanism                                              | Group  | Mutations                |                         |                        |                      |
