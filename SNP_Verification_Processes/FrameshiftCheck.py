@@ -69,7 +69,7 @@ def MEG_6142Check(read, gene):
     endIndex = -1 * read.cigartuples[-1][1] if read.cigartuples[-1][0] == 4 else 0
     aligned_pairs = read.get_aligned_pairs()[startIndex:]               #Removes soft-clipping
     if endIndex != 0:
-        aligned_pairs[:endIndex]
+        aligned_pairs = aligned_pairs[:endIndex]
     shiftCount = 0                                                      #If pos, more ins; if neg. more del
     queryIndex = -1
     stopCodon = ["TAA", "TGA", "TAG"]
@@ -119,7 +119,7 @@ def MEG_6094Check(read, gene, removeFromLongFrameshiftCheck):
     endIndex = -1 * read.cigartuples[-1][1] if read.cigartuples[-1][0] == 4 else 0
     aligned_pairs = read.get_aligned_pairs()[startIndex:]               #Removes soft-clipping
     if endIndex != 0:
-        aligned_pairs[:endIndex]
+        aligned_pairs = aligned_pairs[:endIndex]
     shiftCount = 0                                                      #If pos, more ins; if neg. more del
     inCodon531 = False
     hasCinsertion = False

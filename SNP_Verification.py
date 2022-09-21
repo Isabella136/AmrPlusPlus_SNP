@@ -48,7 +48,9 @@ except getopt.GetoptError:
     sys.exit(-1)
 
 i = 0
+confChanged = False
 output = False
+countMatrixFinal = False
 for opt, arg in options:
     if opt == "-h":
         print("""
@@ -101,13 +103,16 @@ for opt, arg in options:
             sys.exit(-1)
         configFile = arg
         config.read(configFile)
+        confChanged = True
     elif opt == "-i":
         if i == 0:
             config.read(configFile)
         config['SOURCE_FILES']['SAM_INPUT'] = arg
         if output:
             temp = config['OUTPUT_FILES']['OUTPUT_FOLDER'][:config['OUTPUT_FILES']['OUTPUT_FOLDER'].rfind('/')]
-            config['OUTPUT_FILES']['OUTPUT_FOLDER'] = temp + "/" + config['SOURCE_FILES']['SAM_INPUT'].split('/')[-1].split('.')[0]  
+            config['OUTPUT_FILES']['OUTPUT_FOLDER'] = temp + "/" + config['SOURCE_FILES']['SAM_INPUT'].split('/')[-1].split('.')[0]
+        else:
+            config['OUTPUT_FILES']['OUTPUT_FOLDER'] = config['OUTPUT_FILES']['OUTPUT_FOLDER'] + "/" + config['SOURCE_FILES']['SAM_INPUT'].split('/')[-1].split('.')[0]
     elif opt == "-o":
         if i == 0:
             config.read(configFile)
@@ -131,19 +136,20 @@ for opt, arg in options:
             config['SETTINGS']['DETAILED'] = "true"
             if arg != "all":
                 argList = arg.split(',')
-    elif opt == "--count_matrix=":
+    elif opt == "--count_matrix":
         if i == 0:
             config.read(configFile)
-        if config['OUTPUT_FILES']['COUNT_MATRIX_FINAL'] == config['SOURCE_FILES']['COUNT_MATRIX']:
+        if not(countMatrixFinal):
             config['OUTPUT_FILES']['COUNT_MATRIX_FINAL'] = arg
         config['SOURCE_FILES']['COUNT_MATRIX'] = arg
-    elif opt == "--count_matrix_final=":
+    elif opt == "--count_matrix_final":
         if i == 0:
             config.read(configFile)
         config['OUTPUT_FILES']['COUNT_MATRIX_FINAL'] = arg
+        countMatrixFinal = True
     i += 1
 
-if i == 0:
+if (i == 0):
     config.read(configFile)
 else:
     newConfigFile = configFile[:configFile.rfind('.')]
@@ -158,7 +164,16 @@ else:
         config.write(configFileTemp)
 
 if not(os.path.exists(config['OUTPUT_FILES']['OUTPUT_FOLDER'])):
-    os.mkdir(config['OUTPUT_FILES']['OUTPUT_FOLDER'])
+    os.makedirs(config['OUTPUT_FILES']['OUTPUT_FOLDER'])
+if config.getboolean('SETTINGS', 'AMRPLUSPLUS'):
+    if config['OUTPUT_FILES']['COUNT_MATRIX_FINAL'].find('/') != -1:
+        if not(os.path.exists(config['OUTPUT_FILES']['COUNT_MATRIX_FINAL'][:config['OUTPUT_FILES']['COUNT_MATRIX_FINAL'].find('/')])):
+            os.makedirs(config['OUTPUT_FILES']['COUNT_MATRIX_FINAL'][:config['OUTPUT_FILES']['COUNT_MATRIX_FINAL'].find('/')])
+            with open(config['OUTPUT_FILES']['COUNT_MATRIX_FINAL'], 'w') as fp: pass
+        elif not(os.path.exists(config['OUTPUT_FILES']['COUNT_MATRIX_FINAL'])):
+            with open(config['OUTPUT_FILES']['COUNT_MATRIX_FINAL'], 'w') as fp: pass
+    elif not(os.path.exists(config['OUTPUT_FILES']['COUNT_MATRIX_FINAL'])):
+        with open(config['OUTPUT_FILES']['COUNT_MATRIX_FINAL'], 'w') as fp: pass
 if config.getboolean('SETTINGS', 'DETAILED') and not(os.path.exists(config['OUTPUT_FILES']['OUTPUT_FOLDER'] + config['OUTPUT_FILES']['DETAILED_FOLDER'])):
     os.mkdir(config['OUTPUT_FILES']['OUTPUT_FOLDER'] + config['OUTPUT_FILES']['DETAILED_FOLDER'])
 if not(os.path.exists(config['TEMP_FILES']['TEMP_SAM_SORTED'][:config['TEMP_FILES']['TEMP_SAM_SORTED'].rfind('/')])):
@@ -193,7 +208,7 @@ for read in iter:
         continue
     elif (read.cigarstring == None):
         continue
-    elif (len(argList) != 0) and (gene.split("|")[0] not in argList):
+    elif (len(argList) != 0) and (gene.getName().split("|")[0] not in argList):
         continue
     verify(read, gene, config)
     gene.resetForNextRead()
@@ -209,7 +224,10 @@ def appendGeneOutputInfo(name, outputInfo, file, countMatrix):
             index = countMatrix['gene_accession'][countMatrix['gene_accession']==name].index[0]
             prevResCount = countMatrix.loc[index, config['SOURCE_FILES']['SAM_INPUT'].split('/')[-1].split('.')[0]]
             if prevResCount != 0:
-                countMatrix.loc[index, config['SOURCE_FILES']['SAM_INPUT'].split('/')[-1].split('.')[0]] = outputInfo[1]
+                newCount = outputInfo[1]
+                if len(outputInfo) == 10:                                   #If gene is intrinsic
+                    newCount += (outputInfo[2] + outputInfo[5])             #Adds 'some' and 'acquired' counts
+                countMatrix.loc[index, config['SOURCE_FILES']['SAM_INPUT'].split('/')[-1].split('.')[0]] = newCount
 
 
 #Create output files and write headers
@@ -236,7 +254,7 @@ if config.getboolean('SETTINGS', 'AMRPLUSPLUS'):
     countMatrix = pd.read_csv(config['OUTPUT_FILES']['COUNT_MATRIX_FINAL'])
 
 for name, gene in geneDict.items():
-    if (len(argList) != 0) and (gene.split("|")[0] not in argList):
+    if (len(argList) != 0) and (gene.getName().split("|")[0] not in argList):
         continue
     tag = gene.getGeneTag()
     if tag == 'N':
