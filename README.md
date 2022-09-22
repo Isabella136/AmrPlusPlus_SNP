@@ -35,11 +35,30 @@ Currently, pysam is difficult to install on Windows, therefore it is recommended
 ### *data* Folder
 Contains all SNP information extracted from `SNPInfoExtraction` (see `in-depth` branch), the megares database, and sample input/output.
 
+### *InfoExtraction* Folder
+Contains the following three folders:
+
+#### *KargvaInfoExtraction* Folder
+Contains the `KargvaInfoExtracion` program that extracts SNP information retrieved from the database in the [KARGVA](https://github.com/DataIntellSystLab/KARGVA) repository and saves it in the *extracted_SNP_files* folder. 
+
+#### *LiteratureInfoExtraction* Folder
+Contains the `LiteratureInfoExtracion` program that extracts SNP information retrieved from the literature (which was previously compiled into the "SNPinfo_literature.csv" file) and saves it in the *extracted_SNP_files* folder.  
+
+#### *MetamarcInfoExtraction* Folder
+Contains the `MetamarcInfoExtraction` program that extracts SNP information retrieved from the database in the [MetaMARC](https://github.com/lakinsm/meta-marc) repository and saves it in the *extracted_SNP_files* folder.  
+Also contains the *metamarc_files* folder which includes the folowing files: 
+- "mmarc_model_members.csv": lists mmarc models and corresponding ARGs; ARGs are represented by their MEGARes v1 database header
+- "mmarc_snpsearch_metadata2.txt": lists of SNP information for each mmarc model 
+- "mmarc_snpsearch_metadata2_modified.txt": another version of the previous text file that has been modified for use by the `MetamarcInfoExtraction` program
+
+### *mapping_files* Folder
+Contains two csv files: the first file is used to map the MEGARes v1 database headers (used by **MetaMARC**) to headers used by external databases, and the second file is used to map the MEGARes v2 database headers (used by **AMRPlusPlus_SNP**) to headers used by external databases.
+
 ### *SNP_Verification_Process* and *SNP_Verification_Tools* Folder
 Contains the `SNP_Verification` program that verifies SAM files for resistance-conferring SNPs.  
 Uses all of the SNP information saved in the *data* folder.  
 
 ## More Information
-- [Genes Issues](https://github.com/Isabella136/AmrPlusPlus_SNP/blob/main/genes-issues.md)
+- [Genes Issues](https://github.com/Isabella136/AmrPlusPlus_SNP/blob/main/genes-issues%20(old).md)
 - [Usage](https://github.com/Isabella136/AmrPlusPlus_SNP/blob/main/usage.md)
 - [SNP Info Guide](https://github.com/Isabella136/AmrPlusPlus_SNP/blob/main/data/SNPInfoGuide.md)
