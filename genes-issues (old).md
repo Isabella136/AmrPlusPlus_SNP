@@ -1,4 +1,8 @@
-Genes that went through the MEG_6090_SNP_Alignment program:
+# Disclaimer
+This version of the genes-issues.md is outdated. However, because the new version of the genes-issues.md is still being updated, this file is kept as reference only. 
+
+# Genes Issues
+## Genes that went through the MEG_6090_SNP_Alignment program:
 - MEG_3241: The organism used to determine the SNPs was not the same as the one in CARD. Additionally, the sequence in Megares match the sequence in CARD, and there was too big of a difference between the Megares sequence and the sequence that the SNPs were based of. This program created an alignment between the two sequences to figure out the SNPs' positions based on the CARD/Megares sequence.
   - There were additionally three errors in Kargva, where the single mutations E466V, E466K, and R389P were instead written as E467V, E467K, and R388P respectively
   - There was also an error in Kargva, where the single mutation L444F was instead written as K444F
@@ -9,7 +13,7 @@ Genes that went through the MEG_6090_SNP_Alignment program:
   - I replaced the CARD sequence with the Megares sequence in the SNPInfoExtraction program to find the context
 -	MEG_6090: an overwhelming majority of SNPs’ positions are based on the E.coli rpoB gene instead of the M.tuberculosis rpoB gene. This program created an alignment between the two genes to figure out the affected SNPs’ positions based on the M.tuberculosis rpoB gene.
 
-Genes where SNPs had to be changed:
+## Genes where SNPs had to be changed:
 
 - MEG_2710: I found an error in CARD, where the double mutation A313G,Y319C was instead written as A314G,Y322C
 - MEG_3594: The organism used to determine the SNPs was not the same as the one in CARD, so I had to change the sequence used to find the context
@@ -26,7 +30,7 @@ Genes where SNPs had to be changed:
 -	MEG_7301: The strain used to determine the SNPs was not the same as the one in CARD, so I had to change the sequence used to find the context
 -	MEG_7333: The organism used to determine the SNPs was not the same as the one in CARD, so I had to change the sequence used to find the context
 
-Genes where SNPs had to be removed:
+## Genes where SNPs had to be removed:
 
 - MEG_2712: I found an error in CARD where the single mutation S244T actually comes from a different gene
 - MEG_3065: I couldn’t find the true positions for the single mutation F441Y and for the double mutation T387I,E449K
