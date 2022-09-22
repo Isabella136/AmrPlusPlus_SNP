@@ -1,44 +1,107 @@
-Genes that went through the MEG_6090_SNP_Alignment program:
-- MEG_3241: The organism used to determine the SNPs was not the same as the one in CARD. Additionally, the sequence in Megares match the sequence in CARD, and there was too big of a difference between the Megares sequence and the sequence that the SNPs were based of. This program created an alignment between the two sequences to figure out the SNPs' positions based on the CARD/Megares sequence.
-  - There were additionally three errors in Kargva, where the single mutations E466V, E466K, and R389P were instead written as E467V, E467K, and R388P respectively
-  - There was also an error in Kargva, where the single mutation L444F was instead written as K444F
-- MEG_3246: The sequence used to determine the SNPs was an older version of the one in CARD. Additionally, the sequence in Megares match the sequence in CARD, and there was too big of a difference between the Megares sequence and the sequence that the SNPs were based of. This program created an alignment between the two sequences to figure out the SNPs' positions based on the CARD/Megares sequence.
-  - There was also an error in Kargva, where the single mutation G124S was instead written as G125S
-- MEG_3243: the SNP Verification program only looks up to 30 amino acid away from the position provided by the SNP in order to match it to the Megares sequence. For MEG_3243, where the CARD sequence didn't match the Megares sequence, the distance was too small.
-  - This program created an alignment between the two sequences to figure out the affected SNPs’ positions based on the Megares sequence.
-  - I replaced the CARD sequence with the Megares sequence in the SNPInfoExtraction program to find the context
--	MEG_6090: an overwhelming majority of SNPs’ positions are based on the E.coli rpoB gene instead of the M.tuberculosis rpoB gene. This program created an alignment between the two genes to figure out the affected SNPs’ positions based on the M.tuberculosis rpoB gene.
+# Disclaimer
+This file is a work in progress
 
-Genes where SNPs had to be changed:
+# Genes Issues - Kargva/CARD
+## Problems with reference sequence
+### MEG_3594
+Reference sequence in CARD is from a different species than the reference sequence in article listed
+- CARD sequence is S. lincolnensis, which produced lincomycin; its lmrA is intrinsically resistant to lincomycin
+- Article sequence is B. subtilis which can acquire resistance in its lmrA gene through SNP 
+- SNP information for MEG_3594 is still included in SNPInfo database but is never used by the SNP_Verification program
+  - Information is based on article sequence
+### MEG_3994
+Despite being an rRNA sequence, the reference nucleotide sequence retrieved from CARD contains amino acid residues
+### MEG_5779
+Reference sequence in CARD is different from sequence in MEGARes
+- CARD sequence is a phosphatidyltransferase called pgsA
+- MEGARes sequence is a capsular polyglutamate synthetase called capA which is also known as pgsA in NCBI
+- SNP information for MEG_5779 is still included in SNPInfo database but is never used by the SNP_Verification program
+  - Info is based on CARD sequence
 
-- MEG_2710: I found an error in CARD, where the double mutation A313G,Y319C was instead written as A314G,Y322C
-- MEG_3594: The organism used to determine the SNPs was not the same as the one in CARD, so I had to change the sequence used to find the context
-- MEG_4057: The sequence used in CARD was outdated, so I had to change the sequence used to find the context
--	MEG_4296: In both Kargva and CARD, the SNP is entered as Q142X; however, when looking at the paper where the SNP was found, I found that Q142X actually meant Q142*
--	MEG_5325: When looking at other parC genes, I realized that SNP S80L had the wrong position and is actually SNP S87L
--	MEG_5406: When looking at the paper where all three SNPs were found, I realized that the positions are based on another version of the sequence that had 6 less amino acids at the beginning, so I simply added 6 to the SNPs’ positions.
-- MEG_5803: I found five errors in CARD:
-  - D8G was written as A8G
-  - W68D was written as Y68D
-  - R140S was written as A140S
-  - V157W was written as R157W
-  - L172P was written as L72P
--	MEG_7301: The strain used to determine the SNPs was not the same as the one in CARD, so I had to change the sequence used to find the context
--	MEG_7333: The organism used to determine the SNPs was not the same as the one in CARD, so I had to change the sequence used to find the context
+## Problems with mutations
+### MEG_413
+Mutations listed in CARD that are not present in articles referenced: 
+- R45C
 
-Genes where SNPs had to be removed:
+### MEG_414 [^1]
+Single mutations listed in CARD that are actually part of an *n*-tuple mutation:
+- Y114F - part of the double mutation Y114F, V165I
+- V165I - part of the double mutation Y114F, V165I
 
-- MEG_2712: I found an error in CARD where the single mutation S244T actually comes from a different gene
-- MEG_3065: I couldn’t find the true positions for the single mutation F441Y and for the double mutation T387I,E449K
-- MEG_3243: I hade to remove three single mutations, given below with the CARD positions:
-  - Looking at the article where N510D was found, I realized that the actual position of the SNP was 538. Since the SNP N538D is already accounted for, I decided to just remove N510D
-  - I couldn’t find the true positions for the single mutations E501D and N499T.
-- MEG_3446: I removed two mutations:
-  - A234G: the sequence in CARD has a G at that location; however, when looking at the catalase/peroxidase domain in other organisms, I found that G is the wild-type in other organisms as well, which made me feel unsure of the actual validity of this SNP
-  - A431V: the sequence in CARD has a V at that location; additionally, CARD also has V431A as a SNP; to verify which SNP was correct, I looked at the catalase/peroxidase domain in other organisms and found that V is the wild-type in other organisms.
-- MEG_4057: this was one of the genes where I had to change the sequence in order to find the context; the problem was that the sequence in Megares matches the sequence in CARD. Both of those sequence had deletions at codons 349 to 352, while the sequence used to find the context of SNPs does not. This led to the SNP at codon 351 being automatically disregarded by the SNP Verification program.
-  - The SNP at codon 347 was also disregarded by the program due to the fact that the context was now too different due to the deletions, so I tweaked the code so that it was forced to accept this SNP.
-- MEG_6090: the alignment between the E.coli rpoB gene and the M.tuberculosis rpoB gene led to a couple of SNPs with “unaligned” E.coli positions due to the fact that the amino acids at those positions in E.coli were different from the wild-type amino acid in the SNP; however, when using the surrounding amino acids that were aligned, I was able to figure out all M.tuberculosis positions except for one -> S622A. 
-  - Since S622A is part of a double mutation, S531L,S622A (using E.coli positions), and the single mutation S531L is a valid resistance-conferring SNP, I decided to simply remove the double mutation
-- MEG_7250: I couldn’t find the true position for the single mutation I211V.
-- MEG_7309: as a shorter TUFAB gene of the length of 300 aa, it didn't contain SNPs that are normally found in position 320 and after in other TUFAB genes
+Mutations missing from CARD:
+- Transposase insertion
+
+### MEG_1187
+Mutations missing from CARD:
+- R105S
+
+### MEG_1731
+Single mutations listed in CARD that are actually part of an *n*-tuple mutation:
+- +AII14-16 - part of double mutation +AII14-16, -NFQ74-76
+
+### MEG_1732
+Mutations listed wrong in CARD:
+- K59T - is actually a K59N mutation
+
+Mutations missing from CARD:
+- N13S
+
+### MEG_2710
+Mutations that are susceptible or neutral:
+- L413P
+- E504Q
+- D1024N
+
+Single mutations listed in CARD that are actually part of an *n*-tuple mutation:
+- R507G - part of double mutation M306I, R507G
+- R471P - part of double mutation D299E, R471P
+- R469P - part of double mutation D299E, R469P
+- I465D - part of double mutation D299E, I465D
+- P446H - part of double mutation D299E, P446H
+- P397Q - part of quadruple mutation M306V, E368A, S380R, P397Q
+- S380R - part of quadruple mutation M306V, E368A, S380R, P397Q
+- E378A - part of double mutation D299E, E378A
+- E368A - part of quadruple mutation M306V, E368A, S380R, P397Q
+
+Mutations listed wrong in CARD:
+- A314G,Y322C - is actually a A313G,Y319C double mutation
+
+Mutations missing from CARD:
+- A439T
+- H1002R
+- V282G
+- F285L
+- D328H
+
+*N*-tuple mutations that actually include at least one single mutation that can confer resistance by itself
+- A313G,Y319C - Y319C is already listed as a resistance-confering single mutation
+
+### MEG_2711
+Mutations that are suscepible or neutral: [^2]
+- Q998R
+- T610K
+- F1012S
+
+### MEG_2712
+Mutations listed in CARD that are not present in articles referenced: 
+- V287F
+- H285Y
+- A247P
+
+Mutations that are susceptible or neutral:
+- T270I
+
+Mutations missing from CARD:
+- E305D 
+- I406V
+
+*N*-tuple mutations that actually include at least one single mutation that can confer resistance by itself
+- A244T, G288W, V303G - not a single mutation, but G288W, V303G is already listd as a resistance-conferring double mutation
+- A247P, T270I, I297T - I297T is already listed as a resistance-conferring single mutation
+- A247P, I297L, W326R - I297L is already listed as a resistance-conferring single mutation
+- T270I, I297T - I297T is already listed as a resistance-conferring single mutation
+- T270I, I297L, W326R - I297L is already listed as a resistance-conferring single mutation
+- I297L, W326R - I297L is already listed as a resistance-conferring single mutation
+
+[^1]: Although the PMID is in progress under this particular entry, the original article was found in the MEG_6045 entry
+[^2]: All mutations in CARD are not resistance-conferring; therefore the gene is not present in the SNPInfo database
