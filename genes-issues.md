@@ -40,8 +40,9 @@ This file is a work in progress
     <li>R45C</li>
   </ul>
 </details>
+
 <details>
-  <summary><h3>MEG_414</h3></summary> 
+  <summary><h3>MEG_414<sup><a href="#footnote1" id="reference1">1</a></sup></h3></summary> 
   Single mutations listed in CARD that are actually part of an *n*-tuple mutation:
   <ul>
     <li>Y114F - part of the double mutation Y114F, V165I</li>
@@ -53,40 +54,72 @@ This file is a work in progress
   </ul>
 </details>
 
-### MEG_1187
-Mutations missing from CARD:
-- R105S
+<details>
+  <summary><h3>MEG_1187</h3></summary>
+  Mutations missing from CARD:
+  <ul>
+    <li>R105S</li>
+  </ul>
+</details>
 
-### MEG_1731
-Single mutations listed in CARD that are actually part of an *n*-tuple mutation:
-- +AII14-16 - part of double mutation +AII14-16, -NFQ74-76
+<details>
+  <summary><h3>MEG_1731</h3></summary>
+  Single mutations listed in CARD that are actually part of an *n*-tuple mutation:
+  <ul>
+    <li>+AII14-16 - part of double mutation +AII14-16, -NFQ74-76</li>
+  </ul>
+</details>
 
-### MEG_1732
-Mutations listed wrong in CARD:
-- K59T - is actually a K59N mutation
+<details>
+  <summary><h3>MEG_1732</h3></summary>
+  Mutations listed wrong in CARD:
+  <ul>
+    <li>K59T - is actually a K59N mutation</li>
+  </ul>
+  Mutations missing from CARD:
+  <ul>
+    <li>N13S</li>
+  </ul>
+</details>
 
-Mutations missing from CARD:
-- N13S
+<details>
+  <summary><h3>MEG_2710</h3></summary>
+  Mutations that are susceptible or neutral:
+  <ul>
+    <li>L413P</li>
+    <li>E504Q</li>
+    <li>D1024N</li>
+  </ul>
+  Single mutations listed in CARD that are actually part of an *n*-tuple mutation:
+  <ul>
+    <li>R507G - part of double mutation M306I, R507G</li>
+    <li>R471P - part of double mutation D299E, R471P</li>
+    <li>R469P - part of double mutation D299E, R469P</li>
+    <li>I465D - part of double mutation D299E, I465D</li>
+    <li>P446H - part of double mutation D299E, P446H</li>
+    <li>P397Q - part of quadruple mutation M306V, E368A, S380R, P397Q</li>
+    <li>S380R - part of quadruple mutation M306V, E368A, S380R, P397Q</li>
+    <li>E378A - part of double mutation D299E, E378A</li>
+    <li>E368A - part of quadruple mutation M306V, E368A, S380R, P397Q</li>
+  </ul>
+  Mutations listed wrong in CARD:
+  <ul>
+    <li>A314G,Y322C - is actually a A313G,Y319C double mutation</li>
+  </ul>
+  Mutations missing from CARD:
+  <ul>
+    <li>N13S</li>
+  </ul>
+  Mutations listed wrong in CARD:
+  <ul>
+    <li>K59T - is actually a K59N mutation</li>
+  </ul>
+  Mutations missing from CARD:
+  <ul>
+    <li>N13S</li>
+  </ul>
+</details>
 
-### MEG_2710
-Mutations that are susceptible or neutral:
-- L413P
-- E504Q
-- D1024N
-
-Single mutations listed in CARD that are actually part of an *n*-tuple mutation:
-- R507G - part of double mutation M306I, R507G
-- R471P - part of double mutation D299E, R471P
-- R469P - part of double mutation D299E, R469P
-- I465D - part of double mutation D299E, I465D
-- P446H - part of double mutation D299E, P446H
-- P397Q - part of quadruple mutation M306V, E368A, S380R, P397Q
-- S380R - part of quadruple mutation M306V, E368A, S380R, P397Q
-- E378A - part of double mutation D299E, E378A
-- E368A - part of quadruple mutation M306V, E368A, S380R, P397Q
-
-Mutations listed wrong in CARD:
-- A314G,Y322C - is actually a A313G,Y319C double mutation
 
 Mutations missing from CARD:
 - A439T
@@ -142,6 +175,10 @@ Mutations missing from CARD:
 
 ### MEG_2866
 
+---
 
-[^1]: Although the PMID is in progress under this particular entry, the original article was found in the MEG_6045 entry
+<sup id="footnote1">
+  1.Although the PMID is in progress under this particular entry, the original article was found in the MEG_6045 entry <a href="#reference1">↩</a>
+</sup>
+
 [^2]: All mutations in CARD are not resistance-conferring; therefore the gene is not present in the SNPInfo database
