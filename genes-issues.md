@@ -105,6 +105,7 @@ This file is a work in progress
   Mutations listed wrong in CARD:
   <ul>
     <li>A314G,Y322C - is actually a A313G,Y319C double mutation</li>
+    <li>S244T - actually comes from a different gene</li>
   </ul>
   Mutations missing from CARD:
   <ul>
@@ -387,35 +388,201 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_3243<sup><a href="#footnote8" id="reference8">8</a></sup></h3></summary>
-  Mutations listed in CARD that are not present in articles referenced:
-  <ul>
-    <li>InsertHere</li>
-  </ul>
   Mutations that are susceptible or neutral:
   <ul>
-    <li>InsertHere</li>
-  </ul>
-  Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
-  <ul>
-    <li>InsertHere - part of double mutation InsertHere</li>
+    <li>V340L</li>
   </ul>
   Mutations listed wrong in CARD:
   <ul>
-    <li>InsertHere - is actually a InsertHere mutation</li>
-  </ul>
-  Mutations listed wrong in KARGVA:
-  <ul>
-    <li>InsertHere - is actually a InsertHere mutation</li>
-  </ul>
-  Mutations missing from CARD:
-  <ul>
-    <li>InsertHere</li>
+    <li>N510D - is actually a N538D mutation</li>
+    <li>D472H  - is actually a D500H mutation</li>
   </ul>
   <em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:
   <ul>
-    <li>InsertHere - InsertHere is already listed as a resistance-conferring single mutation</li>
+    <li>MEG_3180 G247S, MEG_3243 D500N - MEG_3243 D500N is already listed as a resistance-conferring single mutation</li>
   </ul>
 </details>
+
+<details>
+  <summary><h3>MEG_3244</h3></summary>
+  Mutations listed in CARD that are not present in articles referenced:
+  <ul>
+    <li>R136I</li>
+    <li>R136E</li>
+    <li>R136G</li>
+    <li>R136L</li>
+  </ul>
+  Mutations missing from CARD:
+  <ul>
+    <li>G164V</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_3245<sup><a href="#footnote9" id="reference9">9</a></sup></h3></summary>
+  Mutations that are susceptible or neutral:
+  <ul>
+    <li>S128L</li>
+  </ul>
+  Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
+  <ul>
+    <li>I56S - part of double mutation I56S, R144S</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_3246<sup><a href="#footnote10" id="reference10">10</a></sup></h3></summary>
+  Mutations listed wrong in KARGVA:
+  <ul>
+    <li>G125S - is actually a G124S mutation</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_3429</h3></summary>
+  Mutations listed in CARD that are not present in articles referenced:
+  <ul>
+    <li>I21T</li>
+  </ul>
+  Mutations that are susceptible or neutral:
+  <ul>
+    <li>G3G</li>
+  </ul>
+  Mutations listed wrong in CARD:
+  <ul>
+    <li>V78A - is actually a S94A mutation</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_3430</h3></summary>
+  Mutations missing from CARD:
+  <ul>
+    <li>5 bp deletion from nt 282 to 286</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_3445</h3></summary>
+  Mutations that are susceptible or neutral:
+  <ul>
+    <li>G312S</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_3446</h3></summary>
+  Mutations removed due to conflicting evidence:
+  <ul>
+    <li>A234G - G is the wild-type for this organism
+      <ul>
+        <li>When looking at the catalase/peroxidase domain in other organisms, G is the wild-type as well</li>
+        <li>Additionally, all instances of A234G mutations were accompanied with nonsense mutations</li>
+      </ul>
+    </li>
+    <li>A431V - V is the wild-type for this organism
+      <ul>
+        <li>CARD also has V431A as a SNP</li>
+        <li>When looking at the catalase/peroxidase domain in other organisms; V is the wild-type as well</li>
+        <li>However, A431V is a single mutation, while V431A is in a double mutation with G490S
+          <ul>
+            <li>G490S is also a single mutation</li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+  Mutations listed in CARD that are not present in articles referenced:
+  <ul>
+    <li>G593D</li>
+  </ul>
+  Mutations that are susceptible or neutral:
+  <ul>
+    <li>R463L</li>
+  </ul>
+  Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
+  <ul>
+    <li>S17T - part of triple mutation S17T, T insertion at nt 277<sup><a href="#footnote11" id="reference11">11</a></sup>, and S315T</li>
+    <li>V68G - part of triple mutation V68G, A234G, E454*<sup><a href="#footnote11" id="reference11">11</a></sup></li>
+    <li>Y98C - part of triple mutation Y98C, A349T, R463L</li>
+    <li>G123E - part of double mutation G123E, G299S</li>
+    <li>P131R - part of double mutation P131R, D194Y </li>
+    <li>D194Y - part of double mutation P131R, D194Y </li>
+    <li>D194G - part of triple mutation D194G, S315T, M624V</li>
+    <li>G299S - part of double mutation G123E, G299S</li>
+    <li>A349T - part of triple mutation Y98C, A349T, R463L</li>
+    <li>D387H - part of double mutation S315T, D387H</li>
+    <li>M624V - part of triple mutation D194G, S315T, M624V</li>
+  </ul>
+  Mutations listed wrong in CARD:
+  <ul>
+    <li>D36E - is actually a D63E mutation</li>
+    <li>G300W - is actually a W300G mutation</li>
+    <li>A717P - is actually a A716P mutation</li>
+  </ul>
+  Mutations missing from CARD:
+  <ul>
+    <li>K46*<sup><a href="#footnote11" id="reference11">11</a></sup>, A234G</li>
+    <li>R128P</li>
+    <li>N138H</li>
+    <li>N138T</li>
+    <li>L148R</li>
+    <li>A172T</li>
+    <li>E195K</li>
+    <li>W198*</li>
+    <li>W204R</li>
+    <li>E217G</li>
+    <li>A264V</li>
+    <li>H270Q</li>
+    <li>G285C</li>
+    <li>Y304S</li>
+    <li>T308P</li>
+    <li>W321G</li>
+    <li>L336P</li>
+    <li>W341S</li>
+    <li>T344P</li>
+    <li>D381G</li>
+    <li>K414N</li>
+    <li>K433Q, Q434A, T435D</li>
+    <li>V473*</li>
+    <li>G490S - by itself</li>
+    <li>G491D</li>
+    <li>G491V</li>
+    <li>W505S</li>
+    <li>R515C</li>
+    <li>D735A</li>
+    <li>Deletion of amino acids W191 and E192 </li>
+    <li>Deletion of nucleotides 478 and 479</li>
+    <li>Deletion of nucleotide 371</li>
+    <li>Single bp insertion in codon 304</li>
+    <li>Single bp insertion in codon 521</li>
+    <li>8bp deletion from codon 217 to 219</li>
+    <li>22bp deletion from codon 289 to codon 296</li>
+    <li>GGTC insertion in codon 518</li>
+    <li>C deletion at nt 6</li>
+    <li>A deletion at nt 12</li>
+    <li>C deletion at nt 33</li>
+    <li>G deletion at nt 78</li>
+    <li>G deletion at nt 193</li>
+    <li>G deletion at nt 201</li>
+    <li>G deletion at nt 320</li>
+    <li>T insertion at nt 344</li>
+    <li>G deletion at nt 1245</li>
+    <li>G insertion at nt 1317</li>
+    <li>A deletion at nt 1384</li>
+    <li>G deletion at nt 1453</li>
+    <li>G deletion at nt 1472</li>
+    <li>A deletion at nt 1477</li>
+  </ul>
+  <em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:
+  <ul>
+    <li>Y98C, A349T, R463L - Not a single mutation, but because R463L is a neutral mutation, only Y98C and A349T confer resistance here
+    <li>D194G, S315T, M624V - S315T is already listed as a resistance-conferring single mutation</li>
+    <li>S315T, D387H - S315T is already listed as a resistance-conferring single mutation</li>
+    <li>V431A, G490S - G490S is already listed as a resistance-conferring single mutation</li>
+  </ul>
+</details>
+
 
 
 ---
@@ -442,5 +609,15 @@ This file is a work in progress
   7. The organism used to determine the mutations was not the same as the one in CARD/MEGARes, so a pairwise alignment between the two sequences was made to figure out the SNPs' positions based on the CARD/MEGARes sequence. However, the original positions are used in this file when referring to mutations <a href="#reference7">↩</a>
 </sup><br>
 <sup id="footnote8">
-  8. The sequence in CARD didn't match the sequence in MEGARes, so a pairwise alignment between the two sequences was made to figure out the SNPs' positions based on the /MEGARes sequence. However, the original positions are used in this file when referring to mutations <a href="#reference8">↩</a>
+  8. The sequence in CARD didn't match the sequence in MEGARes, so a pairwise alignment between the two sequences was made to figure out the SNPs' positions based on the CARD/MEGARes sequence. However, the original positions are used in this file when referring to mutations <a href="#reference8">↩</a>
 </sup><br>
+<sup id="footnote9">
+  9. The SNPs included doesn’t exactly match the sequence in CARD; you need to subtract 1 from the SNPs’ position to find the corresponding positions for the sequence in CARD <a href="#reference9">↩</a>
+</sup><br>
+<sup id="footnote10">
+  10. The sequence used to find the SNPs is an older version of the one in CARD/MEGARes, so a pairwise alignment between the two sequences was made to figure out the SNPs' positions based on the CARD/MEGARes sequence. However, the original positions are used in this file when referring to mutations <a href="#reference10">↩</a>
+</sup><br>
+<sup id="footnote11">
+  11. In an <em>n</em>-tuple mutation, nonsense and frameshift mutations take precedence and are therefore considered single mutations <a href="#reference11">↩</a>
+</sup><br>
+
