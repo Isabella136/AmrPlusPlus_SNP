@@ -171,6 +171,8 @@ This file is a work in progress
     <li>A244T, G288W, V303G - not a single mutation, but G288W, V303G is already listd as a resistance-conferring double mutation</li>
     <li>A247P, T270I, I297T - I297T is already listed as a resistance-conferring single mutation</li>
     <li>A247P, I297L, W326R - I297L is already listed as a resistance-conferring single mutation</li>
+    <li>L251R, A254G, T270I  - both L251R and A254G are individually listed as resistance-conferring single mutations</li>
+    <li>T270I, G288W, V303G - not a single mutation, but G288W, V303G is already listd as a resistance-conferring double mutation</li>
     <li>T270I, I297T - I297T is already listed as a resistance-conferring single mutation</li>
     <li>I297L, W326R - I297L is already listed as a resistance-conferring single mutation</li>
   </ul>
@@ -195,6 +197,23 @@ This file is a work in progress
   Mutations listed in CARD that are not present in articles referenced: 
     <ul>
     <li>F25I</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_3065<sup><a href="#footnoteY" id="referenceY">Y</a></sup></h3></summary>
+  Mutations removed due to conflicting evidence:
+  <ul>
+    <li>F441Y - Position 441 had neither an F or a Y</li>
+    <li>T387I, E449K- Neither position had their respsective wild type or mutant</li>
+  </ul>
+  <em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:
+  <ul>
+    <li>A67T, P406L - P406L is already listed as a resistance-conferring single mutation</li>
+    <li>A70V, A160V, H457Y - H457Y is already listed as a resistance-conferring single mutation</li>
+    <li>V90I, H457Q, L461K, A655V - V90I, H457Q and L461K are all already listed as individual resistance-conferring single mutations</li>
+    <li>G452C, R659L - G452C is already listed as a resistance-conferring single mutation</li>
+    <li>H457Y, S416F - H457Y is already listed as a resistance-conferring single mutation</li>
   </ul>
 </details>
 
@@ -583,8 +602,6 @@ This file is a work in progress
   </ul>
 </details>
 
-
-
 ---
 
 <sup id="footnote1">
@@ -620,4 +637,3 @@ This file is a work in progress
 <sup id="footnote11">
   11. In an <em>n</em>-tuple mutation, nonsense and frameshift mutations take precedence and are therefore considered single mutations <a href="#reference11">↩</a>
 </sup><br>
-
