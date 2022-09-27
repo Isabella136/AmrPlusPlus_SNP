@@ -201,7 +201,7 @@ This file is a work in progress
 </details>
 
 <details>
-  <summary><h3>MEG_3065<sup><a href="#footnoteY" id="referenceY">Y</a></sup></h3></summary>
+  <summary><h3>MEG_3065</h3></summary>
   Mutations removed due to conflicting evidence:
   <ul>
     <li>F441Y - Position 441 had neither an F or a Y</li>
