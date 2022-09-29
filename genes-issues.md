@@ -875,14 +875,128 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_5401</h3></summary>
+  Mutations listed in CARD that are not present in articles referenced:
+  <ul>
+    <li>N512Y</li>
+  </ul>
+	Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
+  <ul>
+    <li>I312M  - part of double mutation I312M, G545S</li>
+    <li>V316T - part of double mutation V316T, G545S</li>
+  </ul>
   Mutations missing from CARD:
   <ul>
-    <li>V78I</li>
-    <li>H168Y</li>
     <li>D346 insertion</li>
     <li>A501V</li>
+    <li>A516G</li>
+    <li>E538G</li>
+    <li>P551S</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_5406</h3></summary>
+  Mutations listed wrong in CARD:
+  <ul>
+    <li>T445A - is actually a T451A mutation</li>
+    <li>E475G - is actually a E481G mutation</li>
+    <li>T488A - is actually a T494A mutation</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_5407</h3></summary>
+  Mutations that are susceptible or neutral:
+  <ul>
+    <li>M339F</li>
+    <li>M400T</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_5780</h3></summary>
+  Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
+  <ul>
+    <li>K75N - part of double mutation K75N, GE76 insertion</li>
+    <li>G76 insertion - part of double mutation K75N, GE76 insertion</li>
+    <li>E77 insertion - part of double mutation K75N, GE76 insertion</li>
+  </ul>
+  Mutations listed wrong in CARD:
+  <ul>
+    <li>V59N - is actually a V59T mutation</li>
+    <li>K66R - is actually a K75N mutation</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_5784<sup><a href="#footnote13" id="reference13">13</a></sup></h3></summary>
+  Mutations that are susceptible or neutral:
+  <ul>
+    <li>A110V</li>
+    <li>R117L</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_5785</h3></summary>
+  Mutations that are susceptible or neutral:
+  <ul>
+    <li>V260G - by itself</li>
+  </ul>
+  Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
+  <ul>
+    <li>K123Q - part of double mutation K123Q, V260G</li>
+  </ul>
+  Mutations missing from CARD:
+  <ul>
+    <li>A143V</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_5803<sup><a href="#footnoteY" id="referenceY">Y</a></sup></h3></summary>
+  Mutations removed due to conflicting evidence:
+  <ul>
     <li>InsertHere</li>
+  </ul>
+  Mutations listed in CARD that are not present in articles referenced:
+  <ul>
     <li>InsertHere</li>
+  </ul>
+  Mutations that are susceptible or neutral:
+  <ul>
+    <li>Q10*</li>
+    <li>D12A</li>
+    <li>D12N</li>
+    <li>T47A</li>
+    <li>P54L</li>
+    <li>H57D</li>
+    <li>Y103*</li>
+    <li>Y103S</li>
+    <li>H137R</li>
+    <li>T142M</li>
+    <li>A171V</li>
+  </ul>
+  Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
+  <ul>
+    <li>InsertHere - part of double mutation InsertHere</li>
+  </ul>
+  Mutations listed wrong in CARD:
+  <ul>
+    <li>M1S - is actually a M1I mutation</li>
+    <li>InsertHere - is actually a InsertHere mutation</li>
+  </ul>
+  Mutations listed wrong in KARGVA:
+  <ul>
+    <li>InsertHere - is actually a InsertHere mutation</li>
+  </ul>
+  Mutations missing from CARD:
+  <ul>
+    <li>InsertHere</li>
+  </ul>
+  <em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:
+  <ul>
+    <li>InsertHere - InsertHere is already listed as a resistance-conferring single mutation</li>
   </ul>
 </details>
 
@@ -923,4 +1037,7 @@ This file is a work in progress
 </sup><br>
 <sup id="footnote12">
   12. The CARD sequence contains a 4-aa deletion from positions 349 to 352. All SNPs listed in this entry (minus F57S and I418N) are based on the articles’ sequence which doesn’t contain the 4-aa deletion <a href="#reference12">↩</a>
+</sup><br>
+<sup id="footnote13">
+  13. All mutations in CARD are not resistance-conferring; therefore the gene is not present in the SNPInfo database <a href="#reference13">↩</a>
 </sup><br>
