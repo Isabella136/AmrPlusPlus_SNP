@@ -762,7 +762,129 @@ This file is a work in progress
   </ul>
 </details>
 
+<details>
+  <summary><h3>MEG_4131</h3></summary>
+  Mutations missing from CARD:
+  <ul>
+    <li>A insertion at nt 272</li>
+    <li>T insertion at nt 439</li>
+  </ul>
+</details>
 
+<details>
+  <summary><h3>MEG_4289</h3></summary>
+  Mutations that are susceptible or neutral:
+  <ul>
+    <li>R154A</li>
+    <li>R154D</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_4296</h3></summary>
+  Mutations listed wrong in CARD:
+  <ul>
+    <li>Q142X - is actually a Q142* mutation</li>
+  </ul>
+  Mutations missing from CARD:
+  <ul>
+    <li>W339*</li>
+    <li>14-bp deletion at nt 433</li>
+    <li>A insertion at nt 457</li>
+    <li>17-bp deletion at nt 482</li>
+    <li>T insertion at nt 673</li>
+    <li>2-bp AT insertion at nt 1113</li>
+    <li>2-bp deletion at nt 1163</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_5325</h3></summary>
+  Mutations listed wrong in CARD:
+  <ul>
+    <li>S80L - is actually a S87L mutation</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_5328</h3></summary>
+  Mutations missing from CARD:
+  <ul>
+    <li>D82N</li>
+    <li>E87K</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_5331</h3></summary>
+  Mutations that are susceptible or neutral:
+  <ul>
+    <li>P62S</li>
+    <li>A67S</li>
+    <li>A69T</li>
+    <li>S83N</li>
+    <li>A119V</li>
+  </ul>
+  Mutations listed wrong in CARD:
+  <ul>
+    <li>A66T - is actually a A69T mutation, which is susceptible</li>
+  </ul>
+  Mutations missing from CARD:
+  <ul>
+    <li>D87V</li>
+    <li>K97R</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_5332</h3></summary>
+  Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
+  <ul>
+    <li>A85T - part of double mutation with an S80 mutation</li>
+    <li>D111H - part of double mutation with an S80 mutation</li>
+    <li>S129P - part of double mutation with an S80 mutation</li>
+  </ul>
+  Mutations missing from CARD:
+  <ul>
+    <li>S80I</li>
+    <li>S80R</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_5333</h3></summary>
+  Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
+  <ul>
+    <li>E84G - part of double mutation S80I, E84G</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_5394</h3></summary>
+  Mutations missing from CARD:
+  <ul>
+    <li>L416F</li>
+    <li>I444F</li>
+    <li>L445H</li>
+    <li>S458T</li>
+    <li>E460D</li>
+    <li>I464F</li>
+    <li>I529L</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_5401</h3></summary>
+  Mutations missing from CARD:
+  <ul>
+    <li>V78I</li>
+    <li>H168Y</li>
+    <li>D346 insertion</li>
+    <li>A501V</li>
+    <li>InsertHere</li>
+    <li>InsertHere</li>
+  </ul>
+</details>
 
 ---
 
