@@ -4,6 +4,10 @@ This file is a work in progress
 # Genes Issues - Kargva/CARD
 ## Problems with reference sequence
 <details>
+  <summary><h3>MEG_3586</h3></summary>
+  Reference sequence in CARD is a DNA-binding response regulator in LuxR family, not liaR
+</details>
+<details>
   <summary><h3>MEG_3594</h3></summary>
   Reference sequence in CARD is from a different species than the reference sequence in article listed
   <ul>
@@ -602,6 +606,164 @@ This file is a work in progress
   </ul>
 </details>
 
+<details>
+  <summary><h3>MEG_3588</h3></summary>
+  Mutations listed wrong in CARD:
+  <ul>
+	  <li>I177 insertion and deletion - actually located between positions 168 and 171
+      <ul>
+        <li>Information is based on the fact that Ile repeat is located at those positions</li>
+      </ul>
+    </li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_3589</h3></summary>
+  Mutations listed in CARD that are not present in articles referenced:
+  <ul>
+	  <li>A180T</li>
+  </ul>
+  Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
+  <ul>
+	  <li>H264Q - part of double mutation T120A, H264Q</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_3591</h3></summary>
+  Mutations missing from CARD:
+  <ul>
+	  <li>L27I</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_3594</h3></summary>
+  Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
+  <ul>
+	  <li>Q52P - part of double mutation Q52P, Ter189S</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_3626</h3></summary>
+  Mutations missing from CARD:
+  <ul>
+    <li>Q234*</li>
+    <li>2-bp deletion at nt 76</li>
+    <li>445-bp deletion at nt 364</li>
+    <li>30-bp deletion at nt 391</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_3627</h3></summary>
+  Mutations missing from CARD:
+  <ul>
+    <li>Single base deletion at nt 135</li>
+    <li>84-bp deletion at nt 858</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_3931</h3></summary>
+  Mutations that are susceptible or neutral:
+  <ul>
+    <li>V104A</li>
+  </ul>
+  Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
+  <ul>
+    <li>V73A - part of double mutation V73A, L270Q</li>
+    <li>L270Q - part of double mutation V73A, L270Q</li>
+  </ul>
+  Mutations missing from CARD:
+  <ul>
+    <li>First 809bp deletion</li>
+    <li>C deletion at nt 293</li>
+    <li>8-bp deletion at nt 710</li>
+    <li>30-bp deletion at nt 927</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_4057<sup><a href="#footnote12" id="reference12">12</a></sup></h3></summary>
+  Mutations removed due to wild-type not being in sequence:
+  <ul>
+    <li>V351E</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_4092</h3></summary>
+  Mutations listed wrong in CARD:
+  <ul>
+    <li>D116C - is actually intrinsically resistant at D116</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_4094</h3></summary>
+  Mutations that are susceptible or neutral:
+  <ul>
+    <li>V65L</li>
+    <li>G257D</li>
+    <li>D278E</li>
+    <li>E291D</li>
+    <li>Q362R</li>
+    <li>T396N</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_4095</h3></summary>
+  Mutations listed in CARD that are not present in articles referenced:
+  <ul>
+    <li>C115S</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_4109</h3></summary>
+  Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
+  <ul>
+    <li>A186T - part of double mutation G71E, A186T</li>
+    <li>S209R - part of double mutation G71E, S209R</li>
+  </ul>
+  Mutations missing from CARD:
+  <ul>
+    <li>E72K, D75H, A85D</li>
+    <li>T100K, L110P</li>
+    <li>P105A, P122L, S141N</li>
+    <li>E204G, H205N</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_4110</h3></summary>
+  Mutations missing from CARD:
+  <ul>
+    <li>T158I</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_4130</h3></summary>
+  Mutations that are susceptible or neutral:
+  <ul>
+    <li>V18A</li>
+  </ul>
+  Mutations missing from CARD:
+  <ul>
+    <li>A226E</li>
+    <li>N316K</li>
+    <li>G339A</li>
+    <li>G insertion at nt 969</li>
+  </ul>
+</details>
+
+
+
 ---
 
 <sup id="footnote1">
@@ -636,4 +798,7 @@ This file is a work in progress
 </sup><br>
 <sup id="footnote11">
   11. In an <em>n</em>-tuple mutation, nonsense and frameshift mutations take precedence and are therefore considered single mutations <a href="#reference11">↩</a>
+</sup><br>
+<sup id="footnote12">
+  12. The CARD sequence contains a 4-aa deletion from positions 349 to 352. All SNPs listed in this entry (minus F57S and I418N) are based on the articles’ sequence which doesn’t contain the 4-aa deletion <a href="#reference12">↩</a>
 </sup><br>
