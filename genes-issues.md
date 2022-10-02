@@ -954,14 +954,12 @@ This file is a work in progress
 </details>
 
 <details>
-  <summary><h3>MEG_5803<sup><a href="#footnoteY" id="referenceY">Y</a></sup></h3></summary>
-  Mutations removed due to conflicting evidence:
-  <ul>
-    <li>InsertHere</li>
-  </ul>
+  <summary><h3>MEG_5803</h3></summary>
   Mutations listed in CARD that are not present in articles referenced:
   <ul>
-    <li>InsertHere</li>
+    <li>H59D</li>
+    <li>Y68D</li>
+    <li>R157W</li>
   </ul>
   Mutations that are susceptible or neutral:
   <ul>
@@ -974,29 +972,166 @@ This file is a work in progress
     <li>Y103*</li>
     <li>Y103S</li>
     <li>H137R</li>
-    <li>T142M</li>
+    <li>T142M - by itself</li>
     <li>A171V</li>
   </ul>
   Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
   <ul>
-    <li>InsertHere - part of double mutation InsertHere</li>
+    <li>R140S - part of double mutation with an 8 bp deletion at nt 446<sup><a href="#footnote14" id="reference14">14</a></sup></li>
   </ul>
   Mutations listed wrong in CARD:
   <ul>
     <li>M1S - is actually a M1I mutation</li>
-    <li>InsertHere - is actually a InsertHere mutation</li>
-  </ul>
-  Mutations listed wrong in KARGVA:
-  <ul>
-    <li>InsertHere - is actually a InsertHere mutation</li>
+    <li>L72P - is actually a L172P mutation</li>
+    <li>A140S - is actually a R140S mutation</li>
   </ul>
   Mutations missing from CARD:
   <ul>
-    <li>InsertHere</li>
+    <li>D8A</li>
+    <li>F13SL</li>
+    <li>C14*</li>
+    <li>L27R</li>
+    <li>H43P</li>
+    <li>V44G</li>
+    <li>K48E</li>
+    <li>H51P</li>
+    <li>D53N, CACTG insertion at nt 349<sup><a href="#footnote14" id="reference14">14</a></sup></li>
+    <li>P54Q</li>
+    <li>P54R</li>
+    <li>P54S</li>
+    <li>H57P</li>
+    <li>H57Y</li>
+    <li>P62L</li>
+    <li>P62Q</li>
+    <li>P62T</li>
+    <li>Y64D</li>
+    <li>Y64*</li>
+    <li>H71P</li>
+    <li>T72P</li>
+    <li>E91*</li>
+    <li>F94C</li>
+    <li>F94L</li>
+    <li>F94S</li>
+    <li>Y95*</li>
+    <li>K96R</li>
+    <li>K96T</li>
+    <li>G97A</li>
+    <li>G97D</li>
+    <li>T100A</li>
+    <li>A102P</li>
+    <li>S104R</li>
+    <li>T114P</li>
+    <li>L120R</li>
+    <li>V125G</li>
+    <li>V130G</li>
+    <li>G132A</li>
+    <li>G132C</li>
+    <li>G132D</li>
+    <li>A134G</li>
+    <li>T135A, T142M</li>
+    <li>T135N</li>
+    <li>D136G</li>
+    <li>H137D</li>
+    <li>R140P</li>
+    <li>T142A</li>
+    <li>A143G</li>
+    <li>R148S</li>
+    <li>N149V</li>
+    <li>T153N</li>
+    <li>R154W</li>
+    <li>L156P</li>
+    <li>G162V</li>
+    <li>M175I</li>
+    <li>M175T</li>  
+    <li>RSM120-122 insertion</li>
+    <li>RSM130-132 insertion</li>
+    <li>RSM131-133 insertion</li>
+    <li>MWS132-134 insertion</li>
+    <li>8 bp deletion at start</li>
+    <li>11-bp deletion at start</li>
+    <li>TCATCG deletion at nt 14</li>
+    <li>C deletion at nt 28</li>
+    <li>GACT insertion at nt 37</li>
+    <li>C insertion at nt 44</li>
+    <li>G insertion at nt 52</li>
+    <li>C deletion at nt 59</li>
+    <li>G deletion at nt 70</li>
+    <li>G deletion at nt 71</li>
+    <li>G deletion at nt 77</li>
+    <li>C deletion at nt 84</li>
+    <li>C deletion at nt 104</li>
+    <li>G insertion at nt 136</li>
+    <li>T deletion at nt 150</li>
+    <li>80 bp deletion at nt 151</li>
+    <li>A deletion at nt 158</li>
+    <li>C deletion at nt 161</li>
+    <li>C deletion at nt 186</li>
+    <li>4 bp insertion at nt 185</li>
+    <li>A insertion at nt 186</li>
+    <li>A insertion at nt 192</li>
+    <li>A insertion at nt 193</li>
+    <li>TATCAGG insertion at nt 193</li>
+    <li>68 bp deletion at nt 195</li>
+    <li>CGCATTGCCG insertion at nt 218</li>
+    <li>G insertion at nt 222</li>
+    <li>T deletion at nt 224</li>
+    <li>24 bp deletion at nt 265</li>
+    <li>T insertion at nt 287</li>
+    <li>T insertion at nt 288</li>
+    <li>33 bp insertion at nt 288</li>
+    <li>G deletion at nt 290</li>
+    <li>T deletion at nt 291</li>
+    <li>A insertion at nt 301</li>
+    <li>G deletion at nt 301</li>
+    <li>TACAG deletion at nt 307</li>
+    <li>C insertion at nt 338</li>
+    <li>C deletion at 341</li>
+    <li>AG insertion at nt 368</li>
+    <li>18 bp insertion at nt 368</li>
+    <li>11 bp deletion at nt 379</li>
+    <li>GG deletion at nt 381</li>
+    <li>AG insertion at nt 382</li>
+    <li>ATG deletion at nt 386 - D129 deletion</li>
+    <li>ATGT deletion at nt 386</li>
+    <li>G insertion at nt 391</li>
+    <li>GG insertion at nt 391</li>
+    <li>G insertion at nt 392</li>
+    <li>GG insertion at nt 392</li>
+    <li>G insertion at nt 393</li>
+    <li>GG insertion at nt 393</li>
+    <li>17-bp deletion at nt 395</li>
+    <li>T insertion at nt 397</li>
+    <li>T deletion at nt 398</li>
+    <li>C insertion at nt 403</li>
+    <li>CC insertion at nt 403</li>
+    <li>G deletion at nt 406</li>
+    <li>C insertion at nt 408</li>
+    <li>A insertion at nt 408</li>
+    <li>104-bp deletion at nt 409</li>
+    <li>G insertion at nt 414</li>
+    <li>TG deletion at nt 416</li>
+    <li>G insertion at nt 417</li>
+    <li>G insertion at nt 420</li>
+    <li>CAGACGGCGCCAG insertion at nt 423</li>
+    <li>GG insertion at nt 428</li>
+    <li>G deletion at nt 443</li>
+    <li>8 pb deletion at nt 446</li>
+    <li>T deletion at nt 452</li>
+    <li>T insertion at nt 465</li>
+    <li>C insertion at nt 475</li>
+    <li>TGAC insertion at nt 480</li>
+    <li>GT deletion at nt 487</li>
+    <li>C insertion at nt 493</li>
+    <li>CG insertion at nt 501</li>
+    <li>C deletion at nt 512</li>
+    <li>C deletion at nt 514</li>
+    <li>CG insertion at nt 516</li>
+    <li>5 bp insertion at nt 518</li>
+    <li>C insertion at nt 532</li>
   </ul>
   <em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:
   <ul>
-    <li>InsertHere - InsertHere is already listed as a resistance-conferring single mutation</li>
+    <li>V130G, GG insertion at nt 420 - V130G is already listed as a resistance-conferring single mutation</li>
   </ul>
 </details>
 
@@ -1041,3 +1176,7 @@ This file is a work in progress
 <sup id="footnote13">
   13. All mutations in CARD are not resistance-conferring; therefore the gene is not present in the SNPInfo database <a href="#reference13">↩</a>
 </sup><br>
+<sup id="footnote14">
+  14. In an <em>n</em>-tuple mutation, nonsense and frameshift mutations take precedence and are therefore considered single mutations <a href="#reference14">↩</a>
+</sup><br>
+
