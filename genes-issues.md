@@ -1135,6 +1135,202 @@ This file is a work in progress
   </ul>
 </details>
 
+<details>
+  <summary><h3>MEG_6045<sup><a href="#footnote15" id="reference15">15</a></sup></h3></summary>
+  Mutations missing from CARD:
+  <ul>
+    <li>E53*</li>
+    <li>W89*</li>
+    <li>R108*</li>
+    <li>transposase insertion</li>
+    <li>integrase insertion</li>
+    <li>ACAAAGCGAT deletion</li>
+    <li>CTCGACGTCGGCCAT deletion</li>
+    <li>CACAAAGCGAT deletion</li>
+    <li>GC insertion</li>
+    <li>G deletion</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_6046<sup><a href="#footnote16" id="reference16">16</a></sup></h3></summary>
+  Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
+  <ul>
+    <li>E160D - part of double mutation with a 15-bp deletion<sup><a href="#footnote17" id="reference17">17</a></sup></li>
+    <li>M84I - part of double mutation T18P, M84I</li>
+  </ul>
+  Mutations missing from CARD:
+  <ul>
+    <li>Q19*</li>
+    <li>E160*</li>
+    <li>10 bp deletion</li>
+    <li>C insertion at nt 461</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_6090<sup><a href="#footnote18" id="reference18">18</a></sup></h3></summary>
+  Mutations removed due to conflicting evidence:
+  <ul>
+    <li>InsertHere</li>
+  </ul>
+  Mutations listed in CARD that are not present in articles referenced:
+  <ul>
+    <li>InsertHere</li>
+  </ul>
+  Mutations that are susceptible or neutral:
+  <ul>
+    <li>InsertHere</li>
+  </ul>
+  Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
+  <ul>
+    <li>InsertHere - part of double mutation InsertHere</li>
+  </ul>
+  Mutations listed wrong in CARD:
+  <ul>
+    <li>InsertHere - is actually a InsertHere mutation</li>
+  </ul>
+  Mutations listed wrong in KARGVA:
+  <ul>
+    <li>V146F - is actually a V170F mutation</li>
+    <li>V176F (from fifth article) - is actually a V170F mutation</li>
+    <li>V176F (from 24th article) - is actually a V198F mutation</li>
+    <li>A381V - is actually a A286V mutation</li>
+    <li>S450L - is actually a S369L mutation</li>
+    <li>Q490H - is actually a Q409H mutation</li>
+    <li>Q438K - is actually a Q432K mutation</li>
+    <li>D441Y - is actually a D435Y mutation</li>
+    <li>D441V - is actually a D435V mutation</li>
+    <li>S447Q - is actually a S441Q mutation</li>
+    <li>H451D - is actually a H445D mutation</li>
+    <li>H451R - is actually a H445R mutation</li>
+    <li>H451C - is actually a H445C mutation</li>
+    <li>H451Y - is actually a H445Y mutation</li>
+    <li>S456W - is actually a S450W mutation</li>
+    <li>S456L - is actually a S450L mutation</li>
+    <li>E504A - is actually a E423A mutation</li>
+    <li>F505L - is actually a F424L mutation</li>
+    <li>G507S - is actually a G426S mutation</li>
+    <li>G507D - is actually a G426D mutation</li>
+    <li>T508H - is actually a T427H mutation</li>
+    <li>T508P - is actually a T427P mutation</li>
+    <li>T508A - is actually a T427A mutation</li>
+    <li>T508S - is actually a T427S mutation</li>
+    <li>T508N - is actually a T427N mutation</li>
+    <li>S509R - is actually a S428R mutation</li>
+    <li>S509Q - is actually a S428Q mutation</li>
+    <li>L511M - is actually a L430M mutation</li>
+    <li>L511P - is actually a L430P mutation</li>
+    <li>L511R - is actually a L430R mutation</li>
+    <li>L511V - is actually a L430V mutation</li>
+    <li>L511P,M515I - is actually a L430P,M434I mutation</li>
+    <li>L511R,D516V - is actually a L430R,D435V mutation</li>
+    <li>L511P,S512T,D516V - is actually a L430P,S431T,D435V mutation</li>   
+    <li>S512I - is actually a S431I mutation</li>
+    <li>S512T - is actually a S431T mutation</li>
+    <li>S512R - is actually a S431R mutation</li>
+    <li>S512N - is actually a S431N mutation</li>
+    <li>-S512,-Q513,-F514,H526Q - is actually a -S431,-Q432-F433,H445Q mutation</li>  
+    <li>Q513P - is actually a Q432P mutation</li>
+    <li>Q513K - is actually a Q432K mutation</li>
+    <li>Q513L - is actually a Q432L mutation</li>
+    <li>Q513E - is actually a Q432E mutation</li>
+    <li>Q513D - is actually a Q432D mutation</li>
+    <li>Q513R - is actually a Q432R mutation</li>
+    <li>-Q513 - is actually a -Q432 mutation</li>
+    <li>Q513STOP - is actually a Q432STOP mutation</li>
+    <li>Q513H,-514F,-515M,-516D - is actually a Q432H,-433F,-434M,-435D mutation</li>
+    <li>-F514 - is actually a -F433 mutation</li>
+    <li>M515I - is actually a M434I mutation</li>
+    <li>M515V - is actually a M434V mutation</li>
+    <li>-M515 - is actually a -M434 mutation</li>
+    <li>-515M,-516D,-517Q,-518N - is actually a -434M,-435D,-436Q,-437N mutation</li>
+    <li>D516V - is actually a D435V mutation</li>
+    <li>D516T - is actually a D435T mutation</li>
+    <li>D516Y - is actually a D435Y mutation</li>
+    <li>D516G - is actually a D435G mutation</li>
+    <li>D516N - is actually a D435N mutation</li>
+    <li>D516H - is actually a D435H mutation</li>
+    <li>D516K - is actually a D435K mutation</li>
+    <li>-D516 - is actually a -D435 mutation</li>
+    <li>D516E,S522L - is actually a D435E,S441L mutation</li>
+    <li>D516Y,L511R - is actually a D435Y,L430R mutation</li>
+    <li>T516I,G523W,D525Y - is actually a T444I,G442W,D435Y mutation</li>
+    <li>Q517L - is actually a Q436L mutation</li>
+    <li>Q517H - is actually a Q436H mutation</li>  
+    <li>N518T - is actually a N437T mutation</li>
+    <li>D518H - is actually a N437H mutation</li>
+    <li>N518H - is actually a N437H mutation</li>
+    <li>N518I - is actually a N437I mutation</li>
+    <li>-N518 - is actually a -N437 mutation</li>
+    <li>N519K - is actually a N438K mutation</li>
+    <li>-519N,S522L,S531L - is actually a 438N,S441L,S450L mutation</li>
+    <li>P520T - is actually a P439T mutation</li>
+    <li>L521P - is actually a L452P mutation</li>
+    <li>L521M - is actually a L440M mutation</li>
+    <li>S522L - is actually a S441L mutation</li>
+    <li>S522W - is actually a S441W mutation</li>
+    <li>S522Q - is actually a S441Q mutation</li>
+    <li>S522STOP - is actually a S441STOP mutation</li>
+    <li>G523A - is actually a G442A mutation</li>
+    <li>L524S - is actually a L443S mutation</li>
+    <li>L524W,T525P,H526Q,-527K - is actually a L443W,T444P,H445Q,-446K mutation</li>
+    <li>H526C - is actually a H445C mutation</li>
+    <li>H526Y - is actually a H445Y mutation</li>
+    <li>H526D - is actually a H445D mutation</li>
+    <li>H526S - is actually a H445S mutation</li>
+    <li>H526R - is actually a H445R mutation</li>
+    <li>H526L - is actually a H445L mutation</li>
+    <li>H526N - is actually a H445N mutation</li>
+    <li>H526T - is actually a H445T mutation</li>
+    <li>H526E - is actually a H445E mutation</li>
+    <li>H526G - is actually a H445G mutation</li>
+    <li>H526F - is actually a H445F mutation</li>
+    <li>H526Q - is actually a H445Q mutation</li>
+    <li>H526P - is actually a H445P mutation</li>
+    <li>-H526 - is actually a -H445 mutation</li>
+    <li>H526S,M515V - is actually a H445S,M434V mutation</li>
+    <li>H526S,P535H - is actually a H445S,P454H mutation</li>
+    <li>H526Y,E541G - is actually a H445Y,E460G mutation</li> 
+    <li>H526D,E541G,S553A - is actually a H445D,E460G,S472A mutation</li>
+    <li>H526D,S531 - is actually a H445D,S450 mutation</li>
+    <li>H526P,K527Q - is actually a H445P,K446Q mutation</li>
+    <li>K527Q - is actually a K446Q mutation</li>
+    <li>K527N - is actually a K446N mutation</li>
+    <li>R528P - is actually a R447P mutation</li>
+    <li>R528H - is actually a R447H mutation</li>
+    <li>R529Q - is actually a R448Q mutation</li>
+    <li>S531L - is actually a S450L mutation</li>
+    <li>S531W - is actually a S450W mutation</li>
+    <li>S531G - is actually a S450G mutation</li>
+    <li>S531C - is actually a S450C mutation</li>
+    <li>S531F - is actually a S450F mutation</li>
+    <li>S531L,S622A - is actually a S450L,S541A mutation</li>
+    <li>S531L,F514V - is actually a S450L,F433V mutation</li>
+    <li>S531L,H526C - is actually a S450L,H445C mutation</li>
+    <li>L533R - is actually a L452R mutation</li>
+    <li>L533P - is actually a L452P mutation</li>
+    <li>L538R - is actually a L457R mutation</li>
+    <li>L538P - is actually a L457P mutation</li>
+    <li>L545M - is actually a L464M mutation</li>
+    <li>E562G,P564L - is actually a E481G,P483L mutation</li>    
+    <li>L571V - is actually a L490V mutation</li>
+    <li>I572F - is actually a I491F mutation</li>
+    <li>S574L - is actually a S493L mutation</li>
+    <li>R633C - is actually a R552C mutation</li>
+    <li>E672D - is actually a E592D mutation</li>
+  </ul>
+  Mutations missing from CARD:
+  <ul>
+    <li>InsertHere</li>
+  </ul>
+  <em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:
+  <ul>
+    <li>InsertHere - InsertHere is already listed as a resistance-conferring single mutation</li>
+  </ul>
+</details>
+
+
 ---
 
 <sup id="footnote1">
@@ -1179,4 +1375,24 @@ This file is a work in progress
 <sup id="footnote14">
   14. In an <em>n</em>-tuple mutation, nonsense and frameshift mutations take precedence and are therefore considered single mutations <a href="#reference14">↩</a>
 </sup><br>
-
+<sup id="footnote15">
+  15. Positions of insertions and deletions not provided <a href="#reference15">↩</a>
+</sup><br>
+<sup id="footnote16">
+  16. For some insertions and deletions, positions are not provided <a href="#reference16">↩</a>
+</sup><br>
+<sup id="footnote17">
+  17. In an <em>n</em>-tuple mutation, nonsense and frameshift mutations take precedence and are therefore considered single mutations <a href="#reference17">↩</a>
+</sup><br>
+<sup id="footnote18">
+  18.Almost all mutations recovered from the literature are based on E. coli positions <a href="#reference18">↩</a>
+</sup><br>
+<ul>
+  <sup><li>The exception includes all but the last three SNPs recovered from the fifth article</li></sup>
+</ul>
+<ul>
+  <sup><li>However, the M. tuberculosis reference sequence used in that article has 6 extra amino acids at the beginning of the sequence compare to CARD's reference sequence</li></sup>
+</ul>
+<ul>
+  <sup><li>The positions that are used in this file is based on the M.tubercolosis CARD reference sequence</li></sup>
+</ul><br>
