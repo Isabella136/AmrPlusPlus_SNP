@@ -1349,8 +1349,13 @@ This file is a work in progress
     <li>R633C - is actually a R552C mutation</li>
     <li>E672D - is actually a E592D mutation</li>
   </ul>
-  Mutations removed due to conflicting evidence:
+  Mutations removed due to conflicting evidence<sup><a href="#footnote19" id="reference19">19</a></sup>:
   <ul>
+    <li>Q432 deletion</li>
+    <li>F433 deletion</li>
+    <li>M434 deletion</li>
+    <li>D435 deletion</li>
+    <li>H445 deletion</li>
     <li>S450L,S541A - position 541 doesn't have a serine as its wild-type, and S450L is already a resistance-conferring single mutation</li>
   </ul>
   Mutations listed in CARD that are not present in articles referenced:
@@ -1364,81 +1369,445 @@ This file is a work in progress
     <li>L440P</li>
     <li>S493L</li>
   </ul>
-  Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
-  <ul>
-    <li>E423A - part of an unspecified double mutation</li>
-    <li>F424L - part of double mutation F424L, D435Y</li>
-    <li>G426D - part of double mutation G426D, S450L; triple mutation G426D, N437Y, L457P; and quadruple mutation G426D, Q432*<sup><a href="#footnote19" id="reference19">19</a></sup>, H445Y, S450F</li>
-    <li>G426S - part of double mutation G426S, T427P </li>
-    <li>T427H - part of triple mutations T427H, H445Q, S450F and T427H, G442A, H445R</li>
-    <li>T427P - part of double mutation G426S, T427P and triple mutation T427P, D435H, H445R</li>
-    <li>T427A - part of double mutation T427A, G442A,</li>
-    <li>T427S - part of triple mutation T427S, S431R, H445D</li>
-    <li>S428Q - part of double mutation S428Q, S450L</li>
-    <li>L430M - part of triple mutation L430M, S431R, H445D</li>
-    <li>S431I - part of double mutation S431I, D435G </li>
-    <li>S431T - part of double mutation L430P, S431T; triple mutation L430P, S431T, D435V; and quadruple mutation S431T, Q432N, H445F, S450L</li>
-    <li>S431R - part of double mutation S431R, D435V and triple mutations L430M, S431R, H445D and T427S, S431R, H445D</li>
-    <li>M434I - part of double mutations M434I, D435Y; M434I, L452P; and L430P, M434I</li>
-    <li>D435H - part of triple mutation T427P, D435H, H445R</li>
-    <li>D435K - part of triple mutation D435K, S450L, P454H</li>
-    <li>D435N - part of an unspecified double mutation</li>
-    <li>N437H - part of double mutation N437H, S450L</li>
-    <li>N438K - part of quadruple mutation L430V, Q432E, N438K, H445R</li>
-    <li>H445S - part of double mutations H445S, K446Q; M434V, H445S; and H445S, P454H</li>
-    <li>H445F - part of quadruple mutation S431T, Q432N, H445F, S450L</li>
-    <li>H445Q - part of double mutations L430P, H445Q and H445Q, S450C; triple mutation T427H, H445Q, S450F; and quadruple mutations L443W, T444P, H445Q, K446- and H445Q, S431-, Q432-, F433-</li>
-    <li>K446Q - part of double mutations H445S, K446Q and H445P, K446Q</li>
-    <li>R447H - part of double mutation R447H, S450W</li>
-    <li>R448Q - part of double mutation D435G, R448Q</li>
-    <li>S450C - part of double mutation H445Q, S450C</li>
-    <li>L452R - part of double mutation H445C, L452R </li>
-    <li>L457P - part of triple mutation G426D, N437Y, L457P</li>
-  </ul>
-  <em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:
-  <ul>
-    <li>F424L, D435Y - D435Y is already listed as a resistance-conferring single mutation</li>
-    <li>G426D, S450L - S450L is already listed as a resistance-conferring single mutation</li>
-    <li>T427H, H445Q, S450F - S450F is already listed as a resistance-conferring single mutation</li>
-    <li>T427H, G442A, H445R - G442A and H445R are already listed as individual resistance-conferring single mutations</li>
-    <li>T427P, D435H, H445R - H445R is already listed as a resistance-conferring single mutation</li>
-    <li>T427A, G442A - G442A is already listed as a resistance-conferring single mutation</li>
-    <li>T427S, S431R, H445D - H445D is already listed as a resistance-conferring single mutation</li>
-    <li>S428Q, S450L - S450L is already listed as a resistance-conferring single mutation</li>
-    <li>L430P, S431T - L430P is already listed as a resistance-conferring single mutation</li>
-    <li>L430P, S431T, D435V - L430P and D435V are already listed as individual resistance-conferring single mutations</li>
-    <li>L430R, D435V - L430R and D435V are already listed as individual resistance-conferring single mutations</li>
-    <li>L430P, M434I - L430P is already listed as a resistance-conferring single mutation</li>
-    <li>L430M, S431R, H445D - H445D is already listed as a resistance-conferring single mutation</li>
-    <li>S431I, D435G - D435G is already listed as a resistance-conferring single mutation</li>
-    <li>Q432H, -433F, -434M, -435D - not a single mutation, but -433F,-434M,-435D is already listed as a resistance-conferring triple mutation</li>
-    <li>-434M, -435D, -436Q, -437N - -436Q and -437N are already listed as individual resistance-conferring single mutations</li>
-    <li>D435Y, L430R - L430R and D435Y are already listed as individual resistance-conferring single mutations</li>
-    <li>D435E, S441L - S441L is already listed as a resistance-conferring single mutation</li>
-    <li>D435Y, G442W, T444I - D435Y is already listed as a resistance-conferring single mutation</li>
-    <li>-438N, S441L, S450L - -438N, S441L and S450L are already listed as individual resistance-conferring single mutations</li>
-    <li>H445D, E460G, S472A - H445D is already listed as a resistance-conferring single mutation</li>
-    <li>H445D, S450 - H445D is already listed as a resistance-conferring single mutation</li>
-    <li>H445P, K446Q - H445P and K446Q are already listed as individual resistance-conferring single mutations</li>
-    <li>H445Y, E460G - H445Y is already listed as a resistance-conferring single mutation</li>
-    <li>H445S, M434V - M434V is already listed as a resistance-conferring single mutation</li>
-    <li>S450L, H445C - H445C and S450L are already listed as individual resistance-conferring single mutations</li>
-    <li>S450L, F433V - S450L is already listed as a resistance-conferring single mutation</li>
-    
-    
-    
-    
-    <li>S431T, Q432N, H445F, S450L - S450L is already listed as a resistance-conferring single mutation</li>
-    <li>InsertHere - InsertHere is already listed as a resistance-conferring single mutation</li>
-    <li>InsertHere - InsertHere is already listed as a resistance-conferring single mutation</li>
-    <li>InsertHere - InsertHere is already listed as a resistance-conferring single mutation</li>
-    <li>InsertHere - InsertHere is already listed as a resistance-conferring single mutation</li>
-    <li>InsertHere - InsertHere is already listed as a resistance-conferring single mutation</li>
-    <li>InsertHere - InsertHere is already listed as a resistance-conferring single mutation</li>
-  </ul>
+  <h4>Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:</h4>
+  <table>
+  <thead>
+    <tr>
+      <th>Mutation</th>
+      <th>In Double Mutations</th>
+      <th>In Triple Mutations</th>
+      <th>In Quadruple Mutations</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>E423A</td>
+      <td>unspecified</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>F424L</td>
+      <td>F424L, D435Y</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>G426D</td>
+      <td>G426D, S450L</td>
+      <td>G426D, N437Y, L457P</td>
+      <td>G426D, Q432*<sup><a href="#footnote20" id="reference20">20</a></sup>, H445Y, S450F</td>
+    </tr>
+    <tr>
+      <td>G426S</td>
+      <td>G426S, T427P</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>T427H</td>
+      <td></td>
+      <td>T427H, H445Q, S450F<br>T427H, G442A, H445R</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>T427P</td>
+      <td>G426S, T427P</td>
+      <td>T427P, D435H, H445R</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>T427A</td>
+      <td>T427A, G442A</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>T427S</td>
+      <td></td>
+      <td>T427S, S431R, H445D</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>S428Q</td>
+      <td>S428Q, S450L</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>L430M</td>
+      <td></td>
+      <td>L430M, S431R, H445D</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>S431I</td>
+      <td>S431I, D435G</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>S431T</td>
+      <td>L430P, S431T</td>
+      <td>L430P, S431T, D435V</td>
+      <td>S431T, Q432N, H445F, S450L</td>
+    </tr>
+    <tr>
+      <td>S431R</td>
+      <td>S431R, D435V</td>
+      <td>L430M, S431R, H445D<br>T427S, S431R, H445D</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>M434I</td>
+      <td>M434I, D435Y<br>M434I, L452P<br>L430P, M434I</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>D435H</td>
+      <td></td>
+      <td>T427P, D435H, H445R</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>D435K</td>
+      <td></td>
+      <td>D435K, S450L, P454H</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>D435N</td>
+      <td>unspecified</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>N437H</td>
+      <td>N437H, S450L</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>N438K</td>
+      <td></td>
+      <td></td>
+      <td>L430V, Q432E, N438K, H445R</td>
+    </tr>
+    <tr>
+      <td>H445S</td>
+      <td>H445S, K446Q<br>M434V, H445S<br>H445S, P454H</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>H445F</td>
+      <td></td>
+      <td></td>
+      <td>S431T, Q432N, H445F, S450L</td>
+    </tr>
+    <tr>
+      <td>H445Q</td>
+      <td>L430P, H445Q<br>H445Q, S450C</td>
+      <td>T427H, H445Q, S450F</td>
+      <td>L443W, T444P, H445Q, K446-<br>H445Q, S431-, Q432- , F433-</td>
+    </tr>
+    <tr>
+      <td>K446Q</td>
+      <td>H445S, K446Q<br>H445P, K446Q</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>R447H</td>
+      <td>R447H, S450W</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>R448Q</td>
+      <td>D435G, R448Q</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>S450C</td>
+      <td>H445Q, S450C</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>L452R</td>
+      <td>H445C, L452R</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>L457P</td>
+      <td></td>
+      <td>G426D, N437Y, L457P</td>
+      <td></td>
+    </tr>
+  </tbody>
+  </table>
+  <h4><em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:</h4>
+  <table>
+  <thead>
+    <tr>
+      <th><em>N</em>-tuple Mutation</th>
+      <th>Resistant-Conferring Single Mutations</th>
+      <th>Additional Smaller <em>N</em>-tuple Mutations</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>F424L, D435Y</td>
+      <td>D435Y</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>G426D, S450L</td>
+      <td>S450L</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>T427H, H445Q, S450F</td>
+      <td>S450F</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>T427H, G442A, H445R</td>
+      <td>G442A and H445R</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>T427P, D435H, H445R</td>
+      <td>H445R</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>T427A, G442A</td>
+      <td>G442A</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>T427S, S431R, H445D</td>
+      <td>H445D</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>S428Q, S450L</td>
+      <td>S450L</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>L430P, S431T</td>
+      <td>L430P</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>L430P, S431T, D435V</td>
+      <td>L430P and D435V</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>L430R, D435V</td>
+      <td>L430R and D435V</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>L430P, M434I</td>
+      <td>L430P</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>L430P, H445Q</td>
+      <td>L430P</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>L430M, S431R, H445D</td>
+      <td>H445D</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>L430V, Q432E, N438K, H445R</td>
+      <td>L430V, Q432E and H445R </td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>S431T, Q432N, H445F, S450L</td>
+      <td>S450L</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>S431R, D435V</td>
+      <td>D435V</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>S431I, D435G</td>
+      <td>D435G </td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Q432H, -433F, -434M, -435D </td>
+      <td></td>
+      <td>-433F, -434M, -435D</td>
+    </tr>
+    <tr>
+      <td>M434I, D435Y</td>
+      <td>D435Y</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>M434V, H445S</td>
+      <td>M434V</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>M434I, L452P</td>
+      <td>L452P</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>-434M, -435D, -436Q, -437N </td>
+      <td>-436Q and -437N</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>D435Y, L430R</td>
+      <td>L430R and D435Y</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>D435E, S441L</td>
+      <td>S441L</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>D435G, R448Q</td>
+      <td>D435G</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>D435Y, G442W, T444I</td>
+      <td>D435Y</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>D435K, S450L, P454H</td>
+      <td>S450L</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>N437H, S450L</td>
+      <td>S450L</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>-438N, S441L, S450L </td>
+      <td>-438N, S441L and S450L</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>H445D, E460G, S472A</td>
+      <td>H445D</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>H445D, S450</td>
+      <td>H445D</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>H445P, K446Q</td>
+      <td>H445P</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>H445Y, E460G</td>
+      <td>H445Y</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>H445S, M434V</td>
+      <td>M434V</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>H445C, L452R</td>
+      <td>H445C</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>R447H, S450W</td>
+      <td>S450W</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>S450L, H445C</td>
+      <td>H445C and S450L</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>S450L, F433V</td>
+      <td>S450L</td>
+      <td></td>
+    </tr>
+  </tbody>
+  </table>
   Mutations missing from CARD:
   <ul>
-    <li>InsertHere</li>
+    <li>G426 deletion, T427 deletion</li>
+    <li>Q432 deletion, F433 deletion</li>
+    <li>F433 deletion, M434 deletion, D435 deletion</li>
+    <li>Q436 deletion</li>
+    <li>N438 deletion</li>
+    <li>G442 deletion</li>
+    <li>F433 insertion</li>
+    <li>FM433 insertion</li>
+    <li>R434 insertion</li>
+    <li>M390E</li>
+    <li>M390L</li>
+    <li>M390V</li>
+    <li>Q409E</li>
+    <li>Q409Y</li>
+    <li>Q409*</li>
+    <li>A419D</li>
+    <li>A419T</li>
+    <li>I421T</li>
+    <li>K422N</li>
+    <li>E423K</li>
+    <li>F425L</li>
+    <li>G426D, Q432*<sup><a href="#footnote20" id="reference20">20</a></sup>, H445Y, S450F</li>
+    <li>G426D, N437Y, L457P</li>
+    <li>Q429H</li>
+    <li>F433L</li>
+    <li>D435A</li>
+    <li>S441P</li>
+    <li>H445S, K446Q</li>
+    <li>H445Q, S450C </li>
+    <li>S450Y</li>
+    <li>S450Q</li>
+    <li>S450*</li>
+    <li>A462T</li>
+    <li>A462Y</li>
+    <li>Y474F</li>
+    <li>Y474H</li>
+    <li>Y474S</li>
+    <li>Y474T</li>
+    <li>Y474*</li>
+    <li>R476G</li>
+    <li>R476Q</li>
+    <li>C478Y</li>
+    <li>E481A</li>
+    <li>E481D</li>
+    <li>E481Q</li>
+    <li>P483S</li>
+    <li>P486T</li>
+    <li>G489D</li>
+    <li>I491P</li>
   </ul>
 </details>
 
@@ -1507,7 +1876,10 @@ This file is a work in progress
 </ul>
 <ul>
   <sup><li>The positions that are used in this file is based on the M.tubercolosis CARD reference sequence</li></sup>
-</ul><br>
+</ul>
 <sup id="footnote19">
-  19. In an <em>n</em>-tuple mutation, nonsense and frameshift mutations take precedence and are therefore considered single mutations <a href="#reference19">↩</a>
+  19. All deletions listed here solely comes from the  <a href="https://pubmed.ncbi.nlm.nih.gov/28904673/">second-to-last article </a>referenced in the corresponding CARD entry, which has difficulty differentiating between a deletion of a whole amino acid and a base-pair deletion <a href="#reference19">↩</a>
+</sup><br>
+<sup id="footnote20">
+  20. In an <em>n</em>-tuple mutation, nonsense and frameshift mutations take precedence and are therefore considered single mutations <a href="#reference20">↩</a>
 </sup><br>
