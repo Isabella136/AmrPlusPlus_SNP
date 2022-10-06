@@ -1397,6 +1397,135 @@ This file is a work in progress
   </table>
 </details>
 
+<details>
+  <summary><h3>MEG_6094</h3></summary>
+  <h4>Mutations missing from CARD:</h4>
+  <ul>
+    <li>G507V, S508del, S509del, Q510del, L511del</li>
+    <li>DQ517 insertion</li>
+    <li>A532del</li>
+    <li>D516N</li>
+    <li>D516V</li>
+    <li>S522F</li>
+    <li>I572F</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_6095</h3></summary>
+  <h4>Mutations that are susceptible or neutral:</h4>
+  <ul>
+    <li>Q1073R</li>
+  </ul>
+  <h4>Mutations missing from CARD:</h4>
+  <ul>
+    <li>S575A</li>
+  </ul>
+  <h4>Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:</h4>
+  <ul>
+    <li>S488T - part of double mutation S488T, R505K</li>
+    <li>P496S - part of double mutation P496S, H502Y</li>
+    <li>S498T - part of double mutation S498T, R505K</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_6548<sup><a href="#footnote21" id="reference21">21</a></sup></h3></summary>
+  <h4>Mutations listed in CARD that are not present in articles referenced:</h4>
+  <ul>
+    <li>G121D</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_7196</h3></summary>
+  <h4>Mutations listed wrong in CARD:</h4>
+  <ul>
+    <li>H64Y - is actually intrinsically resistant at H65</li>
+    <li>N82H - is actually intrinsically resistant at N83</li>
+    <li>T103I - is actually intrinsically resistant at T104</li>
+  </ul>
+  <h4>Intrinsically resistant amino acids missing from CARD:</h4>
+  <ul>
+    <li>T66</li>
+    <li>E72</li>
+    <li>A84</li>
+    <li>A90</li>
+    <li>H94</li>
+    <li>V100</li>
+    <li>H101</li>
+    <li>G103</li>
+    <li>P106</li>
+    <li>E107</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_7250<sup><a href="#footnoteY" id="referenceY">Y</a></sup></h3></summary>
+  <h4>Mutations removed due to conflicting evidence:</h4>
+  <ul>
+    <li>I211V - wild-type at this position is an Asn</li>
+  </ul>
+  <h4>Mutations missing from CARD:</h4>
+  <ul>
+    <li>T deletion at nt 111</li>
+    <li>CACGAGCAC insertion at nt 217</li>
+    <li>C deletion at nt 260</li>
+    <li>T insertion at nt 372</li>
+    <li>C deletion at nt 472</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_7258<sup><a href="#footnoteY" id="referenceY">Y</a></sup></h3></summary>
+  <h4>Mutations missing from CARD:</h4>
+  <ul>
+    <li>Q184K</li>
+    <li>C deletion at nt 26</li>
+    <li>G deletion at nt 310</li>
+    <li>C insertion at nt 397</li>
+    <li>A deletion at nt 400</li>
+    <li>G deletion at nt 477</li>
+    <li>G deletion at nt 586</li>
+    <li>T deletion at nt 653</li>
+    <li>GT deletion at nt 673-674</li>
+    <li>C deletion at nt 758</li>
+    <li>A deletion at codon 23</li>
+    <li>C insertion at codon 218</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_7259</h3></summary>
+  <h4>Mutations missing from CARD:</h4>
+  <ul>
+    <li>M306I</li>
+    <li>M306V</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_7301</h3></summary>
+  <h4>Mutations listed in CARD that are not present in articles referenced:</h4>
+  <ul>
+    <li>R231V</li>
+    <li>R234F</li>
+    <li>R234S</li>
+  </ul>
+  <h4>Mutations listed wrong in KARGVA:</h4>
+  <ul>
+    <li>T336A - is actually a T335A mutation</li>
+  </ul>
+</details>
+
+<details>
+  <summary><h3>MEG_7303<sup><a href="#footnote22" id="reference22">22</a></sup></h3></summary>
+  <h4>Mutations listed in CARD that are not present in articles referenced:</h4>
+  <ul>
+    <li>G258A</li>
+    <li>G275A</li>
+  </ul>
+</details>
 
 ---
 
@@ -1464,8 +1593,14 @@ This file is a work in progress
   <sup><li>The positions that are used in this file is based on the M.tubercolosis CARD reference sequence</li></sup>
 </ul>
 <sup id="footnote19">
-  19. All deletions listed here solely comes from the  <a href="https://pubmed.ncbi.nlm.nih.gov/28904673/">second-to-last article </a>referenced in the corresponding CARD entry, which has difficulty differentiating between a deletion of a whole amino acid and a base-pair deletion <a href="#reference19">↩</a>
+  19. All deletions listed here solely comes from the <a href="https://pubmed.ncbi.nlm.nih.gov/28904673/">second-to-last article </a>referenced in the corresponding CARD entry, which has difficulty differentiating between a deletion of a whole amino acid and a base-pair deletion <a href="#reference19">↩</a>
 </sup><br>
 <sup id="footnote20">
   20. In an <em>n</em>-tuple mutation, nonsense and frameshift mutations take precedence and are therefore considered single mutations <a href="#reference20">↩</a>
+</sup><br>
+<sup id="footnote21">
+  21. <a href="https://pubmed.ncbi.nlm.nih.gov/11302826/">First article </a> referenced in the corresponding CARD entry is on <em>E. coli</em> as opposed to <em>S. enterica</em> <a href="#reference21">↩</a>
+</sup><br>
+<sup id="footnote22">
+  22. No mutants are listed in the <a href="https://pubmed.ncbi.nlm.nih.gov/7989561/">article</a> referenced in CARD. Therefore, the gene is not present in the SNPInfo database <a href="#reference22">↩</a>
 </sup><br>
