@@ -39,7 +39,7 @@ This file is a work in progress
 ## Problems with mutations
 <details>
   <summary><h3>MEG_413</h3></summary>
-  Mutations listed in CARD that are not present in articles referenced: 
+  <h4>Mutations listed in CARD that are not present in articles referenced: </h4>
   <ul>
     <li>R45C</li>
   </ul>
@@ -47,20 +47,20 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_414<sup><a href="#footnote1" id="reference1">1</a></sup></h3></summary> 
-  Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
+  <h4>Mutations missing from CARD:</h4>
+  <ul>
+    <li>Transposase insertion</li>
+  </ul>
+  <h4>Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:</h4>
   <ul>
     <li>Y114F - part of the double mutation Y114F, V165I</li>
     <li>V165I - part of the double mutation Y114F, V165I</li>
-  </ul>
-  Mutations missing from CARD:
-  <ul>
-    <li>Transposase insertion</li>
   </ul>
 </details>
 
 <details>
   <summary><h3>MEG_1187</h3></summary>
-  Mutations missing from CARD:
+  <h4>Mutations missing from CARD:</h4>
   <ul>
     <li>R105S</li>
   </ul>
@@ -68,7 +68,7 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_1731</h3></summary>
-  Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
+  <h4>Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:</h4>
   <ul>
     <li>+AII14-16 - part of double mutation +AII14-16, -NFQ74-76</li>
   </ul>
@@ -76,11 +76,11 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_1732</h3></summary>
-  Mutations listed wrong in CARD:
+  <h4>Mutations listed wrong in CARD:</h4>
   <ul>
     <li>K59T - is actually a K59N mutation</li>
   </ul>
-  Mutations missing from CARD:
+  <h4>Mutations missing from CARD:</h4>
   <ul>
     <li>N13S</li>
   </ul>
@@ -88,18 +88,26 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_2710</h3></summary>
-  Mutations listed wrong in CARD:
+  <h4>Mutations listed wrong in CARD:</h4>
   <ul>
     <li>A314G,Y322C - is actually a A313G,Y319C double mutation</li>
     <li>S244T - actually comes from a different gene</li>
   </ul>
-  Mutations that are susceptible or neutral:
+  <h4>Mutations that are susceptible or neutral:</h4>
   <ul>
     <li>L413P</li>
     <li>E504Q</li>
     <li>D1024N</li>
   </ul>
-  Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
+  <h4>Mutations missing from CARD:</h4>
+  <ul>
+    <li>A439T</li>
+    <li>H1002R</li>
+    <li>V282G</li>
+    <li>F285L</li>
+    <li>D328H</li>
+  </ul>
+  <h4>Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:</h4>
   <ul>
     <li>R507G - part of double mutation M306I, R507G</li>
     <li>R471P - part of double mutation D299E, R471P</li>
@@ -111,7 +119,7 @@ This file is a work in progress
     <li>E378A - part of double mutation D299E, E378A</li>
     <li>E368A - part of quadruple mutation M306V, E368A, S380R, P397Q</li>
   </ul>
-  <em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:
+  <h4><em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:</h4>
   <ul>
     <li>D299E, E378A - D299E is already listed as a resistance-confering single mutation</li>
     <li>D299E, P446H - D299E is already listed as a resistance-confering single mutation</li>
@@ -123,19 +131,11 @@ This file is a work in progress
     <li>M306V, E368A, S380R, P397Q - M306V is already listed as a resistance-confering single mutation</li>
     <li>A313G, Y319C - Y319C is already listed as a resistance-confering single mutation</li>
   </ul>
-  Mutations missing from CARD:
-  <ul>
-    <li>A439T</li>
-    <li>H1002R</li>
-    <li>V282G</li>
-    <li>F285L</li>
-    <li>D328H</li>
-  </ul>
 </details>
 
 <details>
   <summary><h3>MEG_2711<sup><a href="#footnote2" id="reference2">2</a></sup></h3></summary> 
-  Mutations that are suscepible or neutral:
+  <h4>Mutations that are suscepible or neutral:</h4>
   <ul>
     <li>Q998R</li>
     <li>T610K</li>
@@ -146,17 +146,22 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_2712</h3></summary>
-  Mutations listed in CARD that are not present in articles referenced: 
+  <h4>Mutations listed in CARD that are not present in articles referenced: </h4>
     <ul>
     <li>V287F</li>
     <li>H285Y</li>
     <li>A247P</li>
   </ul>
-  Mutations that are susceptible or neutral:
+  <h4>Mutations that are susceptible or neutral:</h4>
   <ul>
     <li>T270I</li>
   </ul>
-  Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
+  <h4>Mutations missing from CARD:</h4>
+  <ul>
+    <li>E305D</li>
+    <li>I406V</li>
+  </ul>
+  <h4>Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:</h4>
   <ul>
     <li>G288V - part of triple mutation G288V, M310K, Y327N </li>
     <li>G288W - part of double mutation G288W, V303G </li>
@@ -173,7 +178,7 @@ This file is a work in progress
     <li>W326R - part of double mutation I297L, W326R</li>
     <li>Y327N - part of triple mutation G288V, M310K, Y327N </li>
   </ul>
-  <em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:
+  <h4><em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:</h4>
   <ul>
     <li>A244T, G288W, V303G - not a single mutation, but G288W, V303G is already listd as a resistance-conferring double mutation</li>
     <li>A247P, T270I, I297T - I297T is already listed as a resistance-conferring single mutation</li>
@@ -183,21 +188,16 @@ This file is a work in progress
     <li>T270I, I297T - I297T is already listed as a resistance-conferring single mutation</li>
     <li>I297L, W326R - I297L is already listed as a resistance-conferring single mutation</li>
   </ul>
-  Mutations missing from CARD:
-  <ul>
-    <li>E305D</li>
-    <li>I406V</li>
-  </ul>
 </details>
 
 <details>
   <summary><h3>MEG_2866</h3></summary>
-  Mutations listed in CARD that are not present in articles referenced: 
+  <h4>Mutations listed in CARD that are not present in articles referenced: </h4>
     <ul>
     <li>Deletion of nucleotide 65</li>
     <li>Insertion at nucleoide 811</li>
   </ul>
-  Mutations missing from CARD:
+  <h4>Mutations missing from CARD:</h4>
   <ul>
     <li>Q246STOP</li>
     <li>GC deleted at nucleotides 1322-1323</li>
@@ -206,7 +206,7 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_2934<sup><a href="#footnote3" id="reference3">3</a></sup></h3></summary>
-  Mutations listed in CARD that are not present in articles referenced: 
+  <h4>Mutations listed in CARD that are not present in articles referenced: </h4>
     <ul>
     <li>F25I</li>
   </ul>
@@ -214,12 +214,12 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_3065</h3></summary>
-  Mutations removed due to conflicting evidence:
+  <h4>Mutations removed due to conflicting evidence:</h4>
   <ul>
     <li>F441Y - Position 441 had neither an F or a Y</li>
     <li>T387I, E449K- Neither position had their respsective wild type or mutant</li>
   </ul>
-  <em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:
+  <h4><em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:</h4>
   <ul>
     <li>A67T, P406L - P406L is already listed as a resistance-conferring single mutation</li>
     <li>A70V, A160V, H457Y - H457Y is already listed as a resistance-conferring single mutation</li>
@@ -231,23 +231,18 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_3135</h3></summary>
-  Mutations listed wrong in CARD:
+  <h4>Mutations listed wrong in CARD:</h4>
   <ul>
     <li>N52T - is actually a N51T mutation</li>
     <li>L49F - is actually a L49P mutation</li>
   </ul>
-  Mutations that are susceptible or neutral:
+  <h4>Mutations that are susceptible or neutral:</h4>
   <ul>
     <li>P84L</li>
     <li>G37V</li>
     <li>E92A</li>
   </ul>
-  Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
-  <ul>
-    <li>W45C - part of triple mutation W45C, W148R</li>
-    <li>W148R - part of double mutation W45C, W148R</li>
-  </ul>
-  Mutations missing from CARD:
+  <h4>Mutations missing from CARD:</h4>
   <ul>
     <li>V65A</li>
     <li>E92D</li>
@@ -259,11 +254,16 @@ This file is a work in progress
     <li>G deletion at nt 351</li>
     <li>C deletion at nt 115</li>
   </ul>
+  <h4>Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:</h4>
+  <ul>
+    <li>W45C - part of triple mutation W45C, W148R</li>
+    <li>W148R - part of double mutation W45C, W148R</li>
+  </ul>
 </details>
 
 <details>
   <summary><h3>MEG_3143</h3></summary>
-  Mutations that are susceptible or neutral:
+  <h4>Mutations that are susceptible or neutral:</h4>
   <ul>
     <li>F3I</li>
     <li>L27F</li>
@@ -275,13 +275,13 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_3144</h3></summary>
-  Mutations missing from CARD:
+  <h4>Mutations missing from CARD:</h4>
   <ul>
     <li>insertion of ISEcp1 (1661 bp) between 766T and 767G</li>
     <li>insertion of ISEcp1 (1880 bp) between 552T and 553G</li>
     <li>20 bp deletion from nucleotide 602 to 621</li>
   </ul>
-  <em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:
+  <h4><em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:</h4>
   <ul>
     <li>E448K, Q444E, E443Q, L297F - E448K is already listed as a resistance-conferring single mutation</li>
     <li>E448K, G302D - E448K is already listed as a resistance-conferring single mutation</li>
@@ -291,11 +291,11 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_3177</h3></summary>
-  Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
+  <h4>Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:</h4>
   <ul>
     <li>D95N - part of triple mutation S91F, D95N</li>
   </ul>
-  <em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:
+  <h4><em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:</h4>
   <ul>
     <li>S91F, D95N - S91F is already listed as a resistance-conferring single mutation</li>
   </ul>
@@ -303,16 +303,16 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_3178<sup><a href="#footnote4" id="reference4">4</a></sup></h3></summary>
-  Mutations listed in CARD that are not present in articles referenced:
+  <h4>Mutations listed in CARD that are not present in articles referenced:</h4>
   <ul>
     <li>S83L</li>
   </ul>
-  Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
+  <h4>Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:</h4>
   <ul>
     <li>N57K - part of double mutation N57K, S83L</li>
     <li>H80P - part of double mutation H80P, S83L</li>
   </ul>
-  <em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:
+  <h4><em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:</h4>
   <ul>
     <li>N57K, S83L - S83L is already listed as a resistance-conferring single mutation</li>
     <li>H80P, S83L - S83L is already listed as a resistance-conferring single mutation</li>
@@ -322,38 +322,38 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_3180<sup><a href="#footnote5" id="reference5">5</a></sup></h3></summary>
-  Mutations listed in CARD that are not present in articles referenced:
+  <h4>Mutations listed in CARD that are not present in articles referenced:</h4>
   <ul>
     <li>G88A</li>
     <li>D89V</li>
     <li>D94V</li>
   </ul>
-  Mutations that are susceptible or neutral:
+  <h4>Mutations that are susceptible or neutral:</h4>
   <ul>
     <li>T80A</li>
     <li>A90V - by itself</li>
     <li>A90G</li>
     <li>G247S - by itself</li>
   </ul>
-  Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
+  <h4>Mutations missing from CARD:</h4>
+  <ul>
+    <li>T80A, A90G - is hypersusceptible<sup><a href="#footnote6" id="reference6">6</a></sup></li>
+  </ul>
+  <h4>Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:</h4>
   <ul>
     <li>P102H - part of double mutation A90V, P102H</li>
   </ul>
-  <em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:
+  <h4><em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:</h4>
   <ul>
     <li>A90V, D94G - D94G is already listed as a resistance-conferring single mutation</li>
     <li>MEG_3180 A90V, MEG_3243 D472H- MEG_3243 D472H is already listed as a resistance-conferring single mutation</li>
     <li>MEG_3180 G247S, MEG_3243 D500N - MEG_3243 D500N is already listed as a resistance-conferring single mutation</li>
   </ul>
-  Mutations missing from CARD:
-  <ul>
-    <li>T80A, A90G - is hypersusceptible<sup><a href="#footnote6" id="reference6">6</a></sup></li>
-  </ul>
 </details>
 
 <details>
   <summary><h3>MEG_3181</h3></summary>
-  Mutations listed wrong in CARD:
+  <h4>Mutations listed wrong in CARD:</h4>
   <ul>
     <li>A91T - is actually a A91V mutation</li>
   </ul>
@@ -361,7 +361,7 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_3182</h3></summary>
-  Mutations missing from CARD:
+  <h4>Mutations missing from CARD:</h4>
   <ul>
     <li>S101W</li>
   </ul>
@@ -369,7 +369,7 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_3185</h3></summary>
-  Mutations missing from CARD:
+  <h4>Mutations missing from CARD:</h4>
   <ul>
     <li>D99N</li>
   </ul>
@@ -377,16 +377,16 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_3187</h3></summary>
-  Mutations listed in CARD that are not present in articles referenced:
+  <h4>Mutations listed in CARD that are not present in articles referenced:</h4>
   <ul>
     <li>D87Y</li>
     <li>D87H</li>
   </ul>
-  Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
+  <h4>Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:</h4>
   <ul>
     <li>S83I - part of quintuple mutation S83I, I112V, L127M, A128S, K154R</li>
   </ul>
-  <em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:
+  <h4><em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:</h4>
   <ul>
     <li>S83L, D87Y - S83L is already listed as a resistance-conferring single mutation</li>
     <li>S83L, D87N - S83L and D87N are already listed as individual resistance-conferring single mutations</li>
@@ -395,7 +395,7 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_3240</h3></summary>
-  Mutations missing from CARD:
+  <h4>Mutations missing from CARD:</h4>
   <ul>
     <li>R523Q</li>
   </ul>
@@ -403,17 +403,17 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_3241<sup><a href="#footnote7" id="reference7">7</a></sup></h3></summary>
-  Mutations listed wrong in CARD:
+  <h4>Mutations listed wrong in CARD:</h4>
   <ul>
     <li>K444F - is actually a L444F mutation</li>
   </ul>
-  Mutations listed wrong in KARGVA:
+  <h4>Mutations listed wrong in KARGVA:</h4>
   <ul>
     <li>E467V - is actually a E466V mutation</li>
     <li>E467K - is actually a E466K mutation</li>
     <li>R388P - is actually a R389P mutation</li>
   </ul>
-  Mutations that are susceptible or neutral:
+  <h4>Mutations that are susceptible or neutral:</h4>
   <ul>
     <li>S416A</li>
   </ul>
@@ -421,7 +421,7 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_3242</h3></summary>
-  Mutations listed wrong in KARGVA:
+  <h4>Mutations listed wrong in KARGVA:</h4>
   <ul>
     <li>S464A - is actually a S463A mutation</li>
   </ul>
@@ -429,16 +429,16 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_3243<sup><a href="#footnote8" id="reference8">8</a></sup></h3></summary>
-  Mutations listed wrong in CARD:
+  <h4>Mutations listed wrong in CARD:</h4>
   <ul>
     <li>N510D - is actually a N538D mutation</li>
     <li>D472H  - is actually a D500H mutation</li>
   </ul>
-  Mutations that are susceptible or neutral:
+  <h4>Mutations that are susceptible or neutral:</h4>
   <ul>
     <li>V340L</li>
   </ul>
-  <em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:
+  <h4><em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:</h4>
   <ul>
     <li>MEG_3180 G247S, MEG_3243 D500N - MEG_3243 D500N is already listed as a resistance-conferring single mutation</li>
   </ul>
@@ -446,14 +446,14 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_3244</h3></summary>
-  Mutations listed in CARD that are not present in articles referenced:
+  <h4>Mutations listed in CARD that are not present in articles referenced:</h4>
   <ul>
     <li>R136I</li>
     <li>R136E</li>
     <li>R136G</li>
     <li>R136L</li>
   </ul>
-  Mutations missing from CARD:
+  <h4>Mutations missing from CARD:</h4>
   <ul>
     <li>G164V</li>
   </ul>
@@ -461,15 +461,15 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_3245<sup><a href="#footnote9" id="reference9">9</a></sup></h3></summary>
-  Mutations that are susceptible or neutral:
+  <h4>Mutations that are susceptible or neutral:</h4>
   <ul>
     <li>S128L</li>
   </ul>
-  Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
+  <h4>Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:</h4>
   <ul>
     <li>I56S - part of double mutation I56S, R144S</li>
   </ul>
-  <em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:
+  <h4><em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:</h4>
   <ul>
     <li>I56S, R144S - R144S is already listed as a resistance-conferring single mutation</li>
   </ul>
@@ -478,7 +478,7 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_3246<sup><a href="#footnote10" id="reference10">10</a></sup></h3></summary>
-  Mutations listed wrong in KARGVA:
+  <h4>Mutations listed wrong in KARGVA:</h4>
   <ul>
     <li>G125S - is actually a G124S mutation</li>
   </ul>
@@ -486,23 +486,23 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_3429</h3></summary>
-  Mutations listed wrong in CARD:
-  <ul>
-    <li>V78A - is actually a S94A mutation</li>
-  </ul>
-  Mutations listed in CARD that are not present in articles referenced:
+  <h4>Mutations listed in CARD that are not present in articles referenced:</h4>
   <ul>
     <li>I21T</li>
   </ul>
-  Mutations that are susceptible or neutral:
+  <h4>Mutations that are susceptible or neutral:</h4>
   <ul>
     <li>G3G</li>
+  </ul>
+  <h4>Mutations listed wrong in CARD:</h4>
+  <ul>
+    <li>V78A - is actually a S94A mutation</li>
   </ul>
 </details>
 
 <details>
   <summary><h3>MEG_3430</h3></summary>
-  Mutations missing from CARD:
+  <h4>Mutations missing from CARD:</h4>
   <ul>
     <li>5 bp deletion from nt 282 to 286</li>
   </ul>
@@ -510,7 +510,7 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_3445</h3></summary>
-  Mutations that are susceptible or neutral:
+  <h4>Mutations that are susceptible or neutral:</h4>
   <ul>
     <li>G312S</li>
   </ul>
@@ -518,13 +518,13 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_3446</h3></summary>
-  Mutations listed wrong in CARD:
+  <h4>Mutations listed wrong in CARD:</h4>
   <ul>
     <li>D36E - is actually a D63E mutation</li>
     <li>G300W - is actually a W300G mutation</li>
     <li>A717P - is actually a A716P mutation</li>
   </ul>
-  Mutations removed due to conflicting evidence:
+  <h4>Mutations removed due to conflicting evidence:</h4>
   <ul>
     <li>A234G - G is the wild-type for this organism
       <ul>
@@ -544,36 +544,15 @@ This file is a work in progress
       </ul>
     </li>
   </ul>
-  Mutations listed in CARD that are not present in articles referenced:
+  <h4>Mutations listed in CARD that are not present in articles referenced:</h4>
   <ul>
     <li>G593D</li>
   </ul>
-  Mutations that are susceptible or neutral:
+  <h4>Mutations that are susceptible or neutral:</h4>
   <ul>
     <li>R463L</li>
   </ul>
-  Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
-  <ul>
-    <li>S17T - part of triple mutation S17T, T insertion at nt 277<sup><a href="#footnote11" id="reference11">11</a></sup>, and S315T</li>
-    <li>V68G - part of triple mutation V68G, A234G, E454*<sup><a href="#footnote11" id="reference11">11</a></sup></li>
-    <li>Y98C - part of triple mutation Y98C, A349T, R463L</li>
-    <li>G123E - part of double mutation G123E, G299S</li>
-    <li>P131R - part of double mutation P131R, D194Y </li>
-    <li>D194Y - part of double mutation P131R, D194Y </li>
-    <li>D194G - part of triple mutation D194G, S315T, M624V</li>
-    <li>G299S - part of double mutation G123E, G299S</li>
-    <li>A349T - part of triple mutation Y98C, A349T, R463L</li>
-    <li>D387H - part of double mutation S315T, D387H</li>
-    <li>M624V - part of triple mutation D194G, S315T, M624V</li>
-  </ul>
-  <em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:
-  <ul>
-    <li>Y98C, A349T, R463L - Not a single mutation, but because R463L is a neutral mutation, only Y98C and A349T confer resistance here
-    <li>D194G, S315T, M624V - S315T is already listed as a resistance-conferring single mutation</li>
-    <li>S315T, D387H - S315T is already listed as a resistance-conferring single mutation</li>
-    <li>V431A, G490S - G490S is already listed as a resistance-conferring single mutation</li>
-  </ul>
-  Mutations missing from CARD:
+  <h4>Mutations missing from CARD:</h4>
   <ul>
     <li>K46*<sup><a href="#footnote11" id="reference11">11</a></sup>, A234G</li>
     <li>R128P</li>
@@ -627,11 +606,32 @@ This file is a work in progress
     <li>G deletion at nt 1472</li>
     <li>A deletion at nt 1477</li>
   </ul>
+  <h4>Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:</h4>
+  <ul>
+    <li>S17T - part of triple mutation S17T, T insertion at nt 277<sup><a href="#footnote11" id="reference11">11</a></sup>, and S315T</li>
+    <li>V68G - part of triple mutation V68G, A234G, E454*<sup><a href="#footnote11" id="reference11">11</a></sup></li>
+    <li>Y98C - part of triple mutation Y98C, A349T, R463L</li>
+    <li>G123E - part of double mutation G123E, G299S</li>
+    <li>P131R - part of double mutation P131R, D194Y </li>
+    <li>D194Y - part of double mutation P131R, D194Y </li>
+    <li>D194G - part of triple mutation D194G, S315T, M624V</li>
+    <li>G299S - part of double mutation G123E, G299S</li>
+    <li>A349T - part of triple mutation Y98C, A349T, R463L</li>
+    <li>D387H - part of double mutation S315T, D387H</li>
+    <li>M624V - part of triple mutation D194G, S315T, M624V</li>
+  </ul>
+  <h4><em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:</h4>
+  <ul>
+    <li>Y98C, A349T, R463L - Not a single mutation, but because R463L is a neutral mutation, only Y98C and A349T confer resistance here
+    <li>D194G, S315T, M624V - S315T is already listed as a resistance-conferring single mutation</li>
+    <li>S315T, D387H - S315T is already listed as a resistance-conferring single mutation</li>
+    <li>V431A, G490S - G490S is already listed as a resistance-conferring single mutation</li>
+  </ul>
 </details>
 
 <details>
   <summary><h3>MEG_3588</h3></summary>
-  Mutations listed wrong in CARD:
+  <h4>Mutations listed wrong in CARD:</h4>
   <ul>
 	  <li>I177 insertion and deletion - actually located between positions 168 and 171
       <ul>
@@ -643,15 +643,15 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_3589</h3></summary>
-  Mutations listed in CARD that are not present in articles referenced:
+  <h4>Mutations listed in CARD that are not present in articles referenced:</h4>
   <ul>
 	  <li>A180T</li>
   </ul>
-  Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
+  <h4>Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:</h4>
   <ul>
 	  <li>H264Q - part of double mutation T120A, H264Q</li>
   </ul>
-  <em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:
+  <h4><em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:</h4>
   <ul>
     <li>T120A, H264Q - T120A is already listed as a resistance-conferring single mutation</li>
   </ul>
@@ -659,7 +659,7 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_3591</h3></summary>
-  Mutations missing from CARD:
+  <h4>Mutations missing from CARD:</h4>
   <ul>
 	  <li>L27I</li>
   </ul>
@@ -667,7 +667,7 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_3594</h3></summary>
-  Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
+  <h4>Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:</h4>
   <ul>
 	  <li>Q52P - part of double mutation Q52P, Ter189S</li>
   </ul>
@@ -675,7 +675,7 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_3626</h3></summary>
-  Mutations missing from CARD:
+  <h4>Mutations missing from CARD:</h4>
   <ul>
     <li>Q234*</li>
     <li>2-bp deletion at nt 76</li>
@@ -686,7 +686,7 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_3627</h3></summary>
-  Mutations missing from CARD:
+  <h4>Mutations missing from CARD:</h4>
   <ul>
     <li>Single base deletion at nt 135</li>
     <li>84-bp deletion at nt 858</li>
@@ -695,21 +695,21 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_3931</h3></summary>
-  Mutations that are susceptible or neutral:
+  <h4>Mutations that are susceptible or neutral:</h4>
   <ul>
     <li>V104A</li>
   </ul>
-  Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
-  <ul>
-    <li>V73A - part of double mutation V73A, L270Q</li>
-    <li>L270Q - part of double mutation V73A, L270Q</li>
-  </ul>
-  Mutations missing from CARD:
+  <h4>Mutations missing from CARD:</h4>
   <ul>
     <li>First 809bp deletion</li>
     <li>C deletion at nt 293</li>
     <li>8-bp deletion at nt 710</li>
     <li>30-bp deletion at nt 927</li>
+  </ul>
+  <h4>Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:</h4>
+  <ul>
+    <li>V73A - part of double mutation V73A, L270Q</li>
+    <li>L270Q - part of double mutation V73A, L270Q</li>
   </ul>
 </details>
 
@@ -723,7 +723,7 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_4092</h3></summary>
-  Mutations listed wrong in CARD:
+  <h4>Mutations listed wrong in CARD:</h4>
   <ul>
     <li>D116C - is actually intrinsically resistant at D116</li>
   </ul>
@@ -731,7 +731,7 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_4094</h3></summary>
-  Mutations that are susceptible or neutral:
+  <h4>Mutations that are susceptible or neutral:</h4>
   <ul>
     <li>V65L</li>
     <li>G257D</li>
@@ -744,7 +744,7 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_4095</h3></summary>
-  Mutations listed in CARD that are not present in articles referenced:
+  <h4>Mutations listed in CARD that are not present in articles referenced:</h4>
   <ul>
     <li>C115S</li>
   </ul>
@@ -752,28 +752,28 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_4109</h3></summary>
-  Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
-  <ul>
-    <li>A186T - part of double mutation G71E, A186T</li>
-    <li>S209R - part of double mutation G71E, S209R</li>
-  </ul>
-  <em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:
-  <ul>
-    <li>G71E, A186T - G71E is already listed as a resistance-conferring single mutation</li>
-    <li>G71E, S209R - G71E is already listed as a resistance-conferring single mutation</li>
-  </ul>
-  Mutations missing from CARD:
+  <h4>Mutations missing from CARD:</h4>
   <ul>
     <li>E72K, D75H, A85D</li>
     <li>T100K, L110P</li>
     <li>P105A, P122L, S141N</li>
     <li>E204G, H205N</li>
   </ul>
+  <h4>Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:</h4>
+  <ul>
+    <li>A186T - part of double mutation G71E, A186T</li>
+    <li>S209R - part of double mutation G71E, S209R</li>
+  </ul>
+  <h4><em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:</h4>
+  <ul>
+    <li>G71E, A186T - G71E is already listed as a resistance-conferring single mutation</li>
+    <li>G71E, S209R - G71E is already listed as a resistance-conferring single mutation</li>
+  </ul>
 </details>
 
 <details>
   <summary><h3>MEG_4110</h3></summary>
-  Mutations missing from CARD:
+  <h4>Mutations missing from CARD:</h4>
   <ul>
     <li>T158I</li>
   </ul>
@@ -781,11 +781,11 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_4130</h3></summary>
-  Mutations that are susceptible or neutral:
+  <h4>Mutations that are susceptible or neutral:</h4>
   <ul>
     <li>V18A</li>
   </ul>
-  Mutations missing from CARD:
+  <h4>Mutations missing from CARD:</h4>
   <ul>
     <li>A226E</li>
     <li>N316K</li>
@@ -796,7 +796,7 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_4131</h3></summary>
-  Mutations missing from CARD:
+  <h4>Mutations missing from CARD:</h4>
   <ul>
     <li>A insertion at nt 272</li>
     <li>T insertion at nt 439</li>
@@ -805,7 +805,7 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_4289</h3></summary>
-  Mutations that are susceptible or neutral:
+  <h4>Mutations that are susceptible or neutral:</h4>
   <ul>
     <li>R154A</li>
     <li>R154D</li>
@@ -814,11 +814,11 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_4296</h3></summary>
-  Mutations listed wrong in CARD:
+  <h4>Mutations listed wrong in CARD:</h4>
   <ul>
     <li>Q142X - is actually a Q142* mutation</li>
   </ul>
-  Mutations missing from CARD:
+  <h4>Mutations missing from CARD:</h4>
   <ul>
     <li>W339*</li>
     <li>14-bp deletion at nt 433</li>
@@ -832,7 +832,7 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_5325</h3></summary>
-  Mutations listed wrong in CARD:
+  <h4>Mutations listed wrong in CARD:</h4>
   <ul>
     <li>S80L - is actually a S87L mutation</li>
   </ul>
@@ -840,7 +840,7 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_5328</h3></summary>
-  Mutations missing from CARD:
+  <h4>Mutations missing from CARD:</h4>
   <ul>
     <li>D82N</li>
     <li>E87K</li>
@@ -849,11 +849,11 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_5331</h3></summary>
-  Mutations listed wrong in CARD:
+  <h4>Mutations listed wrong in CARD:</h4>
   <ul>
     <li>A66T - is actually a A69T mutation, which is susceptible</li>
   </ul>
-  Mutations that are susceptible or neutral:
+  <h4>Mutations that are susceptible or neutral:</h4>
   <ul>
     <li>P62S</li>
     <li>A67S</li>
@@ -861,7 +861,7 @@ This file is a work in progress
     <li>S83N</li>
     <li>A119V</li>
   </ul>
-  Mutations missing from CARD:
+  <h4>Mutations missing from CARD:</h4>
   <ul>
     <li>D87V</li>
     <li>K97R</li>
@@ -870,26 +870,26 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_5332</h3></summary>
-  Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
+  <h4>Mutations missing from CARD:</h4>
+  <ul>
+    <li>S80I</li>
+    <li>S80R</li>
+  </ul>
+  <h4>Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:</h4>
   <ul>
     <li>A85T - part of double mutation with an S80 mutation</li>
     <li>D111H - part of double mutation with an S80 mutation</li>
     <li>S129P - part of double mutation with an S80 mutation</li>
   </ul>
-  Mutations missing from CARD:
-  <ul>
-    <li>S80I</li>
-    <li>S80R</li>
-  </ul>
 </details>
 
 <details>
   <summary><h3>MEG_5333</h3></summary>
-  Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
+  <h4>Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:</h4>
   <ul>
     <li>E84G - part of double mutation S80I, E84G</li>
   </ul>
-  <em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:
+  <h4><em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:</h4>
   <ul>
     <li>S80I - S80I, E84G is already listed as a resistance-conferring single mutation</li>
   </ul>
@@ -898,7 +898,7 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_5394</h3></summary>
-  Mutations missing from CARD:
+  <h4>Mutations missing from CARD:</h4>
   <ul>
     <li>L416F</li>
     <li>I444F</li>
@@ -912,21 +912,11 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_5401</h3></summary>
-  Mutations listed in CARD that are not present in articles referenced:
+  <h4>Mutations listed in CARD that are not present in articles referenced:</h4>
   <ul>
     <li>N512Y</li>
   </ul>
-	Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
-  <ul>
-    <li>I312M  - part of double mutation I312M, G545S</li>
-    <li>V316T - part of double mutation V316T, G545S</li>
-  </ul>
-  <em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:
-  <ul>
-    <li>G545S - I312M, G545S is already listed as a resistance-conferring single mutation</li>
-    <li>G545S - V316T, G545S is already listed as a resistance-conferring single mutation</li>
-  </ul>
-  Mutations missing from CARD:
+  <h4>Mutations missing from CARD:</h4>
   <ul>
     <li>D346 insertion</li>
     <li>A501V</li>
@@ -934,11 +924,21 @@ This file is a work in progress
     <li>E538G</li>
     <li>P551S</li>
   </ul>
+	<h4>Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:</h4>
+  <ul>
+    <li>I312M  - part of double mutation I312M, G545S</li>
+    <li>V316T - part of double mutation V316T, G545S</li>
+  </ul>
+  <h4><em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:</h4>
+  <ul>
+    <li>G545S - I312M, G545S is already listed as a resistance-conferring single mutation</li>
+    <li>G545S - V316T, G545S is already listed as a resistance-conferring single mutation</li>
+  </ul>
 </details>
 
 <details>
   <summary><h3>MEG_5406</h3></summary>
-  Mutations listed wrong in CARD:
+  <h4>Mutations listed wrong in CARD:</h4>
   <ul>
     <li>T445A - is actually a T451A mutation</li>
     <li>E475G - is actually a E481G mutation</li>
@@ -948,7 +948,7 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_5407</h3></summary>
-  Mutations that are susceptible or neutral:
+  <h4>Mutations that are susceptible or neutral:</h4>
   <ul>
     <li>M339F</li>
     <li>M400T</li>
@@ -957,12 +957,12 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_5780</h3></summary>
-  Mutations listed wrong in CARD:
+  <h4>Mutations listed wrong in CARD:</h4>
   <ul>
     <li>V59N - is actually a V59T mutation</li>
     <li>K66R - is actually a K75N mutation</li>
   </ul>
-  Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
+  <h4>Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:</h4>
   <ul>
     <li>K75N - part of double mutation K75N, GE76 insertion</li>
     <li>G76 insertion - part of double mutation K75N, GE76 insertion</li>
@@ -972,7 +972,7 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_5784<sup><a href="#footnote13" id="reference13">13</a></sup></h3></summary>
-  Mutations that are susceptible or neutral:
+  <h4>Mutations that are susceptible or neutral:</h4>
   <ul>
     <li>A110V</li>
     <li>R117L</li>
@@ -981,23 +981,23 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_5785</h3></summary>
-  Mutations that are susceptible or neutral:
+  <h4>Mutations that are susceptible or neutral:</h4>
   <ul>
     <li>V260G - by itself</li>
   </ul>
-  Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
-  <ul>
-    <li>K123Q - part of double mutation K123Q, V260G</li>
-  </ul>
-  Mutations missing from CARD:
+  <h4>Mutations missing from CARD:</h4>
   <ul>
     <li>A143V</li>
+  </ul>
+  <h4>Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:</h4>
+  <ul>
+    <li>K123Q - part of double mutation K123Q, V260G</li>
   </ul>
 </details>
 
 <details>
   <summary><h3>MEG_5803</h3></summary>
-  Mutations listed wrong in CARD:
+  <h4>Mutations listed wrong in CARD:</h4>
   <ul>
     <li>M1S - is actually a M1I mutation</li>
     <li>A8G - is actually a D8G mutation</li>
@@ -1006,13 +1006,13 @@ This file is a work in progress
     <li>A140S - is actually a R140S mutation</li>
     <li>R157W - is actually a V157W mutation</li>
   </ul>
-  Mutations listed in CARD that are not present in articles referenced:
+  <h4>Mutations listed in CARD that are not present in articles referenced:</h4>
   <ul>
     <li>H59D</li>
     <li>W68D</li>
     <li>V157W</li>
   </ul>
-  Mutations that are susceptible or neutral:
+  <h4>Mutations that are susceptible or neutral:</h4>
   <ul>
     <li>Q10*</li>
     <li>D12A</li>
@@ -1026,15 +1026,7 @@ This file is a work in progress
     <li>T142M - by itself</li>
     <li>A171V</li>
   </ul>
-  Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
-  <ul>
-    <li>R140S - part of double mutation with an 8 bp deletion at nt 446<sup><a href="#footnote14" id="reference14">14</a></sup></li>
-  </ul>
-  <em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:
-  <ul>
-    <li>V130G, GG insertion at nt 420 - V130G is already listed as a resistance-conferring single mutation</li>
-  </ul>
-  Mutations missing from CARD:
+  <h4>Mutations missing from CARD:</h4>
   <ul>
     <li>D8A</li>
     <li>F13SL</li>
@@ -1178,11 +1170,19 @@ This file is a work in progress
     <li>5 bp insertion at nt 518</li>
     <li>C insertion at nt 532</li>
   </ul>
+  <h4>Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:</h4>
+  <ul>
+    <li>R140S - part of double mutation with an 8 bp deletion at nt 446<sup><a href="#footnote14" id="reference14">14</a></sup></li>
+  </ul>
+  <h4><em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:</h4>
+  <ul>
+    <li>V130G, GG insertion at nt 420 - V130G is already listed as a resistance-conferring single mutation</li>
+  </ul>
 </details>
 
 <details>
   <summary><h3>MEG_6045<sup><a href="#footnote15" id="reference15">15</a></sup></h3></summary>
-  Mutations missing from CARD:
+  <h4>Mutations missing from CARD:</h4>
   <ul>
     <li>E53*</li>
     <li>W89*</li>
@@ -1199,21 +1199,21 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_6046<sup><a href="#footnote16" id="reference16">16</a></sup></h3></summary>
-  Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:
-  <ul>
-    <li>E160D - part of double mutation with a 15-bp deletion<sup><a href="#footnote17" id="reference17">17</a></sup></li>
-    <li>M84I - part of double mutation T18P, M84I</li>
-  </ul>
-  <em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:
-  <ul>
-    <li>T18P, M84I - T18P is already listed as a resistance-conferring single mutation</li>
-  </ul>
-  Mutations missing from CARD:
+  <h4>Mutations missing from CARD:</h4>
   <ul>
     <li>Q19*</li>
     <li>E160*</li>
     <li>10 bp deletion</li>
     <li>C insertion at nt 461</li>
+  </ul>
+  <h4>Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:</h4>
+  <ul>
+    <li>E160D - part of double mutation with a 15-bp deletion<sup><a href="#footnote17" id="reference17">17</a></sup></li>
+    <li>M84I - part of double mutation T18P, M84I</li>
+  </ul>
+  <h4><em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:</h4>
+  <ul>
+    <li>T18P, M84I - T18P is already listed as a resistance-conferring single mutation</li>
   </ul>
 </details>
 
@@ -1290,6 +1290,28 @@ This file is a work in progress
     <li>L440P</li>
     <li>S493L</li>
   </ul>
+  <h4>Mutations missing from CARD:</h4>
+  <table>
+    <tbody>
+      <tr><td>G426 deletion, T427 deletion</td><td>I421T</td><td>A462Y</td></tr>
+      <tr><td>Q432 deletion, F433 deletion</td><td>K422N</td><td>Y474F</td></tr>
+      <tr><td>F433 deletion, M434 deletion, D435 deletion</td><td>E423K</td><td>Y474H</td></tr>
+      <tr><td>Q436 deletion</td><td>F425L</td><td>Y474S</td></tr>
+      <tr><td>N438 deletion</td><td>G426D, Q432*<sup><a href="#footnote20" id="reference20">20</a></sup>, H445Y, S450F </td><td>Y474T</td></tr>
+      <tr><td>G442 deletion</td><td>G426D, N437Y, L457P</td><td>Y474*</td></tr>
+      <tr><td>F433 insertion</td><td>Q429H</td><td>R476G</td></tr>
+      <tr><td>FM433 insertion</td><td>F433L</td><td>R476Q</td></tr>
+      <tr><td>R434 insertion</td><td>D435A</td><td>C478Y</td></tr>
+      <tr><td>M390E</td><td>S441P</td><td>E481A</td></tr>
+      <tr><td>M390L</td><td>H445S, K446Q</td><td>E481D</td></tr>
+      <tr><td>M390V</td><td>H445Q, S450C</td><td>E481Q</td></tr>
+      <tr><td>Q409E</td><td>S450Y</td><td>P483S</td></tr>
+      <tr><td>Q409Y</td><td>S450Q</td><td>P486T</td></tr>
+      <tr><td>Q409*</td><td>S450*</td><td>G489D</td></tr>
+      <tr><td>A419D</td><td>A462T</td><td>I491P</td></tr>
+      <tr><td>A419T</td><td></td><td></td></tr>
+    </tbody>
+  </table>
   <h4>Single mutations listed in CARD that are actually part of an <em>n</em>-tuple mutation:</h4>
   <table>
     <thead>
@@ -1371,28 +1393,6 @@ This file is a work in progress
       <tr><td>R447H, S450W</td><td>S450W</td><td></td></tr>
       <tr><td>S450L, H445C</td><td>H445C and S450L</td><td></td></tr>
       <tr><td>S450L, F433V</td><td>S450L</td><td></td></tr>
-    </tbody>
-  </table>
-  <h4>Mutations missing from CARD:</h4>
-  <table>
-    <tbody>
-      <tr><td>G426 deletion, T427 deletion</td><td>I421T</td><td>A462Y</td></tr>
-      <tr><td>Q432 deletion, F433 deletion</td><td>K422N</td><td>Y474F</td></tr>
-      <tr><td>F433 deletion, M434 deletion, D435 deletion</td><td>E423K</td><td>Y474H</td></tr>
-      <tr><td>Q436 deletion</td><td>F425L</td><td>Y474S</td></tr>
-      <tr><td>N438 deletion</td><td>G426D, Q432*<sup><a href="#footnote20" id="reference20">20</a></sup>, H445Y, S450F </td><td>Y474T</td></tr>
-      <tr><td>G442 deletion</td><td>G426D, N437Y, L457P</td><td>Y474*</td></tr>
-      <tr><td>F433 insertion</td><td>Q429H</td><td>R476G</td></tr>
-      <tr><td>FM433 insertion</td><td>F433L</td><td>R476Q</td></tr>
-      <tr><td>R434 insertion</td><td>D435A</td><td>C478Y</td></tr>
-      <tr><td>M390E</td><td>S441P</td><td>E481A</td></tr>
-      <tr><td>M390L</td><td>H445S, K446Q</td><td>E481D</td></tr>
-      <tr><td>M390V</td><td>H445Q, S450C</td><td>E481Q</td></tr>
-      <tr><td>Q409E</td><td>S450Y</td><td>P483S</td></tr>
-      <tr><td>Q409Y</td><td>S450Q</td><td>P486T</td></tr>
-      <tr><td>Q409*</td><td>S450*</td><td>G489D</td></tr>
-      <tr><td>A419D</td><td>A462T</td><td>I491P</td></tr>
-      <tr><td>A419T</td><td></td><td></td></tr>
     </tbody>
   </table>
 </details>
