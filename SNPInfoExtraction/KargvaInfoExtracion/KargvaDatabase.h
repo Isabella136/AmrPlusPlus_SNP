@@ -204,6 +204,10 @@ void KargvaDatabase::SNPInfo(){
             if (header[1] == "M400T" || header[1] == "M339F")
                 continue;
         }
+        else if (header[2] == "ARO:3003287") {          //MEG_6137
+            header[2] = "ARO:3003285";                  //change to MEG_6136 (was combined to one MDR entry)
+            header[4] = "MEG_6136";
+        }
         else if (header[2] == "ARO:3003382") {          //MEG_6548
             if (header[1] == "G121D")
                 continue;

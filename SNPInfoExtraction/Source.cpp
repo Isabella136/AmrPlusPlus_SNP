@@ -35,9 +35,10 @@ int main()
 	GeneDatabase megaresSNP(mmarc);
 	megaresSNP.combineDatabases(kargva);
 	megaresSNP.combineDatabases(literature);
+	megaresSNP.reorderInfo();
 	//GeneDatabase megaresSNP(kargva);
 	fstream database;
-	database.open("../data/megares_database_v3.00(2).fasta");
+	database.open("../data/megares_database_v3.00.fasta");
 	string header;
 	string sequence;
 	while (std::getline(database, header))

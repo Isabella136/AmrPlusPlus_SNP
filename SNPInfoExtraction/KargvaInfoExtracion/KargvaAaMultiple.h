@@ -17,12 +17,16 @@ class KargvaAaMultiple : public virtual KargvaModel {
 		~KargvaAaMultiple();
 		KargvaAaMultiple(const KargvaAaMultiple& other);
 		InfoPipe* Clone();
+		string getFirstPos();
 		void addToModel(string line);
 		bool includes(string line);
 		string condensedInfo();
 		string infoType();
 
 };
+string KargvaAaMultiple::getFirstPos() {
+	return "mult" + models[0]->getFirstPos();
+}
 KargvaAaMultiple::KargvaAaMultiple() {}
 KargvaAaMultiple::KargvaAaMultiple(string line, string id, shared_ptr<CARD_database> dbSeq) {
 	string temp = line;

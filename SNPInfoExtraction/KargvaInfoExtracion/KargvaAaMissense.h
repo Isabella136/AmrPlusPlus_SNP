@@ -35,7 +35,13 @@ InfoPipe* KargvaAaMissense::Clone() {
 }
 KargvaAaMissense::~KargvaAaMissense() {}
 void KargvaAaMissense::addToModel(string line) {
-    mutant_aa.push_back(line.at(line.size() - 1));
+    bool dontAdd = false;
+    for (auto iter = this->mutant_aa.begin(); iter != this->mutant_aa.end(); ++iter) {
+        if (line.at(line.size() - 1) == *iter)
+            dontAdd = true;
+    }
+    if (!dontAdd)
+        mutant_aa.push_back(line.at(line.size() - 1));
 }
 bool KargvaAaMissense::includesMt(string snp) {
     for (auto iter = this->mutant_aa.begin(); iter != this->mutant_aa.end(); ++iter) {

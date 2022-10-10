@@ -4,7 +4,11 @@
 #include <unordered_map>
 #include <map>
 #include <iostream>
+#include <typeinfo>
 #include "Gene.h"
+#include "Model.h"
+#include "ModelSNP.h"
+#include "ModelInDel.h"
 #include "MetamarcInfoExtraction/MmarcDatabase.h"
 
 using namespace std;
@@ -19,7 +23,7 @@ class GeneDatabase {
         void print(string csv, string fasta);
         void printIfNoSNP(string fileName);
         void addGene(string _geneName, string _geneType, string _geneClass, string _geneMechanism, string _geneGroup, string _geneSequence);
-    
+        void reorderInfo();
 };
 GeneDatabase::GeneDatabase(ModelDatabase& models)
 {
@@ -33,6 +37,21 @@ void GeneDatabase::combineDatabases(ModelDatabase& models)
             snpInfoDatabase.emplace(iter->first, iter->second);
     }
 }
+
+void GeneDatabase::reorderInfo()
+{
+    for (auto iter = snpInfoDatabase.begin(); iter != snpInfoDatabase.end(); ++iter) {
+        
+        for (auto iter2 = (iter->second).begin(); iter2 != (iter->second).end(); ++iter2) {
+            Model* temp = dynamic_cast<Model*>(*((iter->second).begin()));
+        }
+        Model* temp = dynamic_cast<Model*>(*((iter->second).begin()));
+        if (temp == NULL)
+            continue;
+        
+    }
+}
+
 void GeneDatabase::addGene(string _geneName, string _geneType, string _geneClass, string _geneMechanism, string _geneGroup, string _geneSequence)
 {
     Gene* toAdd = new Gene(_geneName, _geneType, _geneClass, _geneMechanism, _geneGroup, _geneSequence);

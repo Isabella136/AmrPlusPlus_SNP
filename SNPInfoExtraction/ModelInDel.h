@@ -12,8 +12,12 @@ protected:
 	virtual ~ModelInDel();
 public:
 	ModelInDel();
+	string getFirstPos();
 	virtual string condensedInfo() = 0;
 };
 
 ModelInDel::ModelInDel() {}
 ModelInDel::~ModelInDel() {}
+string ModelInDel::getFirstPos() {
+	return "del" + to_string(*(pos.begin()));
+}

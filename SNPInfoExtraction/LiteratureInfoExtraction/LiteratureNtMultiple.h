@@ -17,9 +17,13 @@ public:
 	InfoPipe* Clone();
 	string condensedInfo();
 	int getPos();
+	string getFirstPos();
 	string infoType();
 
 };
+string LiteratureNtMultiple::getFirstPos() {
+	return "mult" + models[0]->getFirstPos();
+}
 LiteratureNtMultiple::LiteratureNtMultiple() {}
 LiteratureNtMultiple::LiteratureNtMultiple(string line, string id, shared_ptr<MEGARes_database> dbSeq) {
 	string temp = line;

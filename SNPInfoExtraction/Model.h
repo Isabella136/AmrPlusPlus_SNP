@@ -8,6 +8,7 @@ class Model : public virtual InfoPipe{
 	public:
 		Model();
 		virtual ~Model();
+		virtual string getFirstPos() = 0;
 		virtual string condensedInfo() = 0;
 };
 
