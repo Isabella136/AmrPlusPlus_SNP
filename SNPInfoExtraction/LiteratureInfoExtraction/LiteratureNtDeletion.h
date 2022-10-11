@@ -26,6 +26,7 @@ LiteratureNtDeletion::LiteratureNtDeletion(const LiteratureNtDeletion& other) {
     this->megID = other.megID;
     this->databaseSequences = other.databaseSequences;
     this->nucleic = other.nucleic;
+    this->source = other.source;
 }
 InfoPipe* LiteratureNtDeletion::Clone() {
     return new LiteratureNtDeletion(*this);
@@ -54,6 +55,7 @@ string LiteratureNtDeletion::condensedInfo() {
 void LiteratureNtDeletion::makeModel(string line) {
     wt_nuc = line.at(0);
     pos.push_back(stoi(line.substr(1, line.size() - 2)));
+    source = "Literature";
 }
 string LiteratureNtDeletion::infoType() {
     return "Model";

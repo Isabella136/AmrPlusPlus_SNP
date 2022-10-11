@@ -27,6 +27,7 @@ LiteratureAaNonsense::LiteratureAaNonsense(const LiteratureAaNonsense& other) {
     this->megID = other.megID;
     this->databaseSequences = other.databaseSequences;
     this->nucleic = other.nucleic;
+    this->source = other.source;
 }
 InfoPipe* LiteratureAaNonsense::Clone() {
     return new LiteratureAaNonsense(*this);
@@ -37,6 +38,7 @@ int LiteratureAaNonsense::getPos() {
 void LiteratureAaNonsense::makeModel(string line) {
     wt_aa = line[0];
     pos = stoi(line.substr(1));
+    source = "Literature";
 }
 string LiteratureAaNonsense::condensedInfo() {
     string toReturn = "Nonsense:";

@@ -27,6 +27,7 @@ LiteratureAaIntrinsic::LiteratureAaIntrinsic(const LiteratureAaIntrinsic& other)
     this->megID = other.megID;
     this->databaseSequences = other.databaseSequences;
     this->nucleic = other.nucleic;
+    this->source = other.source;
 }
 InfoPipe* LiteratureAaIntrinsic::Clone() {
     return new LiteratureAaIntrinsic(*this);
@@ -48,6 +49,7 @@ string LiteratureAaIntrinsic::condensedInfo() {
 void LiteratureAaIntrinsic::makeModel(string line) {
     wt_aa = line.at(0);
     pos = stoi(line.substr(1));
+    source = "Literature";
 }
 string LiteratureAaIntrinsic::infoType() {
     return "Model";

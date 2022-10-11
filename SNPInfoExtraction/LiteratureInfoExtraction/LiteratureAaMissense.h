@@ -27,6 +27,7 @@ LiteratureAaMissense::LiteratureAaMissense(const LiteratureAaMissense& other) {
     this->megID = other.megID;
     this->databaseSequences = other.databaseSequences;
     this->nucleic = other.nucleic;
+    this->source = other.source;
 }
 InfoPipe* LiteratureAaMissense::Clone() {
     return new LiteratureAaMissense(*this);
@@ -59,7 +60,7 @@ void LiteratureAaMissense::makeModel(string line) {
     for (int j = 0; j < line.length(); j++) {
         mutant_aa.push_back(line.at(j));
     }
-
+    source = "Literature";
 }
 string LiteratureAaMissense::infoType() {
     return "Model";

@@ -15,6 +15,7 @@ private:
 	string geneMechanism;
 	string geneGroup;
 	string geneSequence;
+	string source = "";
 	vector<string> listOfSNPs;
 
 public:
@@ -24,6 +25,8 @@ public:
 	string getFASTA();
 	string getFASTA2();
 	string getHeader();
+	string getSource();
+	void addSource(string source);
 	void addSNP(string SNP);
 };
 
@@ -41,6 +44,10 @@ void Gene::addSNP(string SNP)
 {
 	listOfSNPs.push_back(SNP);
 }
+void Gene::addSource(string source)
+{
+	this->source = source;
+}
 string Gene::getSequence()
 {
 	return geneSequence;
@@ -49,6 +56,13 @@ string Gene::getSequence()
 string Gene::getName()
 {
 	return geneName;
+}
+
+string Gene::getSource()
+{
+	if (listOfSNPs.empty())
+		return "";
+	return geneName + "," + geneType + "," + geneClass + "," + geneMechanism + "," + geneGroup + "," + source + "\n";
 }
 
 string Gene::getFASTA()

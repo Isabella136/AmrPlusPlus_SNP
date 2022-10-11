@@ -26,12 +26,14 @@ list<int> LiteratureIntrinsicList::getFirstPos() {
 LiteratureIntrinsicList::LiteratureIntrinsicList() {}
 LiteratureIntrinsicList::LiteratureIntrinsicList(string line, string id, shared_ptr<MEGARes_database> dbSeq) {
 	addToList(line, id, dbSeq);
+	source = "Literature";
 }
 LiteratureIntrinsicList::~LiteratureIntrinsicList() {}
 LiteratureIntrinsicList::LiteratureIntrinsicList(const LiteratureIntrinsicList& other) {
 	for (auto iter = other.mustHaveList.begin(); iter != other.mustHaveList.end(); ++iter) {
 		this->mustHaveList.emplace(iter->first, dynamic_cast<LiteratureModel*>(iter->second->Clone()));
 	}
+	this->source = other.source;
 }
 void LiteratureIntrinsicList::addToList(string line, string id, shared_ptr<MEGARes_database> dbSeq) {
 	LiteratureModel* must;

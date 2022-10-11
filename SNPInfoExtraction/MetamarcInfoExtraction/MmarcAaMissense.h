@@ -32,6 +32,7 @@ MmarcAaMissense::MmarcAaMissense(const MmarcAaMissense& other) {
     this->context_right_aa = other.context_right_aa;
     this->mmarc_codon_end = other.mmarc_codon_end;
     this->mmarc_codon_start = other.mmarc_codon_start;
+    this->source = other.source;
 }
 InfoPipe* MmarcAaMissense::Clone() {
     return new MmarcAaMissense(*this);
@@ -63,6 +64,7 @@ void MmarcAaMissense::makeModel(string line)
     aaList = line.substr(0, line.find(','));
     for (int i = 0; i < aaList.size(); i++)
         context_right_aa += aaList[i];
+    source = "MetaMARC";
 }
 string MmarcAaMissense::condensedInfo()
 {

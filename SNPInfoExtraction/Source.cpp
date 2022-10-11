@@ -36,7 +36,6 @@ int main()
 	megaresSNP.combineDatabases(kargva);
 	megaresSNP.combineDatabases(literature);
 	megaresSNP.reorderInfo();
-	//GeneDatabase megaresSNP(kargva);
 	fstream database;
 	database.open("../data/megares_database_v3.00.fasta");
 	string header;
@@ -60,6 +59,6 @@ int main()
 		}
 	}
 	database.close();
-	megaresSNP.print("../data/SNPinfo.csv", "../data/SNPinfo.fasta");
+	megaresSNP.print("../data/SNPinfo.csv", "../data/SNPinfo.fasta", "../data/source.csv");
 	return 0;
 }

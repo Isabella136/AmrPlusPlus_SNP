@@ -19,7 +19,7 @@ class GeneDatabase {
     public:
         GeneDatabase(ModelDatabase& models);
         void combineDatabases(ModelDatabase& models);
-        void print(string csv, string fasta);
+        void print(string csv, string fasta, string source);
         void printIfNoSNP(string fileName);
         void addGene(string _geneName, string _geneType, string _geneClass, string _geneMechanism, string _geneGroup, string _geneSequence);
         void reorderInfo();
@@ -67,6 +67,7 @@ void GeneDatabase::addGene(string _geneName, string _geneType, string _geneClass
     try
     {
         list<InfoPipe*> allSNPs = snpInfoDatabase.at(_geneName);
+        toAdd->addSource((*(allSNPs.begin()))->getSource());
         for (auto iter = allSNPs.begin(); iter != allSNPs.end(); ++iter)
             toAdd->addSNP((*iter)->condensedInfo());
     }
@@ -74,17 +75,21 @@ void GeneDatabase::addGene(string _geneName, string _geneType, string _geneClass
     int megNumber = stoi(_geneName.substr(_geneName.find('_') + 1));
     genes.emplace(megNumber, toAdd);
 }
-void GeneDatabase::print(string csv, string fasta)
+void GeneDatabase::print(string csv, string fasta, string source)
 {
     ofstream outputCsv;
     outputCsv.open(csv);
     ofstream outputFasta;
     outputFasta.open(fasta);
+    ofstream outputSource;
+    outputSource.open(source);
     for (auto iter = genes.begin(); iter != genes.end(); ++iter) {
         outputCsv << iter->second->getHeader();
         outputFasta << iter->second->getFASTA();
+        outputSource << iter->second->getSource();
     }
     outputCsv.close();
+    outputFasta.close();
 }
 void GeneDatabase::printIfNoSNP(string fileName)
 {

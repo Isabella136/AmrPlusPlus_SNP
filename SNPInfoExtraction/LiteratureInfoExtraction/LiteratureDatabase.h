@@ -66,7 +66,7 @@ void LiteratureDatabase::SNPInfo() {
 					must->addToList(headerAndSNP[i].substr(5), headerAndSNP[0], databaseSequences);
 			}
 			else if (headerAndSNP[i].find("FS-") != -1)
-				info = new FrameshiftInfo(headerAndSNP[i]);
+				info = new FrameshiftInfo(headerAndSNP[i], "Literature");
 			else if (headerAndSNP[i].find("Non:") != -1)
 				info = new LiteratureAaNonsense(headerAndSNP[i].substr(4), headerAndSNP[0], databaseSequences);
 			else if (headerAndSNP[i].find("NucDel:") != -1)

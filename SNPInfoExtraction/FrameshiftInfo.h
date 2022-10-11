@@ -8,7 +8,7 @@ class FrameshiftInfo : public InfoPipe {
 	protected:
 		string detail;
 	public:
-		FrameshiftInfo(string input);
+		FrameshiftInfo(string input, string source = "CARD");
 		~FrameshiftInfo();
 		FrameshiftInfo(const FrameshiftInfo& other);
 		InfoPipe* Clone();
@@ -16,11 +16,13 @@ class FrameshiftInfo : public InfoPipe {
 		string infoType();
 };
 
-FrameshiftInfo::FrameshiftInfo(string input) {
+FrameshiftInfo::FrameshiftInfo(string input, string source) {
 	detail = input;
+	this->source = source;
 }
 FrameshiftInfo::FrameshiftInfo(const FrameshiftInfo& other) {
 	this->detail = other.detail;
+	this->source = other.source;
 }
 InfoPipe* FrameshiftInfo::Clone() {
 	return new FrameshiftInfo(*this);

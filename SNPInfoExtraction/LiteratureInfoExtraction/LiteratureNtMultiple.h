@@ -41,11 +41,13 @@ LiteratureNtMultiple::LiteratureNtMultiple(string line, string id, shared_ptr<ME
 			model = new LiteratureNtMissense(snp[i].substr(4), id, dbSeq);
 		models.push_back(model);
 	}
+	source = "Literature";
 }
 LiteratureNtMultiple::LiteratureNtMultiple(const LiteratureNtMultiple& other) {
 	for (auto iter = other.models.begin(); iter != other.models.end(); ++iter) {
 		this->models.push_back(dynamic_cast<LiteratureModel*>((*iter)->Clone()));
 	}
+	this->source = other.source;
 }
 InfoPipe* LiteratureNtMultiple::Clone() {
 	return new LiteratureNtMultiple(*this);
