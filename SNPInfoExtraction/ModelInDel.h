@@ -12,12 +12,12 @@ protected:
 	virtual ~ModelInDel();
 public:
 	ModelInDel();
-	string getFirstPos();
+	list<int> getFirstPos();
 	virtual string condensedInfo() = 0;
 };
 
 ModelInDel::ModelInDel() {}
 ModelInDel::~ModelInDel() {}
-string ModelInDel::getFirstPos() {
-	return "del" + to_string(*(pos.begin()));
+list<int> ModelInDel::getFirstPos() {
+	return {3, *(pos.begin())}; //deletion come after hypersusceptible(2) and before insertion(4)
 }

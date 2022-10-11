@@ -11,12 +11,12 @@ class ModelSNP : public virtual Model{
 		virtual ~ModelSNP();
 	public:
 		ModelSNP();
-		string getFirstPos();
+		list<int> getFirstPos();
 		virtual string condensedInfo() = 0;
 };
 
 ModelSNP::ModelSNP() {}
 ModelSNP::~ModelSNP() {}
-string ModelSNP::getFirstPos() {
-	return to_string(pos);
+list<int> ModelSNP::getFirstPos() {
+	return { 1, pos };				//SNP come after intrinsic(0) and before hypersusceptible(2)
 }

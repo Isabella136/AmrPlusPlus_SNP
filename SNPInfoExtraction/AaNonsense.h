@@ -10,9 +10,13 @@ protected:
     virtual void makeModel(string line) = 0;
 public:
     AaNonsense();
+    list<int> getFirstPos();
     virtual ~AaNonsense();
     virtual string condensedInfo() = 0;
 };
 
 AaNonsense::AaNonsense() {}
 AaNonsense::~AaNonsense() {}
+list<int> AaNonsense::getFirstPos() {
+    return {5, pos};				//nonsense come after insertion(4) and before multiple(6)
+}

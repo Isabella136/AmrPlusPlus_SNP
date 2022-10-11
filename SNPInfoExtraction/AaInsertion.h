@@ -11,12 +11,12 @@ protected:
 public:
     AaInsertion();
     virtual ~AaInsertion();
-    string getFirstPos();
+    list<int> getFirstPos();
     virtual string condensedInfo() = 0;
 };
 
 AaInsertion::AaInsertion() {}
 AaInsertion::~AaInsertion() {}
-string AaInsertion::getFirstPos() {
-    return "ins" + to_string(*(pos.begin()));
+list<int> AaInsertion::getFirstPos() {
+    return {4, *(pos.begin())};  //insertion come after deletion(3) and before nonsense(5)
 }

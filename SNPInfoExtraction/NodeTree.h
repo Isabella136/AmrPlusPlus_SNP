@@ -18,11 +18,12 @@ private:
 	Node* right;
 	InfoPipe* node;
 	void findPos();
-	string pos = "";
+	list<int> pos;
 public:
 	Node(InfoPipe* node);
-	string getPos();
+	list<int> getPos();
 	Node* getChild(bool left);
+	InfoPipe* getContent();
 	void addChild(bool left, Node* child);
 	void addParent(Node* parent);
 };
@@ -30,6 +31,7 @@ public:
 class NodeTree {
 private:
 	Node* top;
+	list<InfoPipe*> traverse(Node* current);
 public:
 	NodeTree(InfoPipe* top);
 	void addChild(InfoPipe* child);
@@ -59,8 +61,12 @@ void Node::findPos() {
 	pos = temp->getFirstPos();
 }
 
-string Node::getPos() {
+list<int> Node::getPos() {
 	return pos;
+}
+
+InfoPipe* Node::getContent() {
+	return node;
 }
 
 Node* Node::getChild(bool left) {
@@ -79,8 +85,20 @@ void NodeTree::addChild(InfoPipe* child) {
 	bool left = false;
 	Node* currentNode = top;
 	while (!parentFound) {
-		if (strcmp(toAdd->getPos().c_str(), currentNode->getPos().c_str()) < 0)
+		list<int> toAddPosList = toAdd->getPos();
+		list<int> currentNodePosList = currentNode->getPos();
+		auto toAddPos = toAddPosList.begin();
+		auto currentNodePos = currentNodePosList.begin();
+		if (*toAddPos < *currentNodePos)
 			left = true;
+		else if (*toAddPos == *currentNodePos) {
+			++toAddPos;
+			++currentNodePos;
+			if (*toAddPos < *currentNodePos)
+				left = true;
+			else
+				left = false;
+		}
 		else
 			left = false;
 		if (currentNode->getChild(left) == nullptr)
@@ -89,8 +107,23 @@ void NodeTree::addChild(InfoPipe* child) {
 			currentNode = currentNode->getChild(left);
 	}
 	currentNode->addChild(left, toAdd);
+	toAdd->addParent(currentNode);
 }
 
 list<InfoPipe*> NodeTree::returnOrderedNodes() {
-	
+	list<InfoPipe*> toReturn = traverse(top);
+	return toReturn;
+}
+
+list<InfoPipe*> NodeTree::traverse(Node* current) {
+	list<InfoPipe*> toReturn;
+	if (current->getChild(true) != NULL)
+		toReturn = traverse(current->getChild(true));
+	toReturn.push_back(current->getContent());
+	if (current->getChild(false) != NULL) {
+		list<InfoPipe*> temp = traverse(current->getChild(false));
+		temp.splice(temp.begin(), toReturn);
+		toReturn.splice(toReturn.begin(), temp);
+	}
+	return toReturn;
 }

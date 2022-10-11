@@ -17,12 +17,12 @@ public:
 	InfoPipe* Clone();
 	string condensedInfo();
 	int getPos();
-	string getFirstPos();
+	list<int> getFirstPos();
 	string infoType();
 
 };
-string LiteratureNtMultiple::getFirstPos() {
-	return "mult" + models[0]->getFirstPos();
+list<int> LiteratureNtMultiple::getFirstPos() {
+	return {6, *(++(models[0]->getFirstPos()).begin()) };		//mult come after nonsense(5)
 }
 LiteratureNtMultiple::LiteratureNtMultiple() {}
 LiteratureNtMultiple::LiteratureNtMultiple(string line, string id, shared_ptr<MEGARes_database> dbSeq) {

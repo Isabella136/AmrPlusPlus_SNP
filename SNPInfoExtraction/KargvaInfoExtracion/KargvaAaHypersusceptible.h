@@ -13,10 +13,13 @@ class KargvaAaHypersuscetible : public virtual KargvaModel {
 		InfoPipe* Clone();
 		void addToModel(string line);
 		bool includes(string line);
+		list<int> getFirstPos();
 		string condensedInfo();
 		string infoType();
 };
-
+list<int> KargvaAaHypersuscetible::getFirstPos() {
+	return {2, *(++(models[0]->getFirstPos()).begin())};		//hyper come after snp(1) and before deletion(3)
+}
 KargvaAaHypersuscetible::KargvaAaHypersuscetible(string line, string id, shared_ptr<CARD_database> dbSeq) {
 	string temp = line.substr(4);
 	vector<string> snp;

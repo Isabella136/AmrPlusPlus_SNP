@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <list>
 #include "InfoPipe.h"
 
 using namespace std;
@@ -8,7 +9,7 @@ class Model : public virtual InfoPipe{
 	public:
 		Model();
 		virtual ~Model();
-		virtual string getFirstPos() = 0;
+		virtual list<int> getFirstPos() = 0;
 		virtual string condensedInfo() = 0;
 };
 

@@ -13,10 +13,13 @@ class KargvaIntrinsicList : public Model {
 		KargvaIntrinsicList(const KargvaIntrinsicList& other);
 		void addToList(string line, string id, shared_ptr<CARD_database> dbSeq);
 		InfoPipe* Clone();
+		list<int> getFirstPos();
 		string condensedInfo();
 		string infoType();
 };
-
+list<int> KargvaIntrinsicList::getFirstPos() {
+	return { 0, *(++(mustHaveList.begin()->second->getFirstPos()).begin())};	//intrinsic come before snp(1)
+}
 KargvaIntrinsicList::KargvaIntrinsicList(string line, string id, shared_ptr<CARD_database> dbSeq) {
 	addToList(line, id, dbSeq);
 }

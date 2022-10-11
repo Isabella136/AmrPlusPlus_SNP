@@ -16,10 +16,13 @@ class LiteratureIntrinsicList : public Model {
 		LiteratureIntrinsicList(const LiteratureIntrinsicList& other);
 		void addToList(string line, string id, shared_ptr<MEGARes_database> dbSeq);
 		InfoPipe* Clone();
+		list<int> getFirstPos();
 		string condensedInfo();
 		string infoType();
 };
-
+list<int> LiteratureIntrinsicList::getFirstPos() {
+	return {0, *(++(mustHaveList.begin()->second->getFirstPos()).begin())};	//intrinsic come before snp(1);
+}
 LiteratureIntrinsicList::LiteratureIntrinsicList() {}
 LiteratureIntrinsicList::LiteratureIntrinsicList(string line, string id, shared_ptr<MEGARes_database> dbSeq) {
 	addToList(line, id, dbSeq);
