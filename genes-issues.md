@@ -1,6 +1,3 @@
-# Disclaimer
-This file is a work in progress
-
 # Genes Issues - MetaMARC
 ## Problems with mutations
 <details>
