@@ -22,6 +22,14 @@ This file is a work in progress
 # Genes Issues - Kargva/CARD
 ## Problems with reference sequence
 <details>
+  <summary><h3>MEG_3241</h3></summary>
+  The organism used to determine the mutations is not the same as the one in CARD/MEGARes
+</details>
+<details>
+  <summary><h3>MEG_3246</h3></summary>
+  The sequence used to determine the SNPs is an older version of the one in CARD
+</details>
+<details>
   <summary><h3>MEG_3586</h3></summary>
   Reference sequence in CARD is a DNA-binding response regulator in LuxR family, not liaR
 </details>
@@ -42,6 +50,10 @@ This file is a work in progress
   Despite being an rRNA sequence, the reference nucleotide sequence retrieved from CARD contains amino acid residues
 </details>
 <details>
+  <summary><h3>MEG_4057</h3></summary>
+  The CARD sequence contains a 4-aa deletion from positions 349 to 352. All SNPs listed in this entry (minus F57S and I418N) are based on the articles’ sequence which doesn’t contain the 4-aa deletion
+</details>
+<details>
   <summary><h3>MEG_5779</h3></summary>
   Reference sequence in CARD is different from sequence in MEGARes
   <ul>
@@ -52,6 +64,23 @@ This file is a work in progress
       <li>Info is based on CARD sequence</li>
     </ul>
   </ul>
+</details>
+<details>
+  <summary><h3>MEG_6090</h3></summary>
+  Almost all mutations recovered from the literature are based on E. coli positions leftwards_arrow_with_hook
+  <ul>
+    <li>The exception includes all but the last three SNPs recovered from the fifth article</li>
+    <li>However, the M. tuberculosis reference sequence used in that article has 6 extra amino acids at the beginning of the sequence compare to CARD's reference sequence</li>
+    <li>The positions that are used in this file is based on the M.tubercolosis CARD reference sequence</li>
+  </ul>
+</details>
+<details>
+  <summary><h3>MEG_7301</h3></summary>
+  The strain used to determine the SNPs is not the same as the one in CARD
+</details>
+<details>
+  <summary><h3>MEG_7333</h3></summary>
+  The organism used to determine the SNPs is not the same as the one in CARD
 </details>
 
 ## Problems with mutations
@@ -459,7 +488,8 @@ This file is a work in progress
   <h4><em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:</h4>
   <ul>
     <li>MEG_3180 G247S, MEG_3243 D500N - MEG_3243 D500N is already listed as a resistance-conferring single mutation</li>
-    <li>N499T, T507M - N499T is already listed as a resistance-conferring single mutation</li>
+    <li>N538T, T546M - N538T is already listed as a resistance-conferring single mutation</li>
+	  <li>N538D, T546M - N538T is already listed as a resistance-conferring single mutation</li>
   </ul>
 </details>
 
@@ -1247,7 +1277,7 @@ This file is a work in progress
 
 <details>
   <summary><h3>MEG_6090</h3></summary>
-  <h4>Mutations listed wrong in CARD<sup><a href="#footnote18" id="reference18">18</a></sup>:</h4>
+  <h4>Mutations listed wrong in CARD:</h4>
   <table>
     <thead>
       <tr><th>From CARD<br></th><th>Actual</th><th></th><th>From CARD<br></th><th>Actual</th><th></th><th>From CARD<br></th><th>Actual</th></tr>
@@ -1298,7 +1328,7 @@ This file is a work in progress
       <tr><td>Q513E</td><td>Q432E</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
     </tbody>
   </table>
-  <h4>Mutations removed due to conflicting evidence<sup><a href="#footnote19" id="reference19">19</a></sup>:</h4>
+  <h4>Mutations removed due to conflicting evidence<sup><a href="#footnote18" id="reference18">18/a></sup>:</h4>
   <ul>
     <li>Q432 deletion</li>
     <li>F433 deletion</li>
@@ -1325,7 +1355,7 @@ This file is a work in progress
       <tr><td>Q432 deletion, F433 deletion</td><td>K422N</td><td>Y474F</td></tr>
       <tr><td>F433 deletion, M434 deletion, D435 deletion</td><td>E423K</td><td>Y474H</td></tr>
       <tr><td>Q436 deletion</td><td>F425L</td><td>Y474S</td></tr>
-      <tr><td>N438 deletion</td><td>G426D, Q432*<sup><a href="#footnote20" id="reference20">20</a></sup>, H445Y, S450F </td><td>Y474T</td></tr>
+      <tr><td>N438 deletion</td><td>G426D, Q432*<sup><a href="#footnote19" id="reference19">19</a></sup>, H445Y, S450F </td><td>Y474T</td></tr>
       <tr><td>G442 deletion</td><td>G426D, N437Y, L457P</td><td>Y474*</td></tr>
       <tr><td>F433 insertion</td><td>Q429H</td><td>R476G</td></tr>
       <tr><td>FM433 insertion</td><td>F433L</td><td>R476Q</td></tr>
@@ -1348,7 +1378,7 @@ This file is a work in progress
     <tbody>
       <tr><td>E423A</td><td>unspecified</td><td></td><td></td></tr>
       <tr><td>F424L</td><td>F424L, D435Y</td><td></td><td></td></tr>
-      <tr><td>G426D</td><td>G426D, S450L</td><td>G426D, N437Y, L457P</td><td>G426D, Q432*<sup><a href="#footnote20" id="reference20">20</a></sup>, H445Y, S450F</td></tr>
+      <tr><td>G426D</td><td>G426D, S450L</td><td>G426D, N437Y, L457P</td><td>G426D, Q432*<sup><a href="#footnote19" id="reference19">19</a></sup>, H445Y, S450F</td></tr>
       <tr><td>G426S</td><td>G426S, T427P</td><td></td><td></td></tr>
       <tr><td>T427H</td><td></td><td>T427H, H445Q, S450F<br>T427H, G442A, H445R</td><td></td></tr>
       <tr><td>T427P</td><td>G426S, T427P</td><td>T427P, D435H, H445R</td><td></td></tr>
@@ -1466,7 +1496,7 @@ This file is a work in progress
 </details>
 
 <details>
-  <summary><h3>MEG_6548<sup><a href="#footnote21" id="reference21">21</a></sup></h3></summary>
+  <summary><h3>MEG_6548<sup><a href="#footnote20" id="reference20">20</a></sup></h3></summary>
   <h4>Mutations listed in CARD that are not present in articles referenced:</h4>
   <ul>
     <li>G121D</li>
@@ -1555,7 +1585,7 @@ This file is a work in progress
 </details>
 
 <details>
-  <summary><h3>MEG_7303<sup><a href="#footnote22" id="reference22">22</a></sup></h3></summary>
+  <summary><h3>MEG_7303<sup><a href="#footnote21" id="reference21">21</a></sup></h3></summary>
   <h4>Mutations listed in CARD that are not present in articles referenced:</h4>
   <ul>
     <li>G258A</li>
@@ -1617,26 +1647,14 @@ This file is a work in progress
   17. In an <em>n</em>-tuple mutation, nonsense and frameshift mutations take precedence and are therefore considered single mutations <a href="#reference17">↩</a>
 </sup><br>
 <sup id="footnote18">
-  18.Almost all mutations recovered from the literature are based on E. coli positions <a href="#reference18">↩</a>
+  18. All deletions listed here solely comes from the <a href="https://pubmed.ncbi.nlm.nih.gov/28904673/">second-to-last article </a>referenced in the corresponding CARD entry, which has difficulty differentiating between a deletion of a whole amino acid and a base-pair deletion <a href="#reference18">↩</a>
 </sup><br>
-<ul>
-  <sup><li>The exception includes all but the last three SNPs recovered from the fifth article</li></sup>
-</ul>
-<ul>
-  <sup><li>However, the M. tuberculosis reference sequence used in that article has 6 extra amino acids at the beginning of the sequence compare to CARD's reference sequence</li></sup>
-</ul>
-<ul>
-  <sup><li>The positions that are used in this file is based on the M.tubercolosis CARD reference sequence</li></sup>
-</ul>
 <sup id="footnote19">
-  19. All deletions listed here solely comes from the <a href="https://pubmed.ncbi.nlm.nih.gov/28904673/">second-to-last article </a>referenced in the corresponding CARD entry, which has difficulty differentiating between a deletion of a whole amino acid and a base-pair deletion <a href="#reference19">↩</a>
+  19. In an <em>n</em>-tuple mutation, nonsense and frameshift mutations take precedence and are therefore considered single mutations <a href="#reference19">↩</a>
 </sup><br>
 <sup id="footnote20">
-  20. In an <em>n</em>-tuple mutation, nonsense and frameshift mutations take precedence and are therefore considered single mutations <a href="#reference20">↩</a>
+  20. <a href="https://pubmed.ncbi.nlm.nih.gov/11302826/">First article </a> referenced in the corresponding CARD entry is on <em>E. coli</em> as opposed to <em>S. enterica</em> <a href="#reference20">↩</a>
 </sup><br>
 <sup id="footnote21">
-  21. <a href="https://pubmed.ncbi.nlm.nih.gov/11302826/">First article </a> referenced in the corresponding CARD entry is on <em>E. coli</em> as opposed to <em>S. enterica</em> <a href="#reference21">↩</a>
-</sup><br>
-<sup id="footnote22">
-  22. No mutants are listed in the <a href="https://pubmed.ncbi.nlm.nih.gov/7989561/">article</a> referenced in CARD. Therefore, the gene is not present in the SNPInfo database <a href="#reference22">↩</a>
+  21 No mutants are listed in the <a href="https://pubmed.ncbi.nlm.nih.gov/7989561/">article</a> referenced in CARD. Therefore, the gene is not present in the SNPInfo database <a href="#reference21">↩</a>
 </sup><br>
