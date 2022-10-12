@@ -1,6 +1,24 @@
 # Disclaimer
 This file is a work in progress
 
+# Genes Issues - MetaMARC
+## Problems with mutations
+<details>
+  <summary><h3>MEG_7309</h3></summary>
+  <h4>Mutations listed in MetaMARC model that are not present in gene sequence: </h4>
+  As a shorter TUFAB gene of the length of 300 aa, it didn't contain SNPs that are normally found in position 316 and after in other TUFAB genes
+  <ul>
+    <li>G316D</li>
+    <li>Q329H</li>
+    <li>R333C</li>
+    <li>T334A</li>
+    <li>A375V</li>
+    <li>A375T</li>
+    <li>A375S</li>
+    <li>E378K</li>
+  </ul>
+</details>
+
 # Genes Issues - Kargva/CARD
 ## Problems with reference sequence
 <details>
@@ -441,6 +459,7 @@ This file is a work in progress
   <h4><em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:</h4>
   <ul>
     <li>MEG_3180 G247S, MEG_3243 D500N - MEG_3243 D500N is already listed as a resistance-conferring single mutation</li>
+    <li>N499T, T507M - N499T is already listed as a resistance-conferring single mutation</li>
   </ul>
 </details>
 
@@ -622,9 +641,15 @@ This file is a work in progress
   </ul>
   <h4><em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:</h4>
   <ul>
-    <li>Y98C, A349T, R463L - Not a single mutation, but because R463L is a neutral mutation, only Y98C and A349T confer resistance here
+    <li>C20R, S315T - S315T is already listed as a resistance-conferring single mutation</li>
+    <li>P92S, S315T - S315T is already listed as a resistance-conferring single mutation</li>
+    <li>Y98C, A349T, R463L - Not a single mutation, but because R463L is a neutral mutation, only Y98C and A349T confer resistance here</li>
+    <li>M126I, R496L - M126I is already listed as a resistance-conferring single mutation</li>
     <li>D194G, S315T, M624V - S315T is already listed as a resistance-conferring single mutation</li>
+    <li>S211G, S315T - S315T is already listed as a resistance-conferring single mutation</li>
     <li>S315T, D387H - S315T is already listed as a resistance-conferring single mutation</li>
+    <li>S315T, G466R - S315T is already listed as a resistance-conferring single mutation</li>
+    <li>S315T, V581G - S315T is already listed as a resistance-conferring single mutation</li>
     <li>V431A, G490S - G490S is already listed as a resistance-conferring single mutation</li>
   </ul>
 </details>
@@ -1036,7 +1061,6 @@ This file is a work in progress
     <li>V44G</li>
     <li>K48E</li>
     <li>H51P</li>
-    <li>D53N, CACTG insertion at nt 349<sup><a href="#footnote14" id="reference14">14</a></sup></li>
     <li>P54Q</li>
     <li>P54R</li>
     <li>P54S</li>
@@ -1176,7 +1200,11 @@ This file is a work in progress
   </ul>
   <h4><em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:</h4>
   <ul>
+    <li>D53N, CACTG insertion at nt 349<sup><a href="#footnote14" id="reference14">14</a></sup></li>
     <li>V130G, GG insertion at nt 420 - V130G is already listed as a resistance-conferring single mutation</li>
+    <li>Q10P, Y99D - Q10P is already listed as a resistance-conferring single mutation</li>
+    <li>A25E, A26G, A28D - A26G is already listed as a resistance-conferring single mutation</li>
+    <li>D63Y, T142K - T142K is already listed as a resistance-conferring single mutation</li>
   </ul>
 </details>
 
@@ -1427,6 +1455,14 @@ This file is a work in progress
     <li>P496S - part of double mutation P496S, H502Y</li>
     <li>S498T - part of double mutation S498T, R505K</li>
   </ul>
+  <h4><em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:</h4>
+  <ul>
+    <li>L487F, H502Y - H502Y is already listed as a resistance-conferring single mutation</li>
+    <li>S488T, R505K - R505K is already listed as a resistance-conferring single mutation</li>
+    <li>P496S, H502Y - H502Y is already listed as a resistance-conferring single mutation</li>
+    <li>S498T, R505K - R505K is already listed as a resistance-conferring single mutation</li>
+    <li>I548M, R505K - R505K is already listed as a resistance-conferring single mutation</li>
+  </ul>
 </details>
 
 <details>
@@ -1461,7 +1497,7 @@ This file is a work in progress
 </details>
 
 <details>
-  <summary><h3>MEG_7250<sup><a href="#footnoteY" id="referenceY">Y</a></sup></h3></summary>
+  <summary><h3>MEG_7250</h3></summary>
   <h4>Mutations removed due to conflicting evidence:</h4>
   <ul>
     <li>I211V - wild-type at this position is an Asn</li>
@@ -1477,7 +1513,7 @@ This file is a work in progress
 </details>
 
 <details>
-  <summary><h3>MEG_7258<sup><a href="#footnoteY" id="referenceY">Y</a></sup></h3></summary>
+  <summary><h3>MEG_7258</h3></summary>
   <h4>Mutations missing from CARD:</h4>
   <ul>
     <li>Q184K</li>
