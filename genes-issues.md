@@ -1328,7 +1328,7 @@ This file is a work in progress
       <tr><td>Q513E</td><td>Q432E</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
     </tbody>
   </table>
-  <h4>Mutations removed due to conflicting evidence<sup><a href="#footnote18" id="reference18">18/a></sup>:</h4>
+  <h4>Mutations removed due to conflicting evidence<sup><a href="#footnote18" id="reference18">18</a></sup>:</h4>
   <ul>
     <li>Q432 deletion</li>
     <li>F433 deletion</li>
