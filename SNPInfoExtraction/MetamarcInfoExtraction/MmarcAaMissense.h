@@ -68,6 +68,7 @@ void MmarcAaMissense::makeModel(string line)
 }
 string MmarcAaMissense::condensedInfo()
 {
+    this->mutant_aa = sortMutant(this->mutant_aa);
     string toReturn = "Mis:";
     toReturn += wt_aa;
     toReturn += to_string(pos);

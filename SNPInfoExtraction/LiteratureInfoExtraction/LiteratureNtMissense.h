@@ -40,6 +40,7 @@ int LiteratureNtMissense::getPos() {
 LiteratureNtMissense::~LiteratureNtMissense() {}
 
 string LiteratureNtMissense::condensedInfo() {
+    this->mutant_nuc = sortMutant(this->mutant_nuc);
     string toReturn = "Nuc:";
     toReturn += wt_nuc;
     toReturn += to_string(pos);

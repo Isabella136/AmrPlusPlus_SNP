@@ -68,8 +68,13 @@ bool KargvaAaMissense::includesAll(string line) {
         }
     }
     for (auto iter = snp.begin(); iter != snp.end(); ++iter) {
-        if ((*iter).find(to_string(this->pos)) != -1) {
-            if ((*iter).find('-') != -1)
+        int tempPos = (*iter).find(to_string(this->pos));
+        if (tempPos != -1) {
+            if (isdigit((*iter).at(tempPos + to_string(this->pos).length())))
+                return false;
+            else if (isdigit((*iter).at(tempPos - 1)))
+                return false;
+            else if ((*iter).find('-') != -1)
                 return false;
             else if (this->includesMt(*iter))
                 return true;
@@ -89,6 +94,7 @@ bool KargvaAaMissense::includes(string line) {
     return temp == line.substr(0, line.size() - 1);
 }
 string KargvaAaMissense::condensedInfo() {
+    this->mutant_aa = sortMutant(this->mutant_aa);
     string toReturn = "Mis:";
     toReturn += wt_aa;
     toReturn += to_string(pos);
