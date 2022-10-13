@@ -1,6 +1,3 @@
-# Disclaimer
-This file is a work in progress
-
 # Genes Issues - MetaMARC
 ## Problems with mutations
 <details>
@@ -202,6 +199,10 @@ This file is a work in progress
   <h4>Mutations that are susceptible or neutral:</h4>
   <ul>
     <li>T270I</li>
+  </ul>
+  <h4>Mutations listed wrong in CARD:</h4>
+  <ul>
+    <li>V287F, T309N - is actually a V287F, Y309N mutation</li>
   </ul>
   <h4>Mutations missing from CARD:</h4>
   <ul>
@@ -479,15 +480,21 @@ This file is a work in progress
   <h4>Mutations listed wrong in CARD:</h4>
   <ul>
     <li>N510D - is actually a N538D mutation</li>
-    <li>D472H  - is actually a D500H mutation</li>
+    <li>MEG_3180 A90V, MEG_3243 D472H  - is actually a MEG_3180 A90V, MEG_3243 D500H mutation</li>
   </ul>
   <h4>Mutations that are susceptible or neutral:</h4>
   <ul>
     <li>V340L</li>
   </ul>
+  <h4>Mutations missing from CARD:</h4>
+  <ul>
+    <li>D500N</li>
+  </ul>
   <h4><em>N</em>-tuple mutations that actually include at least one single mutation that can confer resistance by itself:</h4>
   <ul>
     <li>MEG_3180 G247S, MEG_3243 D500N - MEG_3243 D500N is already listed as a resistance-conferring single mutation</li>
+    <li>MEG_3180 A90V, MEG_3243 D500H - MEG_3243 D500H is already listed as a resistance-conferring single mutation</li>
+    <li>R485C, T539N - T539N is already listed as a resistance-conferring single mutation</li>
     <li>N538T, T546M - N538T is already listed as a resistance-conferring single mutation</li>
 	  <li>N538D, T546M - N538T is already listed as a resistance-conferring single mutation</li>
   </ul>
@@ -1442,6 +1449,7 @@ This file is a work in progress
       <tr><td>D435K, S450L, P454H</td><td>S450L</td><td></td></tr>
       <tr><td>N437H, S450L</td><td>S450L</td><td></td></tr>
       <tr><td>-438N, S441L, S450L </td><td>-438N, S441L and S450L</td><td></td></tr>
+      <tr><td>H445Q, S431-, Q432-, F433-</td><td></td><td>Q432-, F433-</td></tr>
       <tr><td>H445D, E460G, S472A</td><td>H445D</td><td></td></tr>
       <tr><td>H445D, S450</td><td>H445D</td><td></td></tr>
       <tr><td>H445P, K446Q</td><td>H445P</td><td></td></tr>

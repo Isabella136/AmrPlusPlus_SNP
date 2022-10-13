@@ -59,6 +59,6 @@ Contains the `SNP_Verification` program that verifies SAM files for resistance-c
 Uses all of the SNP information saved in the *data* folder.  
 
 ## More Information
-- [Genes Issues](https://github.com/Isabella136/AmrPlusPlus_SNP/blob/main/genes-issues%20(old).md)
+- [Genes Issues](https://github.com/Isabella136/AmrPlusPlus_SNP/blob/main/genes-issues.md)
 - [Usage](https://github.com/Isabella136/AmrPlusPlus_SNP/blob/main/usage.md)
 - [SNP Info Guide](https://github.com/Isabella136/AmrPlusPlus_SNP/blob/main/data/SNPInfoGuide.md)
