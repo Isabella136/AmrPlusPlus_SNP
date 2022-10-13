@@ -143,7 +143,7 @@ void KargvaDatabase::SNPInfo(){
                 continue;
         }
         else if (header[2] == "ARO:3003928") {          //MEG_3177
-            if (header[1] == "D95F")
+            if (header[1] == "D95N")
                 continue;
         }
         else if (header[2] == "ARO:3003298") {          //MEG_3181
