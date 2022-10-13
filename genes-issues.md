@@ -200,6 +200,10 @@
   <ul>
     <li>T270I</li>
   </ul>
+  <h4>Mutations listed wrong in CARD:</h4>
+  <ul>
+    <li>V287F, T309N - is actually a V287F, Y309N mutation</li>
+  </ul>
   <h4>Mutations missing from CARD:</h4>
   <ul>
     <li>E305D</li>
