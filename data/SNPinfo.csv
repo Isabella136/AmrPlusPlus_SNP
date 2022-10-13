@@ -61,7 +61,7 @@ MEG_3143,Drugs,Fosfomycin,Fosfomycin_target_mutation,GLPT,FS-transporter,Mis:W13
 MEG_3144,Drugs,Fosfomycin,Fosfomycin_target_mutation,GLPT,FS-transporter,Mis:E448K_EQLLQ_RNGG
 MEG_3175,Drugs,Lipopeptides,Daptomycin-resistant_mutant,GSHF,Mis:E554K_LEDFT_ALRIA
 MEG_3176,Drugs,Fluoroquinolones,Fluoroquinolone-resistant_DNA_topoisomerases,GYRA,Mis:G80N_KYHPH_DSSVY
-MEG_3177,Drugs,Fluoroquinolones,Fluoroquinolone-resistant_DNA_topoisomerases,GYRA,Mis:S91F_HPHGD_AVYDT,Mis:D95GN_DSAVY_TIVRM
+MEG_3177,Drugs,Fluoroquinolones,Fluoroquinolone-resistant_DNA_topoisomerases,GYRA,Mis:S91F_HPHGD_AVYDT,Mis:D95G_DSAVY_TIVRM
 MEG_3178,Drugs,Fluoroquinolones,Fluoroquinolone-resistant_DNA_topoisomerases,GYRA,Mis:S83L_HPHGD_AVYDT
 MEG_3179,Drugs,Fluoroquinolones,Fluoroquinolone-resistant_DNA_topoisomerases,GYRA,Mis:D90G_FHPHG_ASIYD,Mis:D95N_DASIY_ALVRM
 MEG_3180,Drugs,Fluoroquinolones,Fluoroquinolone-resistant_DNA_topoisomerases,GYRA,Mis:A74S_SHAKS_RSVAE,Mis:G88C_NYHPH_DASIY,Mis:D89GN_YHPHG_ASIYD,Mis:S91P_PHGDA_IYDSL,Mis:D94AYGNTH_DASIY_SLVRM,Hyper:Mis:T80A_RSVAE_MGNYH;Mis:A90G_HPHGD_SIYDS,Mult:Mis:A90V_HPHGD_SIYDS;Mis:P102H_VRMAQ_WSLRY
