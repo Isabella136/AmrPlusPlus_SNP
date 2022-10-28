@@ -18,6 +18,8 @@ def verifyNonsense(read, gene, stopLocation, mapOfInterest):
         lastQueryIndex = values[0][0]-1
         for queryTuple in values:
             for queryIndex in queryTuple:
+                if queryIndex == '-':
+                    continue
                 if stopLocation == queryIndex:
                     referenceStopLocation = list(mapOfInterest.keys())[i]
                     break
