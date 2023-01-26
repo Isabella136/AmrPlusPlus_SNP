@@ -136,7 +136,7 @@ class Deletion(InDel):
             end = len(sequence) - 1 - (this.posList[-1]-this.posList[0]) - len(this.leftContext) - len(this.rightContext)
             begin = end - 61
         for i in range(begin, end+1):
-            if this.checkLeft(0, i, sequence, 0):
+            if this.checkLeft(0, i, sequence, 0, rRNA):
                 this.changeACT(sequence, i)
                 break
     def isValid(this):
