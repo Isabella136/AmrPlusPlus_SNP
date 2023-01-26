@@ -106,7 +106,7 @@ class Gene:
         this.currentReadNonstop = None
         this.meg_6142Special = False
     def getOutputInfo(this):
-        return this.outputInfo
+        return list(this.outputInfo.values())
     def clearOutputInfo(this):
         for key in this.outputInfo:
             this.outputInfo[key] = 0
