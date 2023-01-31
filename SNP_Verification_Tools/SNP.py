@@ -53,6 +53,7 @@ class SNP:
     def findACT(this, sequence, rRNA):
         this.wtACT = ""
         this.posACT = -1
+        # Difference between CARD sequence and megares sequence requires hard-coding this scenario
         if (this.name == "MEG_4057") and (this.posOG == 347):
             this.wtACT = this.wtOG
             this.posACT = this.posOG
@@ -202,32 +203,3 @@ class MustList:
             if (begin <= pos) and (end >= pos):
                 return (this.listOfMust[pos], False)
         return None
-    def returnAaOrNu(this):
-        return this.aaOrNu
-
-class SNP_Mult:
-    def __init__(this, sequence, snpString, name):
-        this.mult = snpString
-        this.listOfMts = []
-        snpsAndDels = snpString.split(";")
-        this.deletionCount = 0
-        for info in snpsAndDels:
-            if (info[:3] == "Mis") or (info[:3] == "Nuc"):
-                this.listOfMts.append(SNP_Mis(sequence, info[4:], name, True if info[:3]=='Nuc' else False))
-            elif info[:3] == "Ins":
-                this.listOfMts.append(InDel.Insertion(sequence, info[4:], name))
-            else: #info[:3] = "Del"
-                this.listOfMts.append(InDel.Deletion(sequence, info[4:], name))
-                this.deletionCount += 1
-    def condensedInfo(this):
-        toReturn = []
-        for snp in this.listOfMts:
-            toReturn.append(snp.condensedInfo())
-        return (toReturn, "Mult:" + this.mult)
-    def isValid(this):
-        for snp in this.listOfMts:
-            if not(snp.isValid()):
-                return False
-        return True
-    def longIndel(this):
-        return this.deletionCount >= 4
