@@ -65,30 +65,31 @@ def reverseTranslation(amino_acid):
 #
 # Return tuple of last sequence index looked at by method and final tally of error_margin for left context
 def checkLeft(left_context_list, current_list_index, current_sequence_index, sequence, error_margin, rRNA, inserted, position_list):
-        if (len(left_context_list) == 0):
-            return 
-        if (len(left_context_list) != 0):
-            for aa in left_context_list[current_list_index]:
-                if aa == sequence[current_sequence_index]:
-                    if current_list_index == len(left_context_list) - 1:
-                        nextPos = current_sequence_index + (position_list[-1]-position_list[0]) + 1
-                        nextPos = nextPos if inserted != None else nextPos+1
-                        return checkRight(0, nextPos , sequence, error_margin, rRNA)
-                    else:
-                        return checkLeft(current_list_index + 1, current_sequence_index + 1, sequence, error_margin, rRNA)
-        else:
+    if (len(left_context_list) == current_list_index):
+        return (current_sequence_index, error_margin)
+    
+    if (len(left_context_list) != 0):
+        for aa in left_context_list[current_list_index]:
+            if aa == sequence[current_sequence_index]:
+                if current_list_index == len(left_context_list) - 1:
+                    nextPos = current_sequence_index + (position_list[-1]-position_list[0]) + 1
+                    nextPos = nextPos if inserted != None else nextPos+1
+                    return checkRight(0, nextPos , sequence, error_margin, rRNA)
+                else:
+                    return checkLeft(current_list_index + 1, current_sequence_index + 1, sequence, error_margin, rRNA)
+    else:
+        nextPos = current_sequence_index + (position_list[-1]-position_list[0]) + 1
+        nextPos = nextPos if inserted != None else nextPos+1
+        return checkRight(0, nextPos, sequence, error_margin, rRNA)
+    if (error_margin < 3) and not(rRNA):
+        if current_list_index == len(left_context_list) - 1:
             nextPos = current_sequence_index + (position_list[-1]-position_list[0]) + 1
             nextPos = nextPos if inserted != None else nextPos+1
-            return checkRight(0, nextPos, sequence, error_margin, rRNA)
-        if (error_margin < 3) and not(rRNA):
-            if current_list_index == len(left_context_list) - 1:
-                nextPos = current_sequence_index + (position_list[-1]-position_list[0]) + 1
-                nextPos = nextPos if inserted != None else nextPos+1
-                return checkRight(0, nextPos, sequence, error_margin + 1, rRNA)
-            else:
-                return checkLeft(current_list_index + 1, current_sequence_index + 1, sequence, error_margin + 1, rRNA)
+            return checkRight(0, nextPos, sequence, error_margin + 1, rRNA)
         else:
-            return False
+            return checkLeft(current_list_index + 1, current_sequence_index + 1, sequence, error_margin + 1, rRNA)
+    else:
+        return False
 def checkRight(this, current_list_index, current_sequence_index, sequence, error_margin, rRNA):
     if (len(this.right_context) != 0):
         for aa in this.right_context[current_list_index]:
