@@ -54,3 +54,96 @@ def reverseTranslation(amino_acid):
         if amino_acid == aAcid:
             return codon
     return ""
+
+# Description of input:
+#   left_context_list:              comes from the 5 bases/residues left of the mutation 
+#   current_list_index:             index of current base/residue in left_context_list (starts at 0 when called from lookThroughContext())
+#   current_sequence_index:         index of corresponding base/residue in sequence
+#   sequence:                       sequence of gene whose variant is being checked
+#   error_margin:                   number of mismatch found between sequence and context (starts at 0 when called from lookThroughContext())
+#   rRNA:                           True if gene is rRNA; otherwise False
+#
+# Return tuple of last sequence index looked at by method and final tally of error_margin for left context
+def checkLeft(left_context_list, current_list_index, current_sequence_index, sequence, error_margin, rRNA, inserted, position_list):
+        if (len(left_context_list) == 0):
+            return 
+        if (len(left_context_list) != 0):
+            for aa in left_context_list[current_list_index]:
+                if aa == sequence[current_sequence_index]:
+                    if current_list_index == len(left_context_list) - 1:
+                        nextPos = current_sequence_index + (position_list[-1]-position_list[0]) + 1
+                        nextPos = nextPos if inserted != None else nextPos+1
+                        return checkRight(0, nextPos , sequence, error_margin, rRNA)
+                    else:
+                        return checkLeft(current_list_index + 1, current_sequence_index + 1, sequence, error_margin, rRNA)
+        else:
+            nextPos = current_sequence_index + (position_list[-1]-position_list[0]) + 1
+            nextPos = nextPos if inserted != None else nextPos+1
+            return checkRight(0, nextPos, sequence, error_margin, rRNA)
+        if (error_margin < 3) and not(rRNA):
+            if current_list_index == len(left_context_list) - 1:
+                nextPos = current_sequence_index + (position_list[-1]-position_list[0]) + 1
+                nextPos = nextPos if inserted != None else nextPos+1
+                return checkRight(0, nextPos, sequence, error_margin + 1, rRNA)
+            else:
+                return checkLeft(current_list_index + 1, current_sequence_index + 1, sequence, error_margin + 1, rRNA)
+        else:
+            return False
+def checkRight(this, current_list_index, current_sequence_index, sequence, error_margin, rRNA):
+    if (len(this.right_context) != 0):
+        for aa in this.right_context[current_list_index]:
+            if aa == sequence[current_sequence_index]:
+                if current_list_index == len(this.right_context) - 1:
+                    return True
+                else:
+                    return checkRight(current_list_index + 1, current_sequence_index + 1, sequence, error_margin, rRNA)
+    else:
+        return True
+    if (error_margin < 3) and not(rRNA):
+        if current_list_index == len(this.right_context) - 1:
+            return True
+        else:
+            return checkRight(this, current_list_index + 1, current_sequence_index + 1, sequence, error_margin + 1, rRNA)
+    else:
+        return False
+
+
+# Description of input (in addition to what was described for checkLeft() and checkRight()):
+#   deleted:                        True if current mutation is a deletion; otherwise False
+#   position_list:                  If current mutation is an insertion or deletion of a repeated residue, 
+#                                   then multiple positions can be called as having the inserted/deleted residue by SAMtools
+
+def lookThroughContext(current_sequence_index, sequence, left_context, right_context, deleted = False, position_list = None, rRNA = False):
+    current_sequence_index, error_margin = checkLeft(left_context, 0, current_sequence_index, sequence, 0, rRNA, deleted, position_list)
+    if error_margin > 3:
+        return False
+    current_sequence_index += 1 if position_list == None else (position_list[-1] - position_list[0] + 1)
+    current_sequence_index += 0 if deleted else 1
+    
+
+
+def establishContext(context_string, left_context, right_context):
+    context_list = context_string.split("_")
+    go_to_next = True
+    for char in context_list[0]:
+        if char == '[':
+            go_to_next = False
+            left_context.append([])
+        elif char == ']':
+            go_to_next = True
+        else:
+            if go_to_next:
+                left_context.append([char])
+            else:
+                left_context[-1].append(char)
+    for char in context_list[1]:
+        if char == '[':
+            go_to_next = False
+            right_context.append([])
+        elif char == ']':
+            go_to_next = True
+        else:
+            if go_to_next:
+                right_context.append([char])
+            else:
+                right_context[-1].append(char)

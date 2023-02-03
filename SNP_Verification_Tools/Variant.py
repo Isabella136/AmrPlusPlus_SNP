@@ -1,32 +1,36 @@
 from . import SNP, InDel
+from . import establishContext
 
 class MutatedVariant:
     def __init__(this, sequence, variant_string, variant_type, name, rRNA):
         this.variant = variant_string
-        this.list_of_mutations = list()         #If this is an N-tuple mutation
-        this.single_mutation = None             #If this is a single mutation
-        this.deletionCount = 0                  #Makes sure that known variant with long deletion 
-                                                #won't be marked as special in detailed_output
+        this.list_of_mutations = list()                     # Used if this is an N-tuple mutation
+        this.single_mutation = None                         # Used if this is a single mutation
+
+        this.deletion_count = 0                             # Makes sure that known variant with long deletion or insertion
+        this.insertion_count = 0                            # won't be marked as special in detailed_output
+
         if 'Ntuple' in variant_type:
             prelim_list_of_mutations = variant_string.split(";")
             for info in prelim_list_of_mutations:
                 if (info[:3] == "Mis") or (info[:3] == "Nuc"):
-                    this.list_of_mutations.append(SNP.SNP_Mis(sequence, info[4:], name, rRNA))
+                    this.list_of_mutations.append(SNP.Missense(sequence, info[4:], name, rRNA))
                 elif info[:3] == "Ins":
                     this.list_of_mutations.append(InDel.Insertion(sequence, info[4:], name, rRNA))
                 elif info[:3] == "Del":
                     this.list_of_mutations.append(InDel.Deletion(sequence, info[4:], name, rRNA))
-                    this.deletionCount += 1
+                    this.deletion_count += 1
                 else:
                     raise NotImplementedError("{} contains N-tuple with unrecognized mutation type".format(name))
         elif 'Missense' in variant_type:
-            this.single_mutation = SNP.SNP_Mis(sequence, this.variant, name, rRNA)
+            this.single_mutation = SNP.Missense(sequence, this.variant, name, rRNA)
         elif 'Deletion' in variant_type:
             this.single_mutation = InDel.Deletion(sequence, this.variant, name, rRNA)
         elif 'Insertion' in variant_type:
             this.single_mutation = InDel.Insertion(sequence, this.variant, name, rRNA)
+            this.insertion_count = this.single_mutation.getInsertionCount()
         elif 'Nonsense' in variant_type:
-            this.single_mutation = SNP.SNP_Non(sequence, this.variant, name)    
+            this.single_mutation = SNP.Nonsense(sequence, this.variant, name)    
             
     def condensedInfo(this):
         if len(this.list_of_mutations) == 0:
@@ -43,7 +47,54 @@ class MutatedVariant:
                 return False
         return True
     def longIndel(this):
-        return this.deletionCount >= 4
+        return this.deletion_count >= 4 or this.insertion_count >= 4
+
+# Wild-type base or residue that is required for resistance
+class Must:
+    def __init__(this, wildtype_string, name):
+        this.name = name
+        this.wildtype_string = wildtype_string
+        this.wildtype_base = wildtype_string[:1]
+        this.wildtype_pos = int(wildtype_string[:wildtype_string.find('_')])
+        this.left_context = list()
+        this.right_context = list()
+        establishContext(this, wildtype_string, this.left_context, this.right_context)
+        this.next = None
+    def condensedInfo(this):
+        return (this.wildtype_base, this.wildtype_pos)
+    def getPos(this):
+        return this.wildtype_pos
+    def defineNext(this,next_must):
+        this.next = next_must
+    def getNext(this):
+        return this.next
+    def getWt(this):
+        return this.wildtype_base
 
 class IntrinsicVariant:
-    def __init__(this, sequence, variant_string, variant_type, name, rRNA):
+    def __init__(this, variant_string, name, rRNA):
+        this.variant = variant_string
+        this.list_of_musts = dict()
+        variant_info_list = this.variant.split(';')
+        for i in range(len(variant_info_list)): 
+            variant_info_list[i] = variant_info_list[i][4 if rRNA else 6:]
+            to_add =  Must(variant_info_list[i], name)
+            if len(this.list_of_musts) > 0:
+                list(this.list_of_musts.values())[-1].defineNext(to_add)
+            else:
+                this.first_pos = to_add.getPos()
+            this.list_of_musts[to_add.getPos] = to_add
+        this.last_pos = list(this.list_of_musts.keys())[-1]
+
+    # Output is either None or a tuple of the 'Must' object and 
+    # a boolean indicating whether it is the first 'Must' of the variant
+    def getFirstMustBetweenParams(this, begin, end):
+        if (end < this.first_pos) or (begin > this.last_pos):
+            return None
+        elif (end >= this.first_pos) and (begin <= this.first_pos): 
+            return (this.listOfMust[this.first_pos], True)
+        for pos in this.list_of_musts.keys():
+            if (begin <= pos) and (end >= pos):
+                return (this.list_of_musts[pos], False)
+        return None
+
