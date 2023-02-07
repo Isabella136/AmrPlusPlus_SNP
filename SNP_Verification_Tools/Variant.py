@@ -49,7 +49,7 @@ class MutatedVariant:
     def longIndel(this):
         return this.deletion_count >= 4 or this.insertion_count >= 4
 
-# Wild-type base or residue that is required for resistance
+# Wild-type base or residue that is required for intrinsic resistance
 class Must:
     def __init__(this, wildtype_string, name):
         this.name = name
@@ -71,6 +71,10 @@ class Must:
     def getWt(this):
         return this.wildtype_base
 
+# Original gene allele that already provides AMR; i.e. gene is intrinsically resistant.
+# Considered as a SNPConfirmation gene because this allele contains key bases or residues that must be present for AMR.
+# This means that a SNP or an InDel at any of those bases/residues can potentially lead to a loss in resistance.
+
 class IntrinsicVariant:
     def __init__(this, variant_string, name, rRNA):
         this.variant = variant_string
@@ -86,8 +90,16 @@ class IntrinsicVariant:
             this.list_of_musts[to_add.getPos] = to_add
         this.last_pos = list(this.list_of_musts.keys())[-1]
 
-    # Output is either None or a tuple of the 'Must' object and 
-    # a boolean indicating whether it is the first 'Must' of the variant
+    # Description of input:
+    #   begin:                      Position of first base/residue of read aligned to megares
+    #   end:                        Position of last base/residue of read aligned to megares
+    # 
+    # Description of potential output:
+    #   If no 'Must" was found:     None
+    #   If 'Must' was found:        Tuple of that contained the following two elements:
+    #                                   1.  First 'Must' object located between begin and end
+    #                                   2.  Boolean indicating whether it is the first 'Must' of the variant
+
     def getFirstMustBetweenParams(this, begin, end):
         if (end < this.first_pos) or (begin > this.last_pos):
             return None

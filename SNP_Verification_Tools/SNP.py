@@ -1,4 +1,17 @@
 from . import establishContext
+from . import lookThroughContext
+
+# Superclass for Missense and Nonsense
+# 
+# Contains the following local variable:
+#   name:                           Has the form MEG_XXXX
+#   snp:                            String rendition of the information gathered from SNPinfo.fasta
+#   wildtype_base:                  Original base (or residue) as gathered from either the literature or other databases
+#   position:                       Position of the mutation
+#   left_context:                   List of the 5 bases or residues that are located to the left of the mutation
+#   right_context:                  List of the 5 bases or residues that are located to the right of the mutation
+#   wildtype_base_ACT:              The original base (or residue) according to the MEGARes sequence
+#   position_ACT:                   The position of the mutation according to the MEGARes sequence
 
 class SNP:
     def __init__(this, mutable_mutant_string, name):
@@ -15,18 +28,18 @@ class SNP:
         this.left_context = list()
         this.right_context = list()
 
-    # Because of discrepancies between megares sequence and source sequence, it is necessary to check
-    # the actual wild-type residue/base and the actual positon using the context
+    # Finds the original base/residue and the position of the mutation based on the MEGARes sequence
     def findACT(this, sequence, rRNA):
         this.wildtype_base_ACT = ""
         this.position_ACT = -1
+
         # A 4-residue deletion in megares sequence requires hard-coding this scenario
         if (this.name == "MEG_4057") and (this.position == 347):
             this.wildtype_base_ACT = this.wildtype_base
             this.position_ACT = this.position
+        
+        # Position of the mutation in MEGARes needs to be thirty base pairs/residues away from recorded mutation position
         else:
-            # Actual mutation needs to be thirty base pairs/residues 
-            # away from recorded mutation position
             begin = this.position - 30 - len(this.left_context)
             end = this.position + 31  - len(this.left_context)
             if end > (len(sequence) - 1 - len(this.right_context) - len(this.left_context)):
@@ -35,46 +48,19 @@ class SNP:
             elif begin < 0:
                 begin = 0
                 end = 61
-            for i in range(begin, end+1):
-                if this.checkLeft(0, i, sequence, 0, rRNA):
-                    this.changeACT(sequence, i)
+            for sequence_index in range(begin, end+1):
+                if lookThroughContext(sequence_index, sequence, this.left_context, this.right_context, rRNA=rRNA):
+                    this.changeACT(sequence, sequence_index)
                     break
-    def checkLeft(this, index, currentPos, sequence, errorMargin, rRNA):
-        if (len(this.left_context) != 0):
-            for aa in this.left_context[index]:
-                if aa == sequence[currentPos]:
-                    if index == len(this.left_context) - 1:
-                        return this.checkRight(0, currentPos + 2, sequence, errorMargin, rRNA)
-                    else:
-                        return this.checkLeft(index + 1, currentPos + 1, sequence, errorMargin, rRNA)
-        else:
-            return this.checkRight(0, currentPos + 2, sequence, errorMargin, rRNA)
-        if (errorMargin < 3) and not(rRNA):
-            if index == len(this.left_context) - 1:
-                return this.checkRight(0, currentPos + 2, sequence, errorMargin + 1, rRNA)
-            else:
-                return this.checkLeft(index + 1, currentPos + 1, sequence, errorMargin + 1, rRNA)
-        else:
-            return False
-    def checkRight(this, index, currentPos, sequence, errorMargin, rRNA):
-        if (len(this.right_context) != 0):
-            for aa in this.right_context[index]:
-                if aa == sequence[currentPos]:
-                    if index == len(this.right_context) - 1:
-                        return True
-                    else:
-                        return this.checkRight(index + 1, currentPos + 1, sequence, errorMargin, rRNA)
-        else:
-            return True
-        if (errorMargin < 3) and not(rRNA):
-            if index == len(this.right_context) - 1:
-                return True
-            else:
-                return this.checkRight(index + 1, currentPos + 1, sequence, errorMargin + 1, rRNA)
-        else:
-            return False
     def isValid(this):
         return this.position_ACT > -1
+
+
+
+# Subclass that is reserved for missense mutations
+#
+# Other local variables:
+#   mutant_list:                    List of all residues or bases that can replace the original residue/base and confer resistance.
 
 class Missense(SNP):
     def __init__(this, sequence, mutant_string, name, rRNA = False):        # What mutant_string looks like:
@@ -98,6 +84,10 @@ class Missense(SNP):
         except ValueError: 
             this.wildtype_base_ACT = sequence[i+len(this.left_context)]
             this.position_ACT = i+len(this.left_context)+1
+
+
+
+# Subclass that is reserved for nonsense mutations
 
 class Nonsense(SNP):
     def __init__(this, sequence, mutant_string, name):                      # What mutant_string looks like:

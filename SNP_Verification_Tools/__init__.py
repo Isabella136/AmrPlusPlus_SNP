@@ -56,72 +56,48 @@ def reverseTranslation(amino_acid):
     return ""
 
 # Description of input:
-#   left_context_list:              comes from the 5 bases/residues left of the mutation 
-#   current_list_index:             index of current base/residue in left_context_list (starts at 0 when called from lookThroughContext())
+#   context_list:                   comes from the 5 bases/residues either left or right of the mutation 
+#   current_list_index:             index of current base/residue in context_list (starts at 0 when called from lookThroughContext())
 #   current_sequence_index:         index of corresponding base/residue in sequence
 #   sequence:                       sequence of gene whose variant is being checked
-#   error_margin:                   number of mismatch found between sequence and context (starts at 0 when called from lookThroughContext())
-#   rRNA:                           True if gene is rRNA; otherwise False
+#   error_margin:                   number of mismatch found between sequence and context 
+#                                   (starts at 0 when called from lookThroughContext() the first time)
 #
-# Return tuple of last sequence index looked at by method and final tally of error_margin for left context
-def checkLeft(left_context_list, current_list_index, current_sequence_index, sequence, error_margin, rRNA, inserted, position_list):
-    if (len(left_context_list) == current_list_index):
+# Returns tuple of last sequence index looked at by method and final tally of error_margin for left context
+
+def checkContext(context_list, current_list_index, current_sequence_index, sequence, error_margin):
+    if (len(context_list) == current_list_index):
         return (current_sequence_index, error_margin)
-    
-    if (len(left_context_list) != 0):
-        for aa in left_context_list[current_list_index]:
-            if aa == sequence[current_sequence_index]:
-                if current_list_index == len(left_context_list) - 1:
-                    nextPos = current_sequence_index + (position_list[-1]-position_list[0]) + 1
-                    nextPos = nextPos if inserted != None else nextPos+1
-                    return checkRight(0, nextPos , sequence, error_margin, rRNA)
-                else:
-                    return checkLeft(current_list_index + 1, current_sequence_index + 1, sequence, error_margin, rRNA)
-    else:
-        nextPos = current_sequence_index + (position_list[-1]-position_list[0]) + 1
-        nextPos = nextPos if inserted != None else nextPos+1
-        return checkRight(0, nextPos, sequence, error_margin, rRNA)
-    if (error_margin < 3) and not(rRNA):
-        if current_list_index == len(left_context_list) - 1:
-            nextPos = current_sequence_index + (position_list[-1]-position_list[0]) + 1
-            nextPos = nextPos if inserted != None else nextPos+1
-            return checkRight(0, nextPos, sequence, error_margin + 1, rRNA)
-        else:
-            return checkLeft(current_list_index + 1, current_sequence_index + 1, sequence, error_margin + 1, rRNA)
-    else:
-        return False
-def checkRight(this, current_list_index, current_sequence_index, sequence, error_margin, rRNA):
-    if (len(this.right_context) != 0):
-        for aa in this.right_context[current_list_index]:
-            if aa == sequence[current_sequence_index]:
-                if current_list_index == len(this.right_context) - 1:
-                    return True
-                else:
-                    return checkRight(current_list_index + 1, current_sequence_index + 1, sequence, error_margin, rRNA)
-    else:
-        return True
-    if (error_margin < 3) and not(rRNA):
-        if current_list_index == len(this.right_context) - 1:
-            return True
-        else:
-            return checkRight(this, current_list_index + 1, current_sequence_index + 1, sequence, error_margin + 1, rRNA)
-    else:
-        return False
+    for aa in context_list[current_list_index]:
+        if aa == sequence[current_sequence_index]:
+            return checkContext(current_list_index + 1, current_sequence_index + 1, sequence, error_margin)
+    return checkContext(current_list_index + 1, current_sequence_index + 1, sequence, error_margin + 1)
 
 
-# Description of input (in addition to what was described for checkLeft() and checkRight()):
+# Description of input (in addition to what was described for checkContext):
 #   deleted:                        True if current mutation is a deletion; otherwise False
 #   position_list:                  If current mutation is an insertion or deletion of a repeated residue, 
 #                                   then multiple positions can be called as having the inserted/deleted residue by SAMtools
+#   rRNA:                           True if gene is rRNA; otherwise False
+#
+#
+# Returns True if 1. it is an rRNA and context has perfect match, or 2. it is a protein, and it has at least a 70% match
 
 def lookThroughContext(current_sequence_index, sequence, left_context, right_context, deleted = False, position_list = None, rRNA = False):
-    current_sequence_index, error_margin = checkLeft(left_context, 0, current_sequence_index, sequence, 0, rRNA, deleted, position_list)
-    if error_margin > 3:
+    current_sequence_index, error_margin = checkContext(left_context, 0, current_sequence_index, sequence, 0)
+    if (error_margin/(len(left_context)+len(right_context)) > (3/10)) or (rRNA and error_margin > 0):
         return False
     current_sequence_index += 1 if position_list == None else (position_list[-1] - position_list[0] + 1)
     current_sequence_index += 0 if deleted else 1
-    
+    current_sequence_index, error_margin = checkContext(right_context, 0, current_sequence_index, sequence, error_margin)
+    if (error_margin/(len(left_context)+len(right_context)) > (3/10)) or (rRNA and error_margin > 0):
+        return False
+    return True
 
+# Description of input:
+#   context_string:                 Retrieved from SNPinfo.fasta, provides up to 5 bases/residues to the left and to the right of the mutation
+#   left_context:                   Mutable list that belongs to Must, SNP, or InDel
+#   right_context:                  Mutable list that belongs to Must, SNP, or InDel
 
 def establishContext(context_string, left_context, right_context):
     context_list = context_string.split("_")
