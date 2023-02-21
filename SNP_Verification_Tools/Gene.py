@@ -1,5 +1,6 @@
 from . import SNP
 from . import InDel
+from Variant import MutatedVariant, IntrinsicVariant
 from . import dnaTranslate
 import csv
 
@@ -9,212 +10,270 @@ def addToList(info, sequence, name, mutation_type, mutable_list):
     if 'Nonstop' in mutation_type:
         mutable_list[0] = True
         if 'Missense' in mutation_type:
-            to_add = SNP.SNP_Mis(sequence, info, name)
+            to_add = MutatedVariant(sequence, info, 'Missense', name, rRNA)
             mutable_list[1] = to_add if to_add.isValid() else None
     elif 'Ntuple' in mutation_type:
-        to_add = SNP.SNP_Mult(sequence, info, name)
+        to_add = MutatedVariant(sequence, info, 'Ntuple', name, rRNA)
         if to_add.isValid(): mutable_list.append(to_add)
     elif 'Missense' in mutation_type:
-        to_add = SNP.SNP_Mis(sequence, info, name, rRNA)
+        to_add = MutatedVariant(sequence, info, 'Missense', name, rRNA)
         if to_add.isValid(): mutable_list.append(to_add)
     elif 'Deletion' in mutation_type:
-        to_add = InDel.Deletion(sequence, info, name, rRNA)
+        to_add = MutatedVariant(sequence, info, 'Deletion', name, rRNA)
         if to_add.isValid(): mutable_list.append(to_add)
     elif 'Insertion' in mutation_type:
-        to_add = InDel.Insertion(sequence, info, name)
+        to_add = MutatedVariant(sequence, info, 'Insertion', name, rRNA)
         if to_add.isValid(): mutable_list.append(to_add)
     elif 'Hypersusceptible' in mutation_type:
-        to_add = SNP.SNP_Mult(sequence, info, name)
+        to_add = MutatedVariant(sequence, info, 'Ntuple', name, rRNA)
         if to_add.isValid(): mutable_list.append(to_add)
     elif 'Nonsense' in mutation_type:
-        to_add = SNP.SNP_Non(sequence, info, name)
+        to_add = MutatedVariant(sequence, info, 'Nonsense', name, rRNA)
         if to_add.isValid(): mutable_list.append(to_add)
 
 class Gene:
-    #Base class that contains same variables as an N-type rRNA
-    def __init__(this, name, sequence):
-        this.name = name.split('|')[0]
-        this.full_name = name + "|RequiresSNPConfirmation"
-        this.sequence = sequence.upper()
+    # Superclass that contains same variables as an N-type rRNA
+        def __init__(this, name, sequence):
+            this.name = name.split('|')[0]
+            this.full_name = name + "|RequiresSNPConfirmation"
+            this.sequence = sequence.upper()
 
-        #Create lists required by Gene class
-        this.list_of_missenses = list()
-        this.list_of_ntuples = list()     
-        this.list_of_deletions = list()
-        this.list_of_insertions = list()
+            # Create lists required by Gene class
+            this.list_of_missenses = list()
+            this.list_of_ntuples = list()     
+            this.list_of_deletions = list()
+            this.list_of_insertions = list()
 
-        this.additional_info = list()
-        this.output_info = list()
-        this.tag = None
-        
-        this.long_indel = 0
-        this.current_read_nonstop = None
+            # List of all specific mutations (e.g. E52K, I77-) found in each alignemnt to current gene
+            this.additional_info = list()
 
-    def currentReadHasNonstop(this):
-        return this.current_read_nonstop
-    def foundNonstop(this, found_nonstop):
-        this.current_read_nonstop = found_nonstop
-    def hasSpecialCase(this):
-        pass
-    def currentReadSpecial(this):
-        return False
-    def resetForNextRead(this):
-        this.current_read_nonstop = None
-    def getOutputInfo(this):
-        return this.output_info
-    def clearOutputInfo(this):
-        for index in range(this.output_info):
-            this.output_info[index] = 0
-        this.additional_info.clear()
-    def getGeneTag(this):
-        return this.tag
-    def addToOutputInfo(this, index):
-        this.output_info[index] += 1
-        if index == 0:
+            # Count of all instances each mutation type (e.g. missense, deletion) is found in alignments to current gene
+            this.output_info = list()
+
+            # Defined in child classes
+            this.tag = None
+
+            # Defined as False in Protein subclass
+            this.rRNA = True
+
             this.long_indel = 0
-    def addDetails(this, read, info):
-        if (type(info) == tuple):
-            if 'Mult:' in info[-1]:
-                deletion_count = 0
-                for mt in info[0]:
-                    if '-' == mt[2]:
-                        deletion_count +=1
-                if deletion_count >= 4:
-                    this.long_indel += 1
-            elif len(info[0]) >= 4:
-                this.long_indel += 1
-        if (len(this.additional_info) > 0) and ((read is this.additional_info[-1][0]) or isinstance(read, str)):
-            temp = list(this.additional_info[-1])
-            temp.append(info)
-            this.additional_info[-1] = tuple(temp)
-        else:
-            this.additional_info.append((read, info))
-    def getLastTupleInfo(this):
-        return this.additional_info[-1]
-    def redefineLastTupleInfo(this, read):
-        if len(this.additional_info) == 0:
-            this.additional_info.append((read.query_name, None))
-        elif read is not this.additional_info[-1][0]:
-            this.additional_info.append((read.query_name, None))
-        else:
-            to_redefine = this.additional_info.pop()
-            to_redefine = list(to_redefine)
-            to_redefine[0] = to_redefine[0].query_name
-            for i in range(1,len(to_redefine)):
-                if type(to_redefine[i]) == tuple:
-                    to_redefine[i] = to_redefine[i][-1]
-                elif to_redefine[i] == "hypersusceptible":
-                    to_redefine[i] = "Hypersusceptible: " + to_redefine[i][-1][5:]
-            this.additional_info.append(to_redefine)
-    def mustSuppressFrameshift(this):
-        return False
 
-    def createAdditionalInfoHeader(this, header):
-        header.update({"12+bp indel": None})
-
-    def updateAdditionalInfoHeader(this, header, info, read):
-        if "12+bp indel" in info:
-            if ((this.geneTag == 'F') and (read[-1] == "sus")) or ((this.geneTag != 'F') and (read[-1] == "res")):
-                count = int(info.split(":")[1][1:]) - this.long_indel
-                if count > 0:
-                    header["12+bp indel"] = "Count: " + str(count)
-        else:
-            header[info] = "T"
-
-    def writeAdditionalInfo(this, file):
-        header = {"Read": None}
-        this.createAdditionalInfoHeader(this, header)
-
-        condensed_info = this.condensedMisInDelInfo()
-        if len(condensed_info) != 0:
-            for geneMtInfo in condensed_info:
-                header.update({geneMtInfo[-1]: None})
-        condensed_info = this.condensedMultInfo()
-        if len(condensed_info) != 0:
-            for geneMtInfo in condensed_info:
-                header.update({geneMtInfo[-1]: None})
+    # Info retrieval functions
+        # Determined by gene category: normal, frameshift, suppressible, hypersusceptible, or intrinsic
+        def getGeneTag(this):
+            return this.tag
         
-        def clearHeader():
-            for key in header:
-                header[key] = ''
+        # If current alignment isn't MEG_6142, will always return False
+        def currentReadSpecial(this):
+            return False
+        
+        # Always returns false if current alignment isn't MEG_6094
+        def mustSuppressFrameshift(this):
+            return False
+        
+        # Returns MEG_XXXX gene name
+        def getName(this):
+            return this.name
+        
+        # Returns full gene name
+        def getFullName(this):
+            return this.full_name
+        
+        # Returns nucleotide sequence length
+        def ntSeqLength(this):
+            return len(this.sequence)
+        
+        # Returns None if gene is an rRNA; else returns translated sequence
+        def aaSequence(this):
+            return None
+        
+        # Returns nucleotide sequence
+        def ntSequence(this):
+            return this.sequence
+        
+        # Returns True if gene is an rRNA; else returns False
+        def rRna(this):
+            return this.rRNA
+    
+    # Functions related to output:
+        # Called when writing to csv output
+        def getOutputInfo(this):
+            return this.output_info
+        
+        # Clears mutation counts for current MEGARes reference gene
+        def clearOutputInfo(this):
+            for index in range(this.output_info):
+                this.output_info[index] = 0
+            this.additional_info.clear()
 
-        csvwriter = csv.writer(file, delimiter = ',')
-        csvwriter.writerow(list(header.keys()))
+        # Increments count for mutation type defined by index
+        # Index 0 will only be used when analyzing a new alignemnt
+        def addToOutputInfo(this, index):
+            this.output_info[index] += 1
+            if index == 0:
+                this.long_indel = 0
 
-        for read in this.additional_info:
-            if read[1] == None: continue
-            header["Read"] = read[0]
-            for info in read[1:]:
-                if info in ["res", "sus"]: continue
-                else: this.updateAdditionalInfoHeader(header, info, read)
-            csvwriter.writerow(list(header.values()))
-            clearHeader()
+        # Description of input:
+        #   read:                       If this is the first time this function is called for current alignment,
+        #                               will always be a reference to the current AlignmentSegment from BAM file;
+        #                               otherwise, can also be the current read's name.
+        #   info:                       Mutation info to add to this.additional_info; is either a string or a condensed_info tuple
+        def addDetails(this, read, info):
+            if (type(info) == tuple):
 
-    def aaSequence(this):
-        return None
-    def ntSequence(this):
-        return this.sequence
+                # Looks for long indel mutations (at least four consecutive deletions) that are listed as resistant in SNPInfo.fasta
+                if 'Mult:' in info[-1]:
+                    deletion_count = 0
+                    for mt in info[0]:
+                        if '-' == mt[2]:
+                            deletion_count +=1
+                    if (deletion_count >= 4 and not(this.rRNA)) or (deletion_count >= 12 and this.rRNA):
+                        this.long_indel += 1
 
-    def condensedMultInfo(this):
-        condensed_info_list = []
-        for snp in this.list_of_ntuples :
-            condensed_info_list.append(snp.condensedInfo())
-        return condensed_info_list
-    def condensedMisInDelInfo(this):
-        condensed_info_list = []
-        for snp in this.list_of_missenses :
-            condensed_info_list.append(snp.condensedInfo())
-        for snp in this.list_of_insertions:
-            condensed_info_list.append(snp.condensedInfo())
-        for snp in this.list_of_deletions :
-            condensed_info_list.append(snp.condensedInfo())
-        return condensed_info_list
-    def getNonstopInfo(this):
-        return None
-    def getFrameshiftInfo(this):
-        return None
-    def getFirstMustBetweenParams(this, begin, end):
-        return None
+                # Multi-base and multi-residue insertions are not listed as n-tuple mutations
+                elif len(info[0]) >= 4:
+                    this.long_indel += 1
 
-    def getName(this):
-        return this.name
-    def getFullName(this):
-        return this.full_name
-    def ntSeqLength(this):
-        return len(this.sequence)
-    def rRna(this):
-        return True
+            # If current read is same as last, update to last inserted tuple
+            if (len(this.additional_info) > 0) and ((read is this.additional_info[-1][0]) or isinstance(read, str)):
+                temp = list(this.additional_info[-1])
+                temp.append(info)
+                this.additional_info[-1] = tuple(temp)
+
+            # If current read is different from the last, add new tuple
+            else:
+                this.additional_info.append((read, info))
+
+        # When current alignement analysis is finished, get last tuple info
+        def getLastTupleInfo(this):
+            return this.additional_info[-1]
+    
+        # Description of input:
+        #   read:                       Reference to the current AlignmentSegment from BAM file
+        def redefineLastTupleInfo(this, read):
+
+            # Current alignment didn't have any relevant information
+            if len(this.additional_info) == 0:
+                this.additional_info.append((read.query_name, None))
+            elif read is not this.additional_info[-1][0]:
+                this.additional_info.append((read.query_name, None))
+
+            # The iterator row in the last alignment info tuple is changed to read name
+            # For each condensed_info tuples in alignment info tuple, only keeps the last value
+            else:
+                to_redefine = this.additional_info.pop()
+                to_redefine = list(to_redefine)
+                to_redefine[0] = to_redefine[0].query_name
+                for i in range(1,len(to_redefine)):
+                    if type(to_redefine[i]) == tuple:
+                        to_redefine[i] = to_redefine[i][-1]
+                    elif to_redefine[i] == "hypersusceptible":
+                        to_redefine[i] = "Hypersusceptible: " + to_redefine[i][-1][5:]
+                this.additional_info.append(to_redefine)
+
+    # Functions related to detailed output syntax
+        # Add '12+bp indel' column; present in all rRNA
+        def createAdditionalInfoHeader(this, header):
+            header.update({"12+bp indel": None})
+
+        def updateAdditionalInfoHeader(this, header, info, read):
+            if "12+bp indel" in info:
+                if read[-1] == "res":
+                    count = int(info.split(":")[1][1:]) - this.long_indel
+                    if count > 0:
+                        header["12+bp indel"] = "Count: " + str(count)
+            else:
+                header[info] = "T"
+
+        def writeAdditionalInfo(this, file):
+            header = {"Read": None}
+            this.createAdditionalInfoHeader(this, header)
+
+            condensed_info = this.condensedMisInDelInfo()
+            if len(condensed_info) != 0:
+                for geneMtInfo in condensed_info:
+                    header.update({geneMtInfo[-1]: None})
+            condensed_info = this.condensedMultInfo()
+            if len(condensed_info) != 0:
+                for geneMtInfo in condensed_info:
+                    header.update({geneMtInfo[-1]: None})
+            
+            def clearHeader():
+                for key in header:
+                    header[key] = ''
+
+            csvwriter = csv.writer(file, delimiter = ',')
+            csvwriter.writerow(list(header.keys()))
+
+            for read in this.additional_info:
+                if read[1] == None: continue
+                header["Read"] = read[0]
+                for info in read[1:]:
+                    if info in ["res", "sus"]: continue
+                    else: this.updateAdditionalInfoHeader(header, info, read)
+                csvwriter.writerow(list(header.values()))
+                clearHeader()
+
+
+        def condensedMultInfo(this):
+            condensed_info_list = list()
+            for snp in this.list_of_ntuples :
+                condensed_info_list.append(snp.condensedInfo())
+            return condensed_info_list
+        def condensedMisInDelInfo(this):
+            condensed_info_list = list()
+            for snp in this.list_of_missenses :
+                condensed_info_list.append(snp.condensedInfo())
+            for snp in this.list_of_insertions:
+                condensed_info_list.append(snp.condensedInfo())
+            for snp in this.list_of_deletions :
+                condensed_info_list.append(snp.condensedInfo())
+            return condensed_info_list
+        def getNonstopInfo(this):
+            return None
+        def getFrameshiftInfo(this):
+            return None
+        def getFirstMustBetweenParams(this, begin, end):
+            return None
 
 class Protein(Gene):
-    def __init__(this, name, sequence):
-        this.list_of_nonsense = []
-        this.translated = dnaTranslate(sequence, name)
+    # Subclass of Gene
+        def __init__(this, name, sequence):
+            this.list_of_nonsense = list()
+            this.translated = dnaTranslate(sequence, name)
+            this.rRNA = False
 
-    def condensedNonInfo(this):
-        condensed_info_list = []
-        for snp in this.list_of_nonsense :
-            condensed_info_list.append(snp.condensedInfo())
-        return condensed_info_list
-    def aaSequence(this):
-        return this.translated
-    def rRna(this):
-        return False
-    def createAdditionalInfoHeader(this, header):
-        header.update({"FS till end": None})
-        header.update({"Newly found nonsense": None})
-        header.update({"12+bp indel": None})
-        header.update({"12+bp frameshift": None})
-        condensed_info = this.condensedNonInfo()
-        if len(condensed_info) != 0:
-            for geneMtInfo in condensed_info:
-                header.update({geneMtInfo[-1]: None})
-    def updateAdditionalInfoHeader(this, header, info, read):
-        if "Newly found nonsense" in info:
-            header["Newly found nonsense"] = "Pos:" + info.split(":")[1]
-        elif "12+bp frameshift" in info:
-            if ((this.geneTag == 'F') and (read[-1] == "sus")) or ((this.geneTag != 'F') and (read[-1] == "res")):
-                header["12+bp frameshift"] = "Count:" + info.split(":")[1]
-        else: Gene.updateAdditionalInfoHeader(this, header, info, read)
+        def condensedNonInfo(this):
+            condensed_info_list = list()
+            for snp in this.list_of_nonsense :
+                condensed_info_list.append(snp.condensedInfo())
+            return condensed_info_list
+        def aaSequence(this):
+            return this.translated
+    
+    # Functions related to detailed output syntax
+        def createAdditionalInfoHeader(this, header):
+            header.update({"FS till end": None})
+            header.update({"Newly found nonsense": None})
+            header.update({"12+bp indel": None})
+            header.update({"12+bp frameshift": None})
+            condensed_info = this.condensedNonInfo()
+            if len(condensed_info) != 0:
+                for geneMtInfo in condensed_info:
+                    header.update({geneMtInfo[-1]: None})
+        def updateAdditionalInfoHeader(this, header, info, read):
+            if "Newly found nonsense" in info:
+                header["Newly found nonsense"] = "Pos:" + info.split(":")[1]
+            elif "12+bp frameshift" in info:
+                if ((this.geneTag == 'F') and (read[-1] == "sus")) or ((this.geneTag != 'F') and (read[-1] == "res")):
+                    header["12+bp frameshift"] = "Count:" + info.split(":")[1]
+            elif "12+bp indel" in info:
+                if ((this.geneTag == 'F') and (read[-1] == "sus")) or ((this.geneTag != 'F') and (read[-1] == "res")):
+                    count = int(info.split(":")[1][1:]) - this.long_indel
+                    if count > 0:
+                        header["12+bp indel"] = "Count: " + str(count)
+            else:
+                header[info] = "T"
 
 class Normal(Gene):
     def __init__(this, name, sequence):
@@ -242,7 +301,11 @@ class NormalrRNA(Normal):
 class NormalProtein(Protein, Normal):
     def __init__(this, name, sequence, info_string):
         Normal.__init__(this, name, sequence)
+        Protein.__init__(this, name, sequence)
         this.nonstop_info = [False, None]
+
+        # If MEG_6142: will be true if read has a nonstop mutation caused by a frameshift, else will be false
+        this.current_read_nonstop = None
 
         #Will only be true for MEG_6142 in the case of a stop codon at pos 26
         this.special_FS_allowed = False
@@ -273,6 +336,24 @@ class NormalProtein(Protein, Normal):
 
             else:   raise NotImplementedError("{} identified as N-type protein but contains unrecognized variant".format(this.name))
 
+  # MEG_6142-specific functions:
+    # Returns True if current read being parsed has a nonstop mutation
+    def getCurrentReadNonstopInformation(this):
+        return this.current_read_nonstop
+
+    # Description of input:
+    #   found_nonstop:              Is True if current read has a nonstop mutation, else is False
+    def updateCurrentReadNonstopInformation(this, found_nonstop):
+        this.current_read_nonstop = found_nonstop
+
+    # Although not a resistance-conferring mutation, MEG_6142 is allowed to have a nonsense-causing frameshift at pos 26
+    def hasSpecialCase(this):
+        this.read_has_special_FS = True
+
+    # Returns true if current read has a nonsense-causing frameshift at pos 26
+    def currentReadSpecial(this):
+        return this.read_has_special_FS
+
     def updateAdditionalInfoHeader(this, header, info, read):
         if info == "nonstop":
             snp = this.nonstop_info[1]
@@ -281,10 +362,7 @@ class NormalProtein(Protein, Normal):
             else:
                 header["Nonstop + " + snp.condensedInfo()[-1]] = "T"
         else: Protein.updateAdditionalInfoHeader(this, header, info, read)
-    def hasSpecialCase(this):
-        this.read_has_special_FS = True
-    def currentReadSpecial(this):
-        return this.read_has_special_FS
+
     def resetForNextRead(this):
         this.current_read_nonstop = None
         this.read_has_special_FS = False
@@ -303,6 +381,7 @@ class NormalProtein(Protein, Normal):
 class Frameshift(Protein, Gene):
     def __init__(this, name, sequence, info_string):
         Gene.__init__(this, name, sequence)
+        Protein.__init__(this, name, sequence)
         this.frameshift_info = None
         
         this.output_info = [0]*12
@@ -334,6 +413,7 @@ class Frameshift(Protein, Gene):
 class Suppressible(Protein, Gene):
     def __init__(this, name, sequence, info_string):
         Gene.__init__(this, name, sequence)
+        Protein.__init__(this, name, sequence)
         this.output_info = [0]*14
         this.tag = 'S'
 
@@ -371,6 +451,7 @@ class Suppressible(Protein, Gene):
 class Hypersusceptible(Protein, Gene):
     def __init__(this, name, sequence, info_string):
         Gene.__init__(this, name, sequence)
+        Protein.__init__(this, name, sequence)
         this.output_info = [0]*13
         this.tag = 'H'
 
@@ -412,12 +493,12 @@ class Hypersusceptible(Protein, Gene):
 class Intrinsic(Gene):
     def __init__(this, name, sequence):
         Gene.__init__(this, name, sequence)
-        this.list_of_musts = None
+        this.intrinsic_variant_info = None
         this.output_info = [0]*10
         this.tag = 'I'
 
     def getFirstMustBetweenParams(this, begin, end):
-        return this.list_of_musts.getFirstMustBetweenParams(begin, end)
+        return this.intrinsic_variant_info.getFirstMustBetweenParams(begin, end)
 
     def createAdditionalInfoHeader(this, header):
         header.update({"All residues in query": None})
@@ -445,7 +526,7 @@ class IntrinsicrRNA(Intrinsic):
             #Current gene is an rRNA and current variant has a point mutation
             elif info[:3] == "Nuc":     addToList(info[4:], this.sequence, this.name, "Nuclear Missense", this.list_of_missenses)
             #If current gene is intrisically resistant when it is current variant
-            elif info[:4] == "Must":    this.list_of_musts = SNP.MustList(info[5:], this.name)
+            elif info[:4] == "Must":    this.intrinsic_variant_info = IntrinsicVariant(sequence, info, name, True)
 
             else:   raise NotImplementedError("{} identified as I-type rRNA but contains unrecognized variant".format(this.name))
 
@@ -457,6 +538,7 @@ class IntrinsicrRNA(Intrinsic):
 class IntrinsicProtein(Protein, Intrinsic):
     def __init__(this, name, sequence, info_string):
         Gene.__init__(this, name, sequence)
+        Protein.__init__(this, name, sequence)
 
         infoList = info_string.split('|')
         for info in infoList:
@@ -471,7 +553,7 @@ class IntrinsicProtein(Protein, Intrinsic):
             #If current gene variant has a nonsense mutation
             elif info[:8] == "Nonsense":addToList(info[9:], this.translated, this.name, "Nonsense", this.list_of_nonsense)
             #If current gene is intrisically resistant when it is current variant
-            elif info[:4] == "Must":    this.list_of_musts = SNP.MustList(info[5:], this.name)
+            elif info[:4] == "Must":    this.intrinsic_variant_info = IntrinsicVariant(sequence, info, name)
 
             else:   raise NotImplementedError("{} identified as I-type protein but contains unrecognized variant".format(this.name))
 

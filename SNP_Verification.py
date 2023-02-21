@@ -14,10 +14,11 @@
 #   You should have received a copy of the GNU General Public License
 #   along with this program.  If not, see https://www.gnu.org/licenses/.
 
-from SNP_Verification_Tools.Gene import Gene
+from SNP_Verification_Tools import Gene
 from SNP_Verification_Processes import verify
-from SNP_Verification_Tools import geneDict
+from SNP_Verification_Tools import gene_dict
 from Bio import SeqIO
+from multiprocessing import Process
 import SNP_Verification_Tools
 import pysam, sys, getopt, os, configparser, shutil, numpy, csv
 import pandas as pd
@@ -152,35 +153,55 @@ if not(os.path.exists(config['FOLDERS']['SAMPLE_DETAILED_OUTPUT'])):
 if not(os.path.exists(config['FOLDERS']['TEMP'])):
     os.makedirs(config['FOLDERS']['TEMP'])
 
-# Get SNP Info
+# Get Variants Info
 for gene in SeqIO.parse(config['SOURCE_FILES']['SNP_INFO_FASTA'], 'fasta'):
-    temp = -1
-    for i in range(0, 5):
-        temp = gene.name[temp+1:].find('|') + temp + 1
-    name = gene.name[:temp]
-    snp = gene.name[temp+1:]
-    geneDict[name + "|RequiresSNPConfirmation"] = Gene(name, gene.seq, snp)
+    # Find index of last pipe ('|') before variant list
+    index = -1
+    for pipe in range(0, 5):
+        index = gene.name[index+1:].find('|') + index + 1
+    name = gene.name[:index]
+    variants = gene.name[index+1:]
 
-#Analyze BAM file sorted by MEGARes reference
+    # Create Gene object, add to dictionary
+    if 'Must:' in variants:
+        if 'Nuc:' in variants:          gene_dict[name + "|RequiresSNPConfirmation"] = Gene.IntrinsicrRNA(name, gene.seq, variants)
+        else:                           gene_dict[name + "|RequiresSNPConfirmation"] = Gene.IntrinsicProtein(name, gene.seq, variants)
+    elif 'Hyper:' in variants:          gene_dict[name + "|RequiresSNPConfirmation"] = Gene.Hypersusceptible(name, gene.seq, variants)
+    elif 'FS-' in variants:
+        if 'suppression' in variants:   gene_dict[name + "|RequiresSNPConfirmation"] = Gene.Suppressible(name, gene.seq, variants)
+        elif 'MEG_6142' in name:        gene_dict[name + "|RequiresSNPConfirmation"] = Gene.NormalProtein(name, gene.seq, variants)
+        else:                           gene_dict[name + "|RequiresSNPConfirmation"] = Gene.Frameshift(name, gene.seq, variants)
+    else:
+        if 'Nuc:' in variants:          gene_dict[name + "|RequiresSNPConfirmation"] = Gene.NormalrRNA(name, gene.seq, variants)
+        else:                           gene_dict[name + "|RequiresSNPConfirmation"] = Gene.NormalProtein(name, gene.seq, variants)
+
+# Define processes for the analysis of BAM file sorted by MEGARes reference
 pysam.sort("-o", config['TEMP_FILES']['TEMP_BAM_SORTED'], config['FULL_FILE_NAMES']['BAM_INPUT'])
 with pysam.AlignmentFile(config['TEMP_FILES']['TEMP_BAM_SORTED'], "r") as samfile:
-    iter = samfile.fetch()
-    for read in iter:
-        gene = geneDict.get(read.reference_name, False)
-        if (gene == False):
-            continue
-        elif (read.cigarstring == None):
-            continue
-        elif (len(argList) != 0) and (gene.getName().split("|")[0] not in argList):
-            continue
-        verify(read, gene, config)
-        gene.resetForNextRead()
+    def iterate(alignment_iterator):
+        for read in alignment_iterator:
+            if (read.cigarstring == None):
+                continue
+            elif (len(argList) != 0) and (gene.getName().split("|")[0] not in argList):
+                continue
+            verify(read, gene, config)
+            gene.resetForNextRead()
+    processes = list()
+    for gene in gene_dict:
+        iter = samfile.fetch(reference=gene)
+        processes.append(Process(target=iterate, args=(iter,)))
+    for startIndex in range(0, len(processes), 12):
+        endIndex = (startIndex + 12) if len(processes) - startIndex >= 12 else len(processes)
+        for currentIndex in range(startIndex, endIndex):
+            processes[currentIndex].start()
+        for currentIndex in range(startIndex, endIndex):
+            processes[currentIndex].join()
 
-#Function that appends gene.getOutputInfo() to output file
+# Function that appends gene.getOutputInfo() to output file
 def appendGeneOutputInfo(name, output_info, csvwriter, countMatrix):
     csvwriter.writerow([name].extend(output_info))
 
-    #Update count matrix if previously found in AMR++
+    # Update count matrix if previously found in AMR++
     if config.getboolean('SETTINGS', 'AMRPLUSPLUS'):
         if name in list(countMatrix['gene_accession'].values):
             index = countMatrix['gene_accession'][countMatrix['gene_accession']==name].index[0]
@@ -192,7 +213,7 @@ def appendGeneOutputInfo(name, output_info, csvwriter, countMatrix):
                 countMatrix.loc[index, config['FULL_FILE_NAMES']['SAMPLE']] = newCount
 
 
-#Create output files and write headers
+# Create output files and write headers
 with (open(config['FULL_FILE_NAMES']['NTYPE_OUTPUT'], "w") as outputN, 
       open(config['FULL_FILE_NAMES']['FTYPE_OUTPUT'], "w") as outputF, 
       open(config['FULL_FILE_NAMES']['HTYPE_OUTPUT'], "w") as outputH,
@@ -226,15 +247,15 @@ with (open(config['FULL_FILE_NAMES']['NTYPE_OUTPUT'], "w") as outputN,
     swriter.writerow(s_header)
     iwriter.writerow(i_header)
 
-    #Retrieve count matrix data
+    # Retrieve count matrix data
     countMatrix = pd.read_csv(config['FULL_FILE_NAMES']['COUNT_MATRIX']) if config.getboolean('SETTINGS', 'AMRPLUSPLUS') else None
 
-    #Run through results
-    for name, gene in geneDict.items():
+    # Run through results
+    for name, gene in gene_dict.items():
         if (len(argList) != 0) and (gene.getName().split("|")[0] not in argList):
             continue
         
-        #Add to correct output
+        # Add to correct output
         tag = gene.getGeneTag()
         if   tag == 'N': appendGeneOutputInfo(name, gene.getOutputInfo(), nwriter, countMatrix)
         elif tag == 'F': appendGeneOutputInfo(name, gene.getOutputInfo(), fwriter, countMatrix)
@@ -242,13 +263,13 @@ with (open(config['FULL_FILE_NAMES']['NTYPE_OUTPUT'], "w") as outputN,
         elif tag == 'S': appendGeneOutputInfo(name, gene.getOutputInfo(), swriter, countMatrix)
         else:            appendGeneOutputInfo(name, gene.getOutputInfo(), iwriter, countMatrix)
 
-        #Print more detailed output if requested
+        # Print more detailed output if requested
         if config.getboolean('SETTINGS', 'DETAILED') and (gene.getOutputInfo()[0] > 0):
             with open(config['FOLDERS']['SAMPLE_DETAILED_OUTPUT'] + name + ".csv", "w") as detailedOutput:
                 gene.writeAdditionalInfo(detailedOutput)
         
         gene.clearOutputInfo()
 
-#Print count matrix
+# Print count matrix
 if config.getboolean('SETTINGS', 'AMRPLUSPLUS'): countMatrix.to_csv(config['FULL_FILE_NAMES']['COUNT_MATRIX_FINAL'], index=False)
 sys.exit(0)

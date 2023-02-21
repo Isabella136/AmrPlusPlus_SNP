@@ -1,6 +1,6 @@
 mycoplasmataceaeList = ["MEG_3185", "MEG_3240", "MEG_5328", "MEG_5330", "MEG_5331"]
 
-geneDict = {}
+gene_dict = {}
 
 aa = {
     "TTT" : 'F',    "TCT" : 'S',    "TAT" : 'Y',    "TGT" : 'C',

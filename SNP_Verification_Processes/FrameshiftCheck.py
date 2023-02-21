@@ -97,13 +97,13 @@ def MEG_6142Check(read, gene):
                     fs482 = True
             
     if fs482:
-        gene.foundNonstop(True)
+        gene.updateCurrentReadNonstopInformation(True)
         gene.addDetails(read, "nonstop")
         if deletion76:
             gene.hasSpecialCase()
         return True
     else:
-        gene.foundNonstop(False)
+        gene.updateCurrentReadNonstopInformation(False)
         if (shiftCount%3) == 0:
             if deletion76:
                 gene.hasSpecialCase()

@@ -1,8 +1,19 @@
 from . import SNP, InDel
 from . import establishContext
 
+
 class MutatedVariant:
-    def __init__(this, sequence, variant_string, variant_type, name, rRNA):
+
+    # Description of input:
+    # 
+    #   sequence:                       Gene sequence; will be used for context finding
+    #   variant_string:                 Variant information as found in SNPInfo.fasta
+    #   variant_type:                   Information on type of mutation(s) present in the variant; is equal to 
+    #                                   either 'Ntuple', 'Missense', 'Deletion', 'Insertion', 'Nonsense'
+    #   name:                           Has the form MEG_XXXX
+    #   rRNA:                           Boolean that is True if and only if the gene is an rRNA.
+
+    def __init__(this, sequence, variant_string, variant_type, name, rRNA = False):
         this.variant = variant_string
         this.list_of_mutations = list()                     # Used if this is an N-tuple mutation
         this.single_mutation = None                         # Used if this is a single mutation
@@ -76,7 +87,7 @@ class Must:
 # This means that a SNP or an InDel at any of those bases/residues can potentially lead to a loss in resistance.
 
 class IntrinsicVariant:
-    def __init__(this, variant_string, name, rRNA):
+    def __init__(this, variant_string, name, rRNA = False):
         this.variant = variant_string
         this.list_of_musts = dict()
         variant_info_list = this.variant.split(';')

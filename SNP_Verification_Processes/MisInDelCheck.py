@@ -159,7 +159,7 @@ def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest, config):
             missenseCheck(mtInfo)
 
     nonstop, alongWithNonstop = gene.getNonstopInfo()
-    if nonstop and (gene.currentReadHasNonstop == None):                #Only MEG_3594 can fullfill this condition
+    if nonstop and (gene.getCurrentReadNonstopInformation() == None):                #Only MEG_3594 can fullfill this condition
         nonstop = False
         if (read.reference_end == gene.ntSeqLength()):
             if (mapOfInterest.get(gene.ntSeqLength()/3-1, False)) != False:
