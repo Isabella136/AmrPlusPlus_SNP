@@ -68,6 +68,10 @@ class Gene:
             return False
         
         # Always returns false if current alignment isn't MEG_6094
+        def removeFromLongFrameshiftCheck(this):
+            return False
+
+        # Always returns false if current alignment isn't MEG_6094
         def mustSuppressFrameshift(this):
             return False
         
@@ -414,6 +418,7 @@ class Suppressible(Protein, Gene):
     def __init__(this, name, sequence, info_string):
         Gene.__init__(this, name, sequence)
         Protein.__init__(this, name, sequence)
+        this.long_frameshift_at_pos_531 = None
         this.output_info = [0]*14
         this.tag = 'S'
 
@@ -440,6 +445,13 @@ class Suppressible(Protein, Gene):
         elif 'Suppressible C insert' not in this.additional_info[-1][1:]:
             return False
         return True
+    
+    def updateLongFrameshift(this, hasLongFrameshift):
+        this.long_frameshift_at_pos_531 = hasLongFrameshift
+
+    def removeFromLongFrameshiftCheck(this):
+        return this.mustSuppressFrameshift() or (this.long_frameshift_at_pos_531 == True)
+    
 
     def createAdditionalInfoHeader(this, header):
         Protein.createAdditionalInfoHeader(this, header)
