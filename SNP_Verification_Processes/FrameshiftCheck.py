@@ -38,7 +38,7 @@ def FrameshiftCheck(read, gene):
     return True
 
 
-# Descripiton of top variables:
+# Descripiton of local variables:
 #   shift_count:                        Incremented by 1 for insertions, decremented by 1 for deletions
 #   long_frameshift_count:              Number of frameshifts that are >= 12bp long
 #   frameshift_length:                  Current length of frameshift, or 0 if not in a frameshift
@@ -82,44 +82,66 @@ def longFrameshiftCheck(read, gene):
 def extendedIndelCheck(read, gene):
     indel = 0
     for cigar_tuple in read.cigartuples:
-        if (cigar_tuple[0] in range(1,3)) and (cigar_tuple[1] >= 12):
-            indel += 1
+        if (cigar_tuple[0] in range(1,3)) and (cigar_tuple[1] >= 12): indel += 1
     if indel > 0:
         gene.addDetails(read, "12+bp indel: " + str(indel))
 
+# Description of local variables:
+#   shift_count:                        Incremented by 1 for insertions, decremented by 1 for deletions
+#   query_index:                        Current index of query sequence
+#   deletion76:                         True if, and only if, there is a deletion between reference index 74 and 76
+#                                       that leads to a stop at codon 26
+#   fs482:                              True if, and only if, there is a nonstop-causing frameshift in the last codon of the gene
+#   aligned_pairs:                      List of tuples with aligned read and reference positions
+#   query_sequence:                     Sequence of read portion that aligned to MEGARes
+#
+# Specifically checks alignements to MEG_6142 which can allow for two specific base indel without removing gene function. 
+# This includes a nonstop mutation that confers resistance
+
 def MEG_6142Check(read, gene):
+    shift_count, query_index = 0 , -1
+    deletion76, fs482 = False, False
+
+    # Remove soft-clipping
+    start_index = read.cigartuples[0][1] if read.cigartuples[0][0] == 4 else 0
+    end_index = read.cigartuples[-1][1] if read.cigartuples[-1][0] == 4 else 0
+    aligned_pairs = read.get_aligned_pairs()[start_index:len(read.cigartuples) - end_index]
+    
     query_sequence = read.query_alignment_sequence
-    startIndex = read.cigartuples[0][1] if read.cigartuples[0][0] == 4 else 0
-    endIndex = -1 * read.cigartuples[-1][1] if read.cigartuples[-1][0] == 4 else 0
-    aligned_pairs = read.get_aligned_pairs()[startIndex:]               #Removes soft-clipping
-    if endIndex != 0:
-        aligned_pairs = aligned_pairs[:endIndex]
-    shift_count = 0                                                     #If pos, more ins; if neg. more del
-    queryIndex = -1
-    stopCodon = ["TAA", "TGA", "TAG"]
-    deletion76 = False
-    fs482 = False
+    stop_codon = ["TAA", "TGA", "TAG"]
+    
     for pair in aligned_pairs:
-        if pair[0] == None:                                             #If deletion
+        query_index += 1
+
+        # Looks for deletion
+        if pair[0] == None:
             shift_count -= 1
+            query_index -= 1
             if pair[1] in range(74,76):
                 deletion76 = True
-        else:
-            queryIndex += 1
-            if pair[1] == None:                                         #If insertion
-                shift_count += 1
-        if (pair[1] == 75) and deletion76:                              #Change if next res isn't stop
-            if (len(query_sequence) < queryIndex+4) or (query_sequence[queryIndex+1:queryIndex+4] not in stopCodon) or ((shift_count%3)!=2):
+
+        # Looks for insertion
+        elif pair[1] == None:
+            shift_count += 1
+
+        # Checks to see if codon 26 is now a stop
+        if (pair[1] == 75) and deletion76:
+            if (len(query_sequence) < query_index+4) or (query_sequence[query_index+1:query_index+4] not in stop_codon) or ((shift_count%3)!=2):
                 deletion76 = False
+
+        # Start over the frameshift check
         if (pair[1] == 78) and deletion76:
             shift_count = 0
+
+        # Looks for nonstop-causing frameshift
         if (pair[1] == 1442) and ((shift_count%3)==0):
             if aligned_pairs[-1][1] == 1445:
-                if len(query_sequence) < queryIndex+4:                   #If deletion
+                if len(query_sequence) < query_index+4:
                     fs482 = True
-                elif (query_sequence[queryIndex+1:queryIndex+4] not in stopCodon) and (len(query_sequence) > queryIndex+4):
+                elif (query_sequence[query_index+1:query_index+4] not in stop_codon) and (len(query_sequence) > query_index+4):
                     fs482 = True
-            
+
+    # Update output info accordingly        
     if fs482:
         gene.updateCurrentReadNonstopInformation(True)
         gene.addDetails(read, "nonstop")
@@ -133,85 +155,130 @@ def MEG_6142Check(read, gene):
                 gene.hasSpecialCase()
             return True
     gene.addDetails(read, 'FS till end')
+
+    # Return False if frameshift is unexplained
     return False
         
 
+# Description of local variables:
+#   shift_count:                        Incremented by 1 for insertions, decremented by 1 for deletions
+#   insertion_count_after_C_insertion:  Number of insertions after the insertion at codon 531 that weren't negated by deletions; 
+#                                       if insertion_count_after_C_insertion % 3 == 2, the insertion at codon 531 shouldn't be 
+#                                       suppressed in this analysis
+#   deletion_count_after_C_insertion:   Number of deltions after the insertion at codon 531 that weren't negated by insertions;
+#                                       if deletion_count_after_C_insertion % 3 == 1, the insertion at codon 531 shouldn't be 
+#                                       suppressed in this analysis
+#   in_codon531:                        True only when analyzing codon 531
+#   has_C_insertion:                    True if, and only if, there is a cytosine insertion in codon 531 that causes a frameshift
+#   residue_531_to_534/536:             Keeps track of amino acids in query residues 531 to 534 or 536
+#   aligned_pairs:                      List of tuples with aligned read and reference positions
+#   query_sequence:                     Sequence of read portion that aligned to MEGARes
+#   last_before_full:                   Keeps track of last query nucleotide index before next codon
+#   ref_index:                          Current index of reference sequence
+#   valid:                              False if, and only if, there is still a frameshift by the end of the query
+#   insertion_position:                 If has_C_insertion is True, contains the position of the insertion; else is None
+#   remove_from_long_frameshift_check:  If cytosine insertion in codon 531 causes a frameshift that isn't suppressible,
+#                                       Will be True if frameshift is long and False if frameshift is short; otherwise is None
+# 
+# Specifically checks alignments to MEG_6094 which can have a cytosine insertion in codon 531.
+# If present, this insertion can be suppressed during protein translation and confer resistance.
 
 def MEG_6094Check(read, gene):
+    shift_count, insertion_count_after_C_insertion, deletion_count_after_C_insertion = 0, 0, 0
+    in_codon531, has_C_insertion = False, False
+    residue_531_to_536, residue_531_to_534 = "", ""
+
+    # Remove soft-clipping
+    start_index = read.cigartuples[0][1] if read.cigartuples[0][0] == 4 else 0
+    end_index = read.cigartuples[-1][1] if read.cigartuples[-1][0] == 4 else 0
+    aligned_pairs = read.get_aligned_pairs()[start_index:len(read.cigartuples) - end_index]
+
     query_sequence = read.query_alignment_sequence
-    startIndex = read.cigartuples[0][1] if read.cigartuples[0][0] == 4 else 0
-    endIndex = -1 * read.cigartuples[-1][1] if read.cigartuples[-1][0] == 4 else 0
-    aligned_pairs = read.get_aligned_pairs()[startIndex:]               #Removes soft-clipping
-    if endIndex != 0:
-        aligned_pairs = aligned_pairs[:endIndex]
-    shift_count = 0                                                      #If pos, more ins; if neg. more del
-    inCodon531 = False
-    hasCinsertion = False
-    insertionCountAfterCinsertion = 0
-    deletionCountAfterCinsertion = 0
-    lastBeforeFull = (3 - (aligned_pairs[0][1]) % 3) % 3 - 1            #Last nt index before first full codon
-    residue531To536 = ""
-    residue531To534 = ""
+    last_before_full = (3 - (aligned_pairs[0][1]) % 3) % 3 - 1 
+    ref_index = aligned_pairs[0][1]
+
     valid = True
-    refIndex = aligned_pairs[0][1]
-    insertionPosition = None
-    removeFromLongFrameshiftCheck = None
+    insertion_position = None
+    remove_from_long_frameshift_check = None
+
     for pair in aligned_pairs:
-        refIndex += 1
-        if pair[0] == None:                                             #If deletion
-            if hasCinsertion:
-                deletionCountAfterCinsertion += 1
-                if (removeFromLongFrameshiftCheck == None) and ((refIndex - insertionPosition) != 0):
-                    removeFromLongFrameshiftCheck = (refIndex - insertionPosition)>= 12
+        ref_index += 1
+
+        # Looks for deletion
+        if pair[0] == None:
+            if has_C_insertion:
+                deletion_count_after_C_insertion += 1
+                if (remove_from_long_frameshift_check == None) and ((ref_index - insertion_position) != 0):
+                    remove_from_long_frameshift_check = (ref_index - insertion_position)>= 12
             shift_count -= 1
-        elif pair[1] == None:                                           #If insertion
-            refIndex -= 1
-            if hasCinsertion:
-                insertionCountAfterCinsertion += 1
-                if (removeFromLongFrameshiftCheck == None) and ((refIndex - insertionPosition) != 0):
-                    removeFromLongFrameshiftCheck = (refIndex - insertionPosition) >= 12
-            if inCodon531 and ((shift_count%3)==0):                      #If in codon 531 and not in frameshift
-                if not(hasCinsertion):
+
+        # Looks for insertion
+        elif pair[1] == None:
+            ref_index -= 1
+            if has_C_insertion:
+                insertion_count_after_C_insertion += 1
+                if (remove_from_long_frameshift_check == None) and ((ref_index - insertion_position) != 0):
+                    remove_from_long_frameshift_check = (ref_index - insertion_position) >= 12
+
+            # If in codon 531 and not currently in frameshift
+            if in_codon531 and ((shift_count%3)==0):
+                if not(has_C_insertion):
                     shift_count -= 1
-                    hasCinsertion = True
-                    insertionPosition = refIndex + 1
+                    has_C_insertion = True
+                    insertion_position = ref_index + 1
             shift_count += 1
-        if (insertionCountAfterCinsertion > 0) and (deletionCountAfterCinsertion > 0):
-            insertionCountAfterCinsertion -= 1                          #Never will have both over 1
-            deletionCountAfterCinsertion -= 1
+
+        # Never will have both over 0 at the same time
+        if (insertion_count_after_C_insertion > 0) and (deletion_count_after_C_insertion > 0):
+            insertion_count_after_C_insertion -= 1                         
+            deletion_count_after_C_insertion -= 1
+
+        # Sets in_codon531 as True for next iteration
         if pair[1] == 1590:
-            inCodon531 = True
+            in_codon531 = True
+
+        # Sets in_codon531 as False for next iteration
         if pair[1] == 1593:
-            inCodon531 = False
-        if pair[0] == (lastBeforeFull + 3):
-            if inCodon531 or (len(residue531To534) >= 1 and len(residue531To534) < 4):
-                residue531To534 += dnaTranslate(query_sequence[lastBeforeFull+1:pair[0]+1], gene.getName())
-            if inCodon531 or (len(residue531To536) >= 1 and len(residue531To536) < 6):
-                residue531To536 += dnaTranslate(query_sequence[lastBeforeFull+1:pair[0]+1], gene.getName())
-            lastBeforeFull += 3
-    gene.hasLongFrameshift(removeFromLongFrameshiftCheck)
-    twoInsertionsAfter = ((insertionCountAfterCinsertion%3) == 2)
-    deletionAfter = ((deletionCountAfterCinsertion%3) == 1)
-    if (shift_count % 3) == 2:
-        if not(hasCinsertion):
-            valid = False
-    elif (shift_count % 3) == 1:
-        valid = False
+            in_codon531 = False
+
+        # Updates last_before_full; keep track of amino acids for variables residue_531_to_534/536, if needed
+        if pair[0] == (last_before_full + 3):
+            if in_codon531 or (len(residue_531_to_534) >= 1 and len(residue_531_to_534) < 4):
+                residue_531_to_534 += dnaTranslate(query_sequence[last_before_full+1:pair[0]+1], gene.getName())
+            if in_codon531 or (len(residue_531_to_536) >= 1 and len(residue_531_to_536) < 6):
+                residue_531_to_536 += dnaTranslate(query_sequence[last_before_full+1:pair[0]+1], gene.getName())
+            last_before_full += 3
+
+    gene.hasLongFrameshift(remove_from_long_frameshift_check)
+    two_insertions_after = ((insertion_count_after_C_insertion%3) == 2)
+    deletion_after = ((deletion_count_after_C_insertion%3) == 1)
+
+    # Checks for validity
+    if (shift_count % 3) == 2 and not(has_C_insertion): valid = False
+    elif (shift_count % 3) == 1: valid = False
+
+    # Alignment should not continue through SNP_Verification
     if not(valid):
         gene.addDetails(read, 'FS till end')
-        return False                                                    #Should not continue
-    elif hasCinsertion:                                                 #shift_count%3 == 0 at residue 531
-        if (residue531To534 == "SRTR"[0:len(residue531To534)]):         #Must have those residues due to insertion
-            if (deletionAfter or twoInsertionsAfter):
-                gene.addDetails(read, 'C insert followed by del/ins')   #In that case, must not have FS suppression                                                
-            elif (residue531To536 == "SRTRPR"[0:len(residue531To536)]):                                                       
+        return False
+
+    # Unless if deletion_after or two_insertions_after are True, shift_count % 3 == 0
+    elif has_C_insertion:    
+        # Must have thoe residues SRTR due to insertion                                             
+        if (residue_531_to_534 == "SRTR"[0:len(residue_531_to_534)]):    
+            # In that case, must not have FS suppression in analysis     
+            if (deletion_after or two_insertions_after):
+                gene.addDetails(read, 'C insert followed by del/ins')                                                  
+            elif (residue_531_to_536 == "SRTRPR"[0:len(residue_531_to_536)]):                                                       
                 gene.addDetails(read, 'Suppressible C insert')
+            # Suppression won't happen during RNA translation to protein in the cell if there is no PR in residues 535 and 536
             else:
-                gene.addDetails(read, 'C insert + not SRTRPR')          #Suppression can't happen if no PR
+                gene.addDetails(read, 'C insert + not SRTRPR')          
                 gene.addDetails(read, 'FS till end')
                 return False
             return True 
-        elif (shift_count % 3) == 0:                                     #Because SRTR is not present, can't make prediction on resistance
+        # Because SRTR is not present, can't make prediction on resistance
+        elif (shift_count % 3) == 0:                                     
             gene.addDetails(read, 'C insert + not SRTR')
             gene.addDetails(read, 'FS till end')
             return False
