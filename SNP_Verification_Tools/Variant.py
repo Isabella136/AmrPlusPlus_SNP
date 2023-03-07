@@ -66,10 +66,10 @@ class Must:
         this.name = name
         this.wildtype_string = wildtype_string
         this.wildtype_base = wildtype_string[:1]
-        this.wildtype_pos = int(wildtype_string[:wildtype_string.find('_')])
+        this.wildtype_pos = int(wildtype_string[1:wildtype_string.find('_')])
         this.left_context = list()
         this.right_context = list()
-        establishContext(this, wildtype_string, this.left_context, this.right_context)
+        establishContext(wildtype_string, this.left_context, this.right_context)
         this.next = None
     def condensedInfo(this):
         return (this.wildtype_base, this.wildtype_pos)

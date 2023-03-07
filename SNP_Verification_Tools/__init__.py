@@ -70,8 +70,8 @@ def checkContext(context_list, current_list_index, current_sequence_index, seque
         return (current_sequence_index, error_margin)
     for aa in context_list[current_list_index]:
         if aa == sequence[current_sequence_index]:
-            return checkContext(current_list_index + 1, current_sequence_index + 1, sequence, error_margin)
-    return checkContext(current_list_index + 1, current_sequence_index + 1, sequence, error_margin + 1)
+            return checkContext(context_list, current_list_index + 1, current_sequence_index + 1, sequence, error_margin)
+    return checkContext(context_list, current_list_index + 1, current_sequence_index + 1, sequence, error_margin + 1)
 
 
 # Description of input (in addition to what was described for checkContext):

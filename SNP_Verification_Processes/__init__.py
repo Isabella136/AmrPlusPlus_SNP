@@ -12,12 +12,12 @@ def verify(read, gene, config):
     gene.addToOutputInfo(0)                                                     #Counts read; other data will be counted in FinalCount method
 
                                                                                 #Checks for frameshifts (if not rRNA), but also for extended indels;
-    checkResult = FrameshiftCheck(read, gene, rRna)                             #for S-tagged, also determines if needs suppression
+    checkResult = FrameshiftCheck(read, gene)                             #for S-tagged, also determines if needs suppression
     if not(checkResult):                                                        #If not F-tagged and has frameshifts till the end of query sequence
         FinalCount(gene, read)
         return None                                
     
-    seqOfInterest, mapOfInterest = MapQueryToReference(rRna, read, gene)        #If S-tagged and needs suppression, seq and map of interest, removes index 1602
+    seqOfInterest, mapOfInterest = MapQueryToReference(read, gene)        #If S-tagged and needs suppression, seq and map of interest, removes index 1602
     if seqOfInterest == False:
         FinalCount(gene, read)
         return None
@@ -28,9 +28,9 @@ def verify(read, gene, config):
             FinalCount(gene, read)
             return None      
     
-    IntrinsicCheck(read, gene, mapOfInterest, seqOfInterest, config)            #For I-tagged specifically
-    MisInDelCheck(read, gene, mapOfInterest, seqOfInterest, config)             #Counts all resistance-conferring mutations
-    nTupleCheck(read, gene, mapOfInterest, seqOfInterest, config)               #Counts all resistance-conferring mutations
+    #IntrinsicCheck(read, gene, mapOfInterest, seqOfInterest, config)            #For I-tagged specifically
+    #MisInDelCheck(read, gene, mapOfInterest, seqOfInterest, config)             #Counts all resistance-conferring mutations
+    #nTupleCheck(read, gene, mapOfInterest, seqOfInterest, config)               #Counts all resistance-conferring mutations
     FinalCount(gene, read)    
 
 

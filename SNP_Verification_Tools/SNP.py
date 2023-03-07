@@ -42,8 +42,8 @@ class SNP:
         else:
             begin = this.position - 30 - len(this.left_context)
             end = this.position + 31  - len(this.left_context)
-            if end > (len(sequence) - 1 - len(this.right_context) - len(this.left_context)):
-                end = len(sequence) - 1 - len(this.right_context) - len(this.left_context)
+            if end > (len(sequence) - 2 - len(this.right_context) - len(this.left_context)):
+                end = len(sequence) - 2 - len(this.right_context) - len(this.left_context)
                 begin = end - 61
             elif begin < 0:
                 begin = 0
@@ -69,7 +69,7 @@ class Missense(SNP):
         mutant_string = mutable_mutant_string[0]                                # MUTANT_ABCDE_FGHIJ
         this.mutant_list = list(mutant_string[:mutant_string.find('_')])
         mutant_string = mutant_string[mutant_string.find('_')+1:]               # ABCDE_FGHIJ
-        establishContext(this, mutant_string, this.left_context, this.right_context)
+        establishContext(mutant_string, this.left_context, this.right_context)
         SNP.findACT(this, sequence, rRNA)
     def condensedInfo(this):
         wild_type = this.wildtype_base
@@ -78,7 +78,7 @@ class Missense(SNP):
         return (wild_type, this.position_ACT, this.mutant_list, "Mis:" + this.snp)
     def changeACT(this, sequence, i):
         try: #if sequence contains mt
-            this.mutant_list.index(sequence[i+len(this.leftleft_contextContext)])
+            this.mutant_list.index(sequence[i+len(this.left_context)])
             this.wildtype_base_ACT = this.wildtype_base
             this.position_ACT = i+len(this.left_context)+1
         except ValueError: 
@@ -95,7 +95,7 @@ class Nonsense(SNP):
         SNP.__init__(this, mutable_mutant_string, name)
         mutant_string = mutable_mutant_string[0]                                # *_ABCDE_FGHIJ
         mutant_string = mutant_string[2:]                                       # ABCDE_FGHIJ
-        establishContext(this, mutant_string, this.left_context, this.right_context)
+        establishContext(mutant_string, this.left_context, this.right_context)
         SNP.findACT(this, sequence, False)
     def condensedInfo(this):
         wild_type = this.wildtype_base

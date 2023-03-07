@@ -1,6 +1,6 @@
 from . import SNP
 from . import InDel
-from Variant import MutatedVariant, IntrinsicVariant
+from .Variant import MutatedVariant, IntrinsicVariant
 from . import dnaTranslate
 import csv
 
@@ -239,6 +239,8 @@ class Gene:
             return None
         def getFirstMustBetweenParams(this, begin, end):
             return None
+        def resetForNextRead(this):
+            return None
 
 class Protein(Gene):
     # Subclass of Gene
@@ -467,6 +469,8 @@ class Hypersusceptible(Protein, Gene):
         this.output_info = [0]*13
         this.tag = 'H'
 
+        this.list_of_hypersusceptible_snps = list()
+
         infoList = info_string.split('|')
         for info in infoList:
             #If currently listed gene variant has multiple mutations
@@ -527,7 +531,7 @@ class Intrinsic(Gene):
 
 class IntrinsicrRNA(Intrinsic):
     def __init__(this, name, sequence, info_string):
-        Gene.__init__(this, name, sequence)
+        Intrinsic.__init__(this, name, sequence)
 
         infoList = info_string.split('|')
         for info in infoList:
@@ -538,7 +542,7 @@ class IntrinsicrRNA(Intrinsic):
             #Current gene is an rRNA and current variant has a point mutation
             elif info[:3] == "Nuc":     addToList(info[4:], this.sequence, this.name, "Nuclear Missense", this.list_of_missenses)
             #If current gene is intrisically resistant when it is current variant
-            elif info[:4] == "Must":    this.intrinsic_variant_info = IntrinsicVariant(sequence, info, name, True)
+            elif info[:4] == "Must":    this.intrinsic_variant_info = IntrinsicVariant(info[5:], name, True)
 
             else:   raise NotImplementedError("{} identified as I-type rRNA but contains unrecognized variant".format(this.name))
 
@@ -549,7 +553,7 @@ class IntrinsicrRNA(Intrinsic):
 
 class IntrinsicProtein(Protein, Intrinsic):
     def __init__(this, name, sequence, info_string):
-        Gene.__init__(this, name, sequence)
+        Intrinsic.__init__(this, name, sequence)
         Protein.__init__(this, name, sequence)
 
         infoList = info_string.split('|')
@@ -565,7 +569,7 @@ class IntrinsicProtein(Protein, Intrinsic):
             #If current gene variant has a nonsense mutation
             elif info[:8] == "Nonsense":addToList(info[9:], this.translated, this.name, "Nonsense", this.list_of_nonsense)
             #If current gene is intrisically resistant when it is current variant
-            elif info[:4] == "Must":    this.intrinsic_variant_info = IntrinsicVariant(sequence, info, name)
+            elif info[:4] == "Must":    this.intrinsic_variant_info = IntrinsicVariant(info[5:], name)
 
             else:   raise NotImplementedError("{} identified as I-type protein but contains unrecognized variant".format(this.name))
 

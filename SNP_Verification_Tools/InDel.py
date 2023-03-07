@@ -20,7 +20,7 @@ class InDel:
         this.position_list = [int(i) for i in this.position_list]
         this.left_context = list()
         this.right_context = list()
-        establishContext(this, mutant_string, this.left_context, this.right_context)
+        establishContext(mutant_string, this.left_context, this.right_context)
 
     def changeACT(this, sequence_index):
         previous = this.position_list[0]                            # Previous indel postion
@@ -36,13 +36,13 @@ class InDel:
         return len(this.position_list_ACT) != 0
 
 class Insertion(InDel):
-    def __init__(this, sequence, mtString, name, rRNA = False):
+    def __init__(this, sequence, mutant_string, name, rRNA = False):
         this.indel = mutant_string
         this.inserted = list()
         while not(mutant_string[0].isdigit()):
             this.inserted.append(mutant_string[0])
             mutant_string = mutant_string[1:]
-        InDel.__init__(this, mtString, name)
+        InDel.__init__(this, mutant_string, name)
         this.findACT(sequence, rRNA)
     def findACT(this, sequence, rRNA):
         this.position_list_ACT = []
@@ -53,8 +53,8 @@ class Insertion(InDel):
         if begin < 0:
             begin = 0
             end = begin + 60
-        elif end > (len(sequence) - (this.position_list[-1]-this.position_list[0]) - len(this.left_context) - len(this.right_context)):
-            end = len(sequence) - (this.position_list[-1]-this.position_list[0]) - len(this.left_context) - len(this.right_context)
+        elif end > (len(sequence) - 1 - (this.position_list[-1]-this.position_list[0]) - len(this.left_context) - len(this.right_context)):
+            end = len(sequence) - 1 - (this.position_list[-1]-this.position_list[0]) - len(this.left_context) - len(this.right_context)
             begin = end - 60
         for sequence_index in range(begin, end+1):
             if lookThroughContext(sequence_index, sequence, this.left_context, this.right_context, rRNA=rRNA, position_list=this.position_list):
@@ -83,8 +83,8 @@ class Deletion(InDel):
         if begin < 0:
             begin = 0
             end = begin + 61
-        elif end > (len(sequence) - 1 - (this.position_list[-1]-this.position_list[0]) - len(this.left_context) - len(this.right_context)):
-            end = len(sequence) - 1 - (this.position_list[-1]-this.position_list[0]) - len(this.left_context) - len(this.right_context)
+        elif end > (len(sequence) - 2 - (this.position_list[-1]-this.position_list[0]) - len(this.left_context) - len(this.right_context)):
+            end = len(sequence) - 2 - (this.position_list[-1]-this.position_list[0]) - len(this.left_context) - len(this.right_context)
             begin = end - 61
         for sequence_index in range(begin, end+1):
             if lookThroughContext(sequence_index, sequence, this.left_context, this.right_context, rRNA=rRNA, deleted=True, position_list=this.position_list):

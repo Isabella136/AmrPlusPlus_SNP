@@ -176,9 +176,10 @@ for gene in SeqIO.parse(config['SOURCE_FILES']['SNP_INFO_FASTA'], 'fasta'):
         else:                           gene_dict[name + "|RequiresSNPConfirmation"] = Gene.NormalProtein(name, gene.seq, variants)
 
 # Define processes for the analysis of BAM file sorted by MEGARes reference
-pysam.sort("-o", config['TEMP_FILES']['TEMP_BAM_SORTED'], config['FULL_FILE_NAMES']['BAM_INPUT'])
+#pysam.sort("-o", config['TEMP_FILES']['TEMP_BAM_SORTED'], config['SOURCE_FILES']['BAM_INPUT'])
+pysam.index(config['TEMP_FILES']['TEMP_BAM_SORTED'], config['TEMP_FILES']['TEMP_BAM_SORTED']+'.bai')
 with pysam.AlignmentFile(config['TEMP_FILES']['TEMP_BAM_SORTED'], "r") as samfile:
-    def iterate(alignment_iterator):
+    def iterate(alignment_iterator, gene):
         for read in alignment_iterator:
             if (read.cigarstring == None):
                 continue
@@ -189,7 +190,7 @@ with pysam.AlignmentFile(config['TEMP_FILES']['TEMP_BAM_SORTED'], "r") as samfil
     processes = list()
     for gene in gene_dict:
         iter = samfile.fetch(reference=gene)
-        processes.append(Process(target=iterate, args=(iter,)))
+        processes.append(Process(target=iterate, args=(iter,gene_dict[gene])))
     for startIndex in range(0, len(processes), 12):
         endIndex = (startIndex + 12) if len(processes) - startIndex >= 12 else len(processes)
         for currentIndex in range(startIndex, endIndex):
