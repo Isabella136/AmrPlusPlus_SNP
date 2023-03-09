@@ -14,7 +14,7 @@ def FrameshiftCheck(read, gene):
     cigarOpCount = read.get_cigar_stats()[0].tolist()
 
     # If (insertions - deletions) %3 != 0, susceptible unless if gene has frameshift info
-    if (((cigarOpCount[1] - cigarOpCount[2]) % 3) != 0) and (gene.getGeneTag() == 'N') and (gene.getName() != "MEG_6142"): 
+    if (((cigarOpCount[1] - cigarOpCount[2]) % 3) != 0) and (gene.getGeneTag() in  ['N', 'H', 'I']) and (gene.getName() != "MEG_6142"): 
         gene.addDetails(read, 'FS till end')
         #Should not continue
         return False                                                            
