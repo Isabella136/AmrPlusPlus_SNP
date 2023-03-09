@@ -371,6 +371,206 @@ def aaAlignment(nt_alignment_map):
     last_alignment = 0
     inbetween = None
     has_deletion = False
+    full_codon_deletion = False
+    last_add_to_map_scenario = None
+
+    def addToMapScenario(aa_ref_index, current_aa_shift):
+        #1
+        # If (first==last, 
+        #     ref_index%3 == 0, 
+        #     prev_aa_shift%3 == 0, 
+        #     nt[3]%3 == 0, 
+        #     not full_codon_deletion,
+        #     nt[3] - prev_aa_shift == 0,
+        #     not has_deletion) : add last to aa_ref_index
+        if ((first_alignment == last_alignment) and
+            (nt_ref_index % 3 == 0) and
+            (prev_aa_shift % 3 == 0) and
+            (current_aa_shift % 3 == 0) and
+            ((current_aa_shift - prev_aa_shift) == 0) and
+            (not full_codon_deletion) and
+            (not has_deletion)):
+                #add last to aa_ref_index
+                last_add_to_map_scenario = 1
+        #2
+        # If (first==last,
+        #     ref_index%3 == 0, 
+        #     prev_aa_shift%3 == 0, 
+        #     nt[3]%3 == 0, 
+        #     nt[3] - prev_aa_shift == 3   
+        #     not full_codon_deletion,
+        #     not has_deletion) : add last to aa_ref_index-1
+        elif ((first_alignment == last_alignment) and
+              (nt_ref_index % 3 == 0) and
+              (prev_aa_shift % 3 == 0) and
+              (current_aa_shift % 3 == 0) and
+              ((current_aa_shift - prev_aa_shift) == 3) and
+              (not full_codon_deletion) and
+              (not has_deletion)):
+                #add last to aa_ref_index-1
+                last_add_to_map_scenario = 2
+        #3
+        # If (first == last-1,
+        #     ref_index%3 == 0, 
+        #     (prev_aa_shift%3 == 0 or, 
+        #     nt[3]%3 == 0),
+        #     not full_codon_deletion) : add first and last to aa_ref_index
+        elif ((first_alignment == (last_alignment - 1)) and
+              (nt_ref_index % 3 == 0) and
+              ((prev_aa_shift % 3 == 0) or
+              (current_aa_shift % 3 == 0)) and
+              (not full_codon_deletion)):
+                #add first and last to aa_ref_index
+                last_add_to_map_scenario = 3
+        #4
+        # If (first < last-1,
+        #     ref_index%3 == 0, 
+        #     nt[3]%3 == 0,    
+        #     not full_codon_deletion,
+        #     not has_deletion,
+        #     aa_ref_index has stuff) : update aa_ref_index to last and last-1
+        elif ((first_alignment < (last_alignment - 1)) and
+              (nt_ref_index % 3 == 0) and
+              (current_aa_shift % 3 == 0) and
+              (not full_codon_deletion) and
+              #aa_ref_index has stuff and
+              (not has_deletion)):
+                #update aa_ref_index to last and last-1
+                last_add_to_map_scenario = 4
+        #5
+        # If (first < last-1,
+        #     ref_index%3 == 0, 
+        #     nt[3]%3 == 0,    
+        #     not full_codon_deletion,
+        #     not has_deletion,
+        #     aa_ref_index is empty) : add first and last to aa_ref_index, add first+1 and last-1 too if first+1 == last-1
+        elif ((first_alignment < (last_alignment - 1)) and
+              (nt_ref_index % 3 == 0) and
+              (current_aa_shift % 3 == 0) and
+              (not full_codon_deletion) and
+              #aa_ref_index is empty and
+              (not has_deletion)):
+                # add first and last to aa_ref_index, add first+1 and last-1 too if first+1 == last-1
+                last_add_to_map_scenario = 5
+        #6
+        # If (first < last-1,
+        #     ref_index%3 == 0, 
+        #     prev_aa_shift%3 == 0, 
+        #     nt[3]%3 != 0,    
+        #     not full_codon_deletion,
+        #     not has_deletion,
+        #     aa_ref_index has stuff) : update aa_ref_index to first and first+1
+        elif ((first_alignment < (last_alignment - 1)) and
+              (nt_ref_index % 3 == 0) and
+              (prev_aa_shift % 3 == 0) and
+              (current_aa_shift % 3 != 0) and
+              (not full_codon_deletion) and
+              (not has_deletion)):
+                # add first and first+1 to aa_ref_index
+                last_add_to_map_scenario = 6
+        #7
+        # If (full_codon_deletion, 
+        #     ref_index%3 == 0, 
+        #     prev_aa_shift%3 == 0, 
+        #     nt[3]%3 == 0, 
+        #     prev_aa_shift - nt[3] == 3) : add '-' to aa_ref_index
+        elif ((full_codon_deletion) and
+              (nt_ref_index % 3 == 0) and
+              (prev_aa_shift % 3 == 0) and
+              (current_aa_shift % 3 == 0) and
+              ((current_aa_shift - prev_aa_shift) == 3)):
+                # add '-' to aa_ref_index
+                last_add_to_map_scenario = 7
+        #8
+        # If (first==last, 
+        #     ref_index%3 == 0, 
+        #     prev_aa_shift%3 == 0
+        #     nt[3]%3 != 0,
+        #     has_deletion) : add last to aa_ref_index
+        elif ((first_alignment == last_alignment) and
+              (nt_ref_index % 3 == 0) and
+              (prev_aa_shift % 3 == 0) and
+              (current_aa_shift % 3 != 0) and
+              (has_deletion)):
+                # add last to aa_ref_index
+                last_add_to_map_scenario = 8
+        #9
+        # If (8 was last called,
+        #     first==last, 
+        #     ref_index%3 == 0, 
+        #     prev_aa_shift%3 != 0,
+        #     nt[3]%3 != 0) : add last to aa_ref_index
+        elif ((last_add_to_map_scenario == 8) and
+              (first_alignment == last_alignment) and
+              (nt_ref_index % 3 == 0) and
+              (prev_aa_shift % 3 != 0) and
+              (current_aa_shift % 3 != 0)):
+                # add last to aa_ref_index
+                last_add_to_map_scenario = 9
+        #10
+        # If (8 was last called,
+        #     first==last, 
+        #     ref_index%3 == 0, 
+        #     nt[3]%3 == 0),
+        #     has_deletion) : add '-' to aa_ref_index and aa_ref_index-1, add last to aa_ref_index
+        elif ((last_add_to_map_scenario == 8) and
+              (first_alignment == last_alignment) and
+              (nt_ref_index % 3 == 0) and
+              (has_deletion) and
+              (current_aa_shift % 3 == 0)):
+                # add '-' to aa_ref_index and aa_ref_index-1, add last to aa_ref_index
+                last_add_to_map_scenario = 10
+        #11
+        # If (ref_index%3 != 0, 
+        #     full_codon_deletion) : add '-' to aa_ref_index, aa_ref_index-1
+        elif ((full_codon_deletion) and
+              (nt_ref_index % 3 != 0)):
+                # add '-' to aa_ref_index, aa_ref_index-1
+                last_add_to_map_scenario = 11
+        #12
+        # If (first==last, 
+        #     ref_index%3 == 0, 
+        #     prev_aa_shift%3 != 0
+        #     nt[3]%3 == 0,
+        #     full_codon_deletion) : add last to aa_ref_index
+        elif ((first_alignment == last_alignment) and
+              (nt_ref_index % 3 == 0) and
+              (prev_aa_shift % 3 != 0) and
+              (current_aa_shift % 3 == 0) and
+              (full_codon_deletion)):
+                # add last to aa_ref_index
+                last_add_to_map_scenario = 12
+        #13
+        # If (9 was last called,
+        #     first==last, 
+        #     ref_index%3 == 0, 
+        #     prev_aa_shift%3 != 0
+        #     nt[3]%3 == 0,
+        #     has_deletion)  : add '-' to aa_ref_index-1, add last to aa_ref_index and aa_ref_index-1
+        elif ((last_add_to_map_scenario == 9) and
+              (first_alignment == last_alignment) and
+              (nt_ref_index % 3 == 0) and
+              (prev_aa_shift % 3 != 0) and
+              (current_aa_shift % 3 == 0) and
+              (has_deletion)):
+                # add '-' to aa_ref_index-1, add last to aa_ref_index and aa_ref_index-1
+                last_add_to_map_scenario = 13
+        #14
+        # If (first==last, 
+        #     ref_index%3 == 0, 
+        #     prev_aa_shift%3 != 0
+        #     nt[3]%3 == 0,
+        #     has_deletion
+        #     not full_codon_deletion)  : add last to aa_ref_index and aa_ref_index-1
+        elif ((first_alignment == last_alignment) and
+              (nt_ref_index % 3 == 0) and
+              (prev_aa_shift % 3 != 0) and
+              (current_aa_shift % 3 == 0) and
+              (has_deletion) and
+              (not full_codon_deletion)):
+                # add last to aa_ref_index and aa_ref_index-1
+                last_add_to_map_scenario = 14
+        else: last_add_to_map_scenario = None
 
 
     # Maps query codon in inbetween to previous reference codon then calls addToMap function
@@ -525,6 +725,10 @@ def aaAlignment(nt_alignment_map):
                 insert_count += 1 
                 delete_count = 0
 
+                # Would happen for scenarios where first alignment pair in nt_alignment_map is an insertion 
+                # and second alignemnt pair is a match to the second base pair in the reference codon
+                if prev_aa_shift == None: prev_aa_shift = nt[4]
+
                 # Case: we are at our second insertion and reached the end of the query codon
                 if (nt_query_index % 3) == 0:
                     
@@ -568,10 +772,6 @@ def aaAlignment(nt_alignment_map):
                 # If the first base in the reference codon was deleted
                 if first_alignment == None: first_alignment = aa_query_index
 
-                # Would happen for scenarios where first alignment pair in nt_alignment_map is an insertion 
-                # and second alignemnt pair is a match to the second base pair in the reference codon
-                if prev_aa_shift == None: prev_aa_shift = nt[4]
-
                 # We started frameshift with either one insertion or two deletions, and continued with match ever since
                 if (nt_query_index % 3) == 0:
 
@@ -605,6 +805,10 @@ def aaAlignment(nt_alignment_map):
                 nt_query_index += 1
                 insert_count += 1 
                 delete_count = 0
+
+                # Would happen for scenarios where first two alignment pairs in nt_alignment_map are insertions 
+                # and third alignemnt pair is a match to the last base pair in the reference codon
+                if prev_aa_shift == None: prev_aa_shift = nt[4]
 
             # Deletion
             elif (nt[0] == "D") and not(combine):
@@ -642,11 +846,6 @@ def aaAlignment(nt_alignment_map):
                 # If the first base in the reference codon was deleted
                 if first_alignment == None: first_alignment = aa_query_index
 
-                # Would happen for scenarios where first two alignment pairs in nt_alignment_map are insertions 
-                # and third alignemnt pair is a match to the last base pair in the reference codon
-                if prev_aa_shift == None: prev_aa_shift = nt[4]
-
-
                 # Case by case scenario of what could be true for the reference codon:
                 
                 # Case 1: no indel or there is a deletion for each insertion (MMM or DMIM)
@@ -675,6 +874,7 @@ def aaAlignment(nt_alignment_map):
                 elif ((first_alignment == last_alignment) and
                       ((nt[4] % 3) == 0) and 
                       (inbetween != '-')):
+                        inbetween = last_alignment
                         addToMapDeletion(int((nt_ref_index-1)/3), last_alignment)
                         inbetween = None
                 # Case 5: we didn't have a frameshift at the start and we had x insertions in a single reference codon, 
