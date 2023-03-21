@@ -583,13 +583,11 @@ def aaAlignment(nt_alignment_map):
         # If (9 was last called,
         #     first==last, 
         #     ref_index%3 == 0, 
-        #     prev_aa_shift%3 != 0
         #     nt[3]%3 == 0,
         #     has_deletion)  : add '-' to aa_ref_index-1, add last to aa_ref_index and aa_ref_index-1
         elif ((last_add_to_map_scenario == 9) and
               (first_alignment == last_alignment) and
               (nt_ref_index % 3 == 0) and
-              (prev_aa_shift % 3 != 0) and
               (current_aa_shift % 3 == 0) and
               (has_deletion)):
                 addOneToTwo(last_alignment, aa_ref_index-1, aa_ref_index)
