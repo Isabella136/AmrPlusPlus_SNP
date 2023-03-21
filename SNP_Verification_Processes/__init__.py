@@ -22,11 +22,11 @@ def verify(read, gene, config):
         FinalCount(gene, read)
         return None
 
-    if not(rRna):                                                               #rRNA stays as nucleotide sequence; nonsense mutations don't matter   
-        checkResult = NonsenseCheck(read, gene, mapOfInterest, seqOfInterest)   #Checks for nonsense previously found in literature and for new nonsense
-        if not(checkResult):                                                    #If not F-tagged and has new nonsense, can't determine resistance
-            FinalCount(gene, read)
-            return None      
+    # if not(rRna):                                                               #rRNA stays as nucleotide sequence; nonsense mutations don't matter   
+    #     checkResult = NonsenseCheck(read, gene, mapOfInterest, seqOfInterest)   #Checks for nonsense previously found in literature and for new nonsense
+    #     if not(checkResult):                                                    #If not F-tagged and has new nonsense, can't determine resistance
+    #         FinalCount(gene, read)
+    #         return None      
     
     #IntrinsicCheck(read, gene, mapOfInterest, seqOfInterest, config)            #For I-tagged specifically
     #MisInDelCheck(read, gene, mapOfInterest, seqOfInterest, config)             #Counts all resistance-conferring mutations
@@ -75,7 +75,7 @@ def FinalCount(gene, read):
                 gene.addToOutputInfo(5)
                 resistant = True
             elif '12+bp indel:' in info:
-                count = int(info.split(":")[1][1:]) - gene.longIndel
+                count = int(info.split(":")[1][1:]) - gene.long_indel
                 eight = count > 0
             elif '12+bp frameshift:' in info:
                 nine = True

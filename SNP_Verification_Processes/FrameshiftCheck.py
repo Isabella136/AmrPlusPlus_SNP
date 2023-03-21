@@ -191,9 +191,9 @@ def MEG_6094Check(read, gene):
     # Remove soft-clipping
     start_index = read.cigartuples[0][1] if read.cigartuples[0][0] == 4 else 0
     end_index = read.cigartuples[-1][1] if read.cigartuples[-1][0] == 4 else 0
-    aligned_pairs = read.get_aligned_pairs()[start_index:len(read.cigartuples) - end_index]
+    aligned_pairs = read.get_aligned_pairs()[start_index:len(read.get_aligned_pairs()) - end_index]
 
-    query_sequence = read.query_alignment_sequence
+    query_sequence = read.query_sequence
     last_before_full = (3 - (aligned_pairs[0][1]) % 3) % 3 - 1 
     ref_index = aligned_pairs[0][1]
 
@@ -249,7 +249,7 @@ def MEG_6094Check(read, gene):
                 residue_531_to_536 += dnaTranslate(query_sequence[last_before_full+1:pair[0]+1], gene.getName())
             last_before_full += 3
 
-    gene.hasLongFrameshift(remove_from_long_frameshift_check)
+    gene.updateLongFrameshift(remove_from_long_frameshift_check)
     two_insertions_after = ((insertion_count_after_C_insertion%3) == 2)
     deletion_after = ((deletion_count_after_C_insertion%3) == 1)
 

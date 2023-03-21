@@ -20,8 +20,10 @@ from SNP_Verification_Tools import gene_dict
 from Bio import SeqIO
 from multiprocessing import Process
 import SNP_Verification_Tools
-import pysam, sys, getopt, os, configparser, shutil, numpy, csv
+import pysam, sys, getopt, os, configparser, shutil, numpy, csv, multiprocessing
 import pandas as pd
+
+
 
 # Define Command Line Arguments and Read Config
 configFile = "config.ini"
@@ -190,7 +192,7 @@ with pysam.AlignmentFile(config['TEMP_FILES']['TEMP_BAM_SORTED'], "r") as samfil
     processes = list()
     for gene in gene_dict:
         iter = samfile.fetch(reference=gene)
-        processes.append(Process(target=iterate, args=(iter,gene_dict[gene])))
+        processes.append(Process(target=iterate, args=(list(iter),gene_dict[gene])))
     for startIndex in range(0, len(processes), 12):
         endIndex = (startIndex + 12) if len(processes) - startIndex >= 12 else len(processes)
         for currentIndex in range(startIndex, endIndex):
@@ -226,7 +228,8 @@ with (open(config['FULL_FILE_NAMES']['NTYPE_OUTPUT'], "w") as outputN,
                  "N-tuple", "Nonstop", "12+bp indel", "12+ bp frameshift",
                  "Newly found nonsense", "Frameshift till end"]
 
-    h_header = nf_header.copy().append('Hypersusceptible mutations + resistance-conferring mutations')
+    h_header = nf_header.copy()
+    h_header = h_header.append('Hypersusceptible mutations + resistance-conferring mutations')
 
     s_header = nf_header.copy()
     s_header.pop()
