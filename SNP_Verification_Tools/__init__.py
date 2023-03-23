@@ -1,7 +1,5 @@
 mycoplasmataceaeList = ["MEG_3185", "MEG_3240", "MEG_5328", "MEG_5330", "MEG_5331"]
 
-gene_dict = {}
-
 aa = {
     "TTT" : 'F',    "TCT" : 'S',    "TAT" : 'Y',    "TGT" : 'C',
     "TTC" : 'F',    "TCC" : 'S',    "TAC" : 'Y',    "TGC" : 'C',
@@ -67,7 +65,7 @@ def reverseTranslation(amino_acid):
 
 def checkContext(context_list, current_list_index, current_sequence_index, sequence, error_margin):
     if (len(context_list) == current_list_index):
-        return (current_sequence_index, error_margin)
+        return (current_sequence_index-1, error_margin)
     for aa in context_list[current_list_index]:
         if aa == sequence[current_sequence_index]:
             return checkContext(context_list, current_list_index + 1, current_sequence_index + 1, sequence, error_margin)
@@ -83,12 +81,12 @@ def checkContext(context_list, current_list_index, current_sequence_index, seque
 #
 # Returns True if 1. it is an rRNA and context has perfect match, or 2. it is a protein, and it has at least a 70% match
 
-def lookThroughContext(current_sequence_index, sequence, left_context, right_context, deleted = False, position_list = None, rRNA = False):
+def lookThroughContext(current_sequence_index, sequence, left_context, right_context, inserted = False, position_list = None, rRNA = False):
     current_sequence_index, error_margin = checkContext(left_context, 0, current_sequence_index, sequence, 0)
     if (error_margin/(len(left_context)+len(right_context)) > (3/10)) or (rRNA and error_margin > 0):
         return False
     current_sequence_index += 1 if position_list == None else (position_list[-1] - position_list[0] + 1)
-    current_sequence_index += 0 if deleted else 1
+    current_sequence_index += 0 if inserted else 1
     current_sequence_index, error_margin = checkContext(right_context, 0, current_sequence_index, sequence, error_margin)
     if (error_margin/(len(left_context)+len(right_context)) > (3/10)) or (rRNA and error_margin > 0):
         return False

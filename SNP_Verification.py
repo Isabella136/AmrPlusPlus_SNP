@@ -16,11 +16,10 @@
 
 from SNP_Verification_Tools import Gene
 from SNP_Verification_Processes import verify
-from SNP_Verification_Tools import gene_dict
 from Bio import SeqIO
-from multiprocessing import Process
+from multiprocessing import Process, Manager
 import SNP_Verification_Tools
-import pysam, sys, getopt, os, configparser, shutil, numpy, csv, multiprocessing
+import pysam, sys, getopt, os, configparser, shutil, numpy, csv
 import pandas as pd
 
 
@@ -148,6 +147,8 @@ config['FULL_FILE_NAMES']['STYPE_OUTPUT'] = (config['FOLDERS']['SAMPLE_OUTPUT'] 
                                              config['OUTPUT_FILES']['SUPPRESSIBLE_TYPE_OUTPUT'])
 config['FULL_FILE_NAMES']['ITYPE_OUTPUT'] = (config['FOLDERS']['SAMPLE_OUTPUT'] + 
                                              config['OUTPUT_FILES']['INTRINSIC_TYPE_OUTPUT'])
+gene_dict = dict()
+gene_variant_dict = Manager().dict()
 
 # Verify existance of folders 
 if not(os.path.exists(config['FOLDERS']['SAMPLE_DETAILED_OUTPUT'])):
@@ -164,45 +165,56 @@ for gene in SeqIO.parse(config['SOURCE_FILES']['SNP_INFO_FASTA'], 'fasta'):
     name = gene.name[:index]
     variants = gene.name[index+1:]
 
-    # Create Gene object, add to dictionary
-    if 'Must:' in variants:
-        if 'Nuc:' in variants:          gene_dict[name + "|RequiresSNPConfirmation"] = Gene.IntrinsicrRNA(name, gene.seq, variants)
-        else:                           gene_dict[name + "|RequiresSNPConfirmation"] = Gene.IntrinsicProtein(name, gene.seq, variants)
-    elif 'Hyper:' in variants:          gene_dict[name + "|RequiresSNPConfirmation"] = Gene.Hypersusceptible(name, gene.seq, variants)
-    elif 'FS-' in variants:
-        if 'suppression' in variants:   gene_dict[name + "|RequiresSNPConfirmation"] = Gene.Suppressible(name, gene.seq, variants)
-        elif 'MEG_6142' in name:        gene_dict[name + "|RequiresSNPConfirmation"] = Gene.NormalProtein(name, gene.seq, variants)
-        else:                           gene_dict[name + "|RequiresSNPConfirmation"] = Gene.Frameshift(name, gene.seq, variants)
-    else:
-        if 'Nuc:' in variants:          gene_dict[name + "|RequiresSNPConfirmation"] = Gene.NormalrRNA(name, gene.seq, variants)
-        else:                           gene_dict[name + "|RequiresSNPConfirmation"] = Gene.NormalProtein(name, gene.seq, variants)
-
+    # Store information required for creating Gene object
+    gene_dict[name + "|RequiresSNPConfirmation"] = [name, gene.seq, variants]
+   
 # Define processes for the analysis of BAM file sorted by MEGARes reference
 #pysam.sort("-o", config['TEMP_FILES']['TEMP_BAM_SORTED'], config['SOURCE_FILES']['BAM_INPUT'])
 #pysam.index(config['TEMP_FILES']['TEMP_BAM_SORTED'], config['TEMP_FILES']['TEMP_BAM_SORTED']+'.bai')
 with pysam.AlignmentFile(config['TEMP_FILES']['TEMP_BAM_SORTED'], "r") as samfile:
-    def iterate(alignment_iterator, gene):
+    def iterate(alignment_iterator, gene_name, gene_object, gene_variant_dict):
+        # Create Gene object
+        if 'Must:' in gene_object[2]:
+            if 'Nuc:' in gene_object[2]:            gene_variant = Gene.IntrinsicrRNA(gene_object[0],gene_object[1],gene_object[2])
+            else:                                   gene_variant = Gene.IntrinsicProtein(gene_object[0],gene_object[1],gene_object[2])
+        elif 'Hyper:' in gene_object[2]:            gene_variant = Gene.Hypersusceptible(gene_object[0],gene_object[1],gene_object[2])
+        elif 'FS-' in gene_object[2]:
+            if 'suppression' in gene_object[2]:     gene_variant = Gene.Suppressible(gene_object[0],gene_object[1],gene_object[2])
+            elif 'MEG_6142' in gene_name:           gene_variant = Gene.NormalProtein(gene_object[0],gene_object[1],gene_object[2])
+            else:                                   gene_variant = Gene.Frameshift(gene_object[0],gene_object[1],gene_object[2])
+        else:
+            if 'Nuc:' in gene_object[2]:            gene_variant = Gene.NormalrRNA(gene_object[0],gene_object[1],gene_object[2])
+            else:                                   gene_variant = Gene.NormalProtein(gene_object[0],gene_object[1],gene_object[2])
+
+        # Go through all alignments to gene
         for read in alignment_iterator:
             if (read.cigarstring == None):
                 continue
-            elif (len(argList) != 0) and (gene.getName().split("|")[0] not in argList):
+            elif (len(argList) != 0) and (gene_variant.getName().split("|")[0] not in argList):
                 continue
-            verify(read, gene, config)
-            gene.resetForNextRead()
+            verify(read, gene_variant, config)
+            gene_variant.resetForNextRead()
+        
+        # Add Gene object to gene_variant_dict
+        gene_variant_dict[gene_name] = gene_variant
+
     processes = list()
-    for gene in gene_dict:
-        iter = samfile.fetch(reference=gene)
-        processes.append(Process(target=iterate, args=(list(iter),gene_dict[gene])))
+    for gene_name, gene_object in gene_dict.items():
+        iter = samfile.fetch(reference=gene_name)
+        processes.append(Process(target=iterate, args=(list(iter), gene_name, gene_object, gene_variant_dict)))
     for startIndex in range(0, len(processes), 12):
         endIndex = (startIndex + 12) if len(processes) - startIndex >= 12 else len(processes)
         for currentIndex in range(startIndex, endIndex):
             processes[currentIndex].start()
         for currentIndex in range(startIndex, endIndex):
             processes[currentIndex].join()
+        gene_variant_dict
 
 # Function that appends gene.getOutputInfo() to output file
 def appendGeneOutputInfo(name, output_info, csvwriter, countMatrix):
-    csvwriter.writerow([name].extend(output_info))
+    new_row = [name]
+    new_row.extend(output_info)
+    csvwriter.writerow(new_row)
 
     # Update count matrix if previously found in AMR++
     if config.getboolean('SETTINGS', 'AMRPLUSPLUS'):
@@ -223,13 +235,13 @@ with (open(config['FULL_FILE_NAMES']['NTYPE_OUTPUT'], "w") as outputN,
       open(config['FULL_FILE_NAMES']['STYPE_OUTPUT'], "w") as outputS,
       open(config['FULL_FILE_NAMES']['ITYPE_OUTPUT'], "w") as outputI):
 
-    nf_header = ["Gene,Number of reads", "Resistant", "Missense",
+    nf_header = ["Gene","Number of reads", "Resistant", "Missense",
                  "Insertion", "Deletion", "Previously recorded nonsense",
                  "N-tuple", "Nonstop", "12+bp indel", "12+ bp frameshift",
                  "Newly found nonsense", "Frameshift till end"]
 
     h_header = nf_header.copy()
-    h_header = h_header.append('Hypersusceptible mutations + resistance-conferring mutations')
+    h_header.extend(['Hypersusceptible mutations + resistance-conferring mutations'])
 
     s_header = nf_header.copy()
     s_header.pop()
@@ -255,7 +267,7 @@ with (open(config['FULL_FILE_NAMES']['NTYPE_OUTPUT'], "w") as outputN,
     countMatrix = pd.read_csv(config['FULL_FILE_NAMES']['COUNT_MATRIX']) if config.getboolean('SETTINGS', 'AMRPLUSPLUS') else None
 
     # Run through results
-    for name, gene in gene_dict.items():
+    for name, gene in gene_variant_dict.items():
         if (len(argList) != 0) and (gene.getName().split("|")[0] not in argList):
             continue
         

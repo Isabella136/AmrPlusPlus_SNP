@@ -106,7 +106,7 @@ class Gene:
         
         # Clears mutation counts for current MEGARes reference gene
         def clearOutputInfo(this):
-            for index in range(this.output_info):
+            for index in range(len(this.output_info)):
                 this.output_info[index] = 0
             this.additional_info.clear()
 
@@ -234,7 +234,7 @@ class Gene:
                 condensed_info_list.append(snp.condensedInfo())
             return condensed_info_list
         def getNonstopInfo(this):
-            return None
+            return [False, None]
         def getFrameshiftInfo(this):
             return None
         def getFirstMustBetweenParams(this, begin, end):

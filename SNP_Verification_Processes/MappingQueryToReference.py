@@ -41,7 +41,7 @@ def MapQueryToReference(read, gene):
 
     # For MEG_6094, if gene.mustSuppressFrameshift() is True, calls suppressFS function
     if gene.mustSuppressFrameshift():
-         query_seq = suppressFS(1602, mapOfInterest, query_seq)
+         query_seq = suppressFS(1602, map_of_interest, query_seq)
 
     # Trimms query sequence in order to not have broken codons during translation
     # for rRNA, the mapCigarToAlignment returns full map, so sequence won't be trimmed
@@ -62,7 +62,7 @@ def MapQueryToReference(read, gene):
     # ?????????? what did I meant by extend past
     if not(gene.rRna()):
         seq_of_interest = dnaTranslate(trimmed_query_sequence, gene.getName())
-        mapOfInterest = aaAlignment(nt_alignment_map)           #for 'F' type of genes, seq_of_interest may extend past map_of_interest
+        map_of_interest = aaAlignment(nt_alignment_map)           #for 'F' type of genes, seq_of_interest may extend past map_of_interest
                                                                 #due to frameshift that extend past the end of query sequence
     return (seq_of_interest, map_of_interest)
 

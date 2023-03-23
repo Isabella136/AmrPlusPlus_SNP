@@ -98,7 +98,7 @@ class IntrinsicVariant:
                 list(this.list_of_musts.values())[-1].defineNext(to_add)
             else:
                 this.first_pos = to_add.getPos()
-            this.list_of_musts[to_add.getPos] = to_add
+            this.list_of_musts[to_add.getPos()] = to_add
         this.last_pos = list(this.list_of_musts.keys())[-1]
 
     # Description of input:
@@ -115,7 +115,7 @@ class IntrinsicVariant:
         if (end < this.first_pos) or (begin > this.last_pos):
             return None
         elif (end >= this.first_pos) and (begin <= this.first_pos): 
-            return (this.listOfMust[this.first_pos], True)
+            return (this.list_of_musts[this.first_pos], True)
         for pos in this.list_of_musts.keys():
             if (begin <= pos) and (end >= pos):
                 return (this.list_of_musts[pos], False)

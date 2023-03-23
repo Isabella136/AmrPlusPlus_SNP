@@ -57,7 +57,7 @@ class Insertion(InDel):
             end = len(sequence) - 1 - (this.position_list[-1]-this.position_list[0]) - len(this.left_context) - len(this.right_context)
             begin = end - 60
         for sequence_index in range(begin, end+1):
-            if lookThroughContext(sequence_index, sequence, this.left_context, this.right_context, rRNA=rRNA, position_list=this.position_list):
+            if lookThroughContext(sequence_index, sequence, this.left_context, this.right_context, rRNA=rRNA, inserted = True, position_list=this.position_list):
                 this.changeACT(sequence_index)
                 break
     def condensedInfo(this):
@@ -87,7 +87,7 @@ class Deletion(InDel):
             end = len(sequence) - 2 - (this.position_list[-1]-this.position_list[0]) - len(this.left_context) - len(this.right_context)
             begin = end - 61
         for sequence_index in range(begin, end+1):
-            if lookThroughContext(sequence_index, sequence, this.left_context, this.right_context, rRNA=rRNA, deleted=True, position_list=this.position_list):
+            if lookThroughContext(sequence_index, sequence, this.left_context, this.right_context, rRNA=rRNA, position_list=this.position_list):
                 this.changeACT(sequence, sequence_index)
                 break
     def isValid(this):
