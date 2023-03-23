@@ -145,10 +145,10 @@ def nTupleCheck(read, gene, mapOfInterest, seqOfInterest, config):
                             if seqOfInterest[queryIndex] == mtInfo[0]:
                                 remainingResidueIsEqualToOriginal = (True,False)
                                 if ((mapOfInterest.get(mtInfo[1][0],False)) != False) and (queryIndex in mapOfInterest[mtInfo[1][0]]):
-                                    if gene.aaSequence()[mtInfo[1][0]] == mtInfo[0]:
+                                    if gene.finalSequence()[mtInfo[1][0]] == mtInfo[0]:
                                         remainingResidueIsEqualToOriginal = (True,True)
                                 elif ((mapOfInterest.get(mtInfo[1][0]-2,False)) != False) and queryIndex in mapOfInterest[mtInfo[1][0]-2]:
-                                    if gene.aaSequence()[mtInfo[1][0]-2] == mtInfo[0]:
+                                    if gene.finalSequence()[mtInfo[1][0]-2] == mtInfo[0]:
                                         remainingResidueIsEqualToOriginal = (True,True)
                             misMut += 1
                     if (delMut > 0) & (misMut > 0):
@@ -174,13 +174,13 @@ def nTupleCheck(read, gene, mapOfInterest, seqOfInterest, config):
                                     break
                             elif (mtInfo[0] == seqOfInterest[queryIndex]) and not(config.getboolean('SETTINGS', 'MT_AND_WT')):
                                 if ((mapOfInterest.get(mtInfo[1],False)) != False) and (queryIndex in mapOfInterest[mtInfo[1]]):
-                                    if gene.aaSequence()[mtInfo[1]] != mtInfo[0]:
+                                    if gene.finalSequence()[mtInfo[1]] != mtInfo[0]:
                                         wtPresent = True
                                         currentResBool = False
                                         resBool = False
                                         break
                                 elif ((mapOfInterest.get(mtInfo[1]-2,False)) != False) and queryIndex in mapOfInterest[mtInfo[1]-2]:
-                                    if gene.aaSequence()[mtInfo[1]-2] != mtInfo[0]:
+                                    if gene.finalSequence()[mtInfo[1]-2] != mtInfo[0]:
                                         wtPresent = True
                                         currentResBool = False
                                         resBool = False

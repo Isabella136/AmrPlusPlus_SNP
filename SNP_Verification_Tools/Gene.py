@@ -95,6 +95,10 @@ class Gene:
         def ntSequence(this):
             return this.sequence
         
+        # Returns nucleotide sequence if gene is an rRNA; else returns translated sequence
+        def finalSequence(this):
+            return this.ntSequence()
+        
         # Returns True if gene is an rRNA; else returns False
         def rRna(this):
             return this.rRNA
@@ -256,6 +260,8 @@ class Protein(Gene):
             return condensed_info_list
         def aaSequence(this):
             return this.translated
+        def finalSequence(this):
+            return this.aaSequence()
     
     # Functions related to detailed output syntax
         def createAdditionalInfoHeader(this, header):

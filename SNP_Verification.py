@@ -130,7 +130,7 @@ if len(options) == 0:
 
 # Add new information to config buffer
 config['FOLDERS']['SAMPLE_OUTPUT'] = (config['FOLDERS']['MAIN_OUTPUT_FOLDER'] + 
-                                      config['FULL_FILE_NAMES']['SAMPLE'])
+                                      config['FULL_FILE_NAMES']['SAMPLE']) + '/'
 config['FOLDERS']['SAMPLE_DETAILED_OUTPUT'] = (config['FOLDERS']['SAMPLE_OUTPUT'] + 
                                                config['FOLDERS']['DETAILED_FOLDER'])
 config['FOLDERS']['TEMP'] = os.path.dirname(config['TEMP_FILES']['TEMP_BAM_SORTED'])
@@ -264,7 +264,7 @@ with (open(config['FULL_FILE_NAMES']['NTYPE_OUTPUT'], "w") as outputN,
     iwriter.writerow(i_header)
 
     # Retrieve count matrix data
-    countMatrix = pd.read_csv(config['FULL_FILE_NAMES']['COUNT_MATRIX']) if config.getboolean('SETTINGS', 'AMRPLUSPLUS') else None
+    countMatrix = pd.read_csv(config['SOURCE_FILES']['COUNT_MATRIX']) if config.getboolean('SETTINGS', 'AMRPLUSPLUS') else None
 
     # Run through results
     for name, gene in gene_variant_dict.items():
