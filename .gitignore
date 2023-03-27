@@ -15,3 +15,4 @@ Test/P_BPW_50_2_filtered.sam
 Sample_Output/
 Test/
 temp/sorted.sam
+data/test_output/*
