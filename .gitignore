@@ -14,5 +14,6 @@ Test/P_BPW_50_2_filtered.sam
 *.json
 Sample_Output/
 Test/
-temp/sorted.sam
+temp/*
+troubleshoot_data/*
 data/test_output/*
