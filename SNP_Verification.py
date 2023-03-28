@@ -197,7 +197,7 @@ def iterate(process_vars):
     config = process_vars[2]
     argList = process_vars[3]
 
-    with pysam.AlignmentFile(config['SOURCE_FILES']['BAM_INPUT'], "r") as samfile:
+    with pysam.AlignmentFile(config['TEMP_FILES']['TEMP_BAM_SORTED'], "r") as samfile:
         alignment_iterator = list(samfile.fetch(reference=gene_name))
 
     # Create Gene object
@@ -227,10 +227,13 @@ def iterate(process_vars):
 def process_genes(config, argList, gene_dict):
     processes = list()
 
+    pysam.sort("-o", config['TEMP_FILES']['TEMP_BAM_SORTED'], config['SOURCE_FILES']['BAM_INPUT'])
+    pysam.index(config['TEMP_FILES']['TEMP_BAM_SORTED'], config['TEMP_FILES']['TEMP_BAM_SORTED']+'.bai')
+
     for gene_name, gene_object in gene_dict.items():
         processes.append((gene_name, gene_object, config, argList))
 
-    with ppe(config['SETTINGS']['THREADS']) as p:
+    with ppe(int(config['SETTINGS']['THREADS'])) as p:
         results = p.map(iterate, processes)
 
     return results
