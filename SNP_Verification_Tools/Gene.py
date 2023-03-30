@@ -195,7 +195,7 @@ class Gene:
 
         def writeAdditionalInfo(this, file):
             header = {"Read": None}
-            this.createAdditionalInfoHeader(this, header)
+            this.createAdditionalInfoHeader(header)
 
             condensed_info = this.condensedMisInDelInfo()
             if len(condensed_info) != 0:
@@ -277,10 +277,10 @@ class Protein(Gene):
             if "Newly found nonsense" in info:
                 header["Newly found nonsense"] = "Pos:" + info.split(":")[1]
             elif "12+bp frameshift" in info:
-                if ((this.geneTag == 'F') and (read[-1] == "sus")) or ((this.geneTag != 'F') and (read[-1] == "res")):
+                if ((this.tag == 'F') and (read[-1] == "sus")) or ((this.tag != 'F') and (read[-1] == "res")):
                     header["12+bp frameshift"] = "Count:" + info.split(":")[1]
             elif "12+bp indel" in info:
-                if ((this.geneTag == 'F') and (read[-1] == "sus")) or ((this.geneTag != 'F') and (read[-1] == "res")):
+                if ((this.tag == 'F') and (read[-1] == "sus")) or ((this.tag != 'F') and (read[-1] == "res")):
                     count = int(info.split(":")[1][1:]) - this.long_indel
                     if count > 0:
                         header["12+bp indel"] = "Count: " + str(count)

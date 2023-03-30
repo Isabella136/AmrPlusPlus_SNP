@@ -21,7 +21,7 @@ from SNP_Verification_Processes import verify
 from Bio import SeqIO
 import pysam, sys, getopt, os, configparser, csv
 import pandas as pd
-#from multiprocessing import Pool as ppe
+import multiprocessing
 from concurrent.futures import ProcessPoolExecutor as ppe
 
 # from argparse import ArgumentParser
@@ -60,7 +60,7 @@ def parse_config():
         """
     argList = []
     try:
-        options, args = getopt.getopt(sys.argv[1:], "hlrac:i:o:", ["mt_and_wt=", "detailed_output=", "count_matrix=", "count_matrix_final="])
+        options, args = getopt.getopt(sys.argv[1:], "hlra:c:i:o:", ["mt_and_wt=", "detailed_output=", "count_matrix=", "count_matrix_final="])
     except getopt.GetoptError:
         print("ERROR - this is the list of arguments recognized by the program:{}".format(arguments_string))
         sys.exit(-1)
@@ -113,7 +113,10 @@ def parse_config():
         elif opt == "-a":
             if i == 0:
                 config.read(configFile)
-            config['SETTINGS']['AMRPLUSPLUS'] = 'true'
+            if arg not in ['true', 'false']:
+                print("ERROR: '-a' argument can only be either 'true' or 'false'")
+                sys.exit(-1)
+            config['SETTINGS']['AMRPLUSPLUS'] = arg
         elif opt == "-t":
             if i == 0:
                 config.read(configFile)
@@ -196,6 +199,7 @@ def iterate(process_vars):
     gene_object = process_vars[1]
     config = process_vars[2]
     argList = process_vars[3]
+    lock = process_vars[4]
 
     with pysam.AlignmentFile(config['TEMP_FILES']['TEMP_BAM_SORTED'], "r") as samfile:
         alignment_iterator = list(samfile.fetch(reference=gene_name))
@@ -214,6 +218,9 @@ def iterate(process_vars):
         else:                                   gene_variant = Gene.NormalProtein(gene_object[0],gene_object[1],gene_object[2])
 
     # Go through all alignments to gene
+    DEBUGGING_MODE = config.getboolean('SETTINGS', 'DEBUGGING_MODE')
+    if DEBUGGING_MODE:
+        lock.acquire()
     for read in alignment_iterator:
         if (read.cigarstring == None):
             continue
@@ -221,6 +228,9 @@ def iterate(process_vars):
             continue
         verify(read, gene_variant, config)
         gene_variant.resetForNextRead()
+
+    if DEBUGGING_MODE:
+        lock.release()
     
     return {gene_name : gene_variant}
 
@@ -230,8 +240,11 @@ def process_genes(config, argList, gene_dict):
     pysam.sort("-o", config['TEMP_FILES']['TEMP_BAM_SORTED'], config['SOURCE_FILES']['BAM_INPUT'])
     pysam.index(config['TEMP_FILES']['TEMP_BAM_SORTED'], config['TEMP_FILES']['TEMP_BAM_SORTED']+'.bai')
 
+    m = multiprocessing.Manager()
+    lock = m.Lock()
+
     for gene_name, gene_object in gene_dict.items():
-        processes.append((gene_name, gene_object, config, argList))
+        processes.append((gene_name, gene_object, config, argList, lock))
 
     with ppe(int(config['SETTINGS']['THREADS'])) as p:
         results = p.map(iterate, processes)

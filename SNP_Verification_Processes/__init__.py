@@ -8,20 +8,22 @@ from SNP_Verification_Processes.nTupleCheck import nTupleCheck
 import pysam
 
 def verify(read, gene, config):
+    if config.getboolean('SETTINGS', 'DEBUGGING_MODE'):
+        print(read.qname)
     rRna = gene.rRna()
     #Counts read; other data will be counted in FinalCount method
     gene.addToOutputInfo(0)
 
     #Checks for frameshifts (if not rRNA), but also for extended indels;
     #for S-tagged, also determines if needs suppression
-    checkResult = FrameshiftCheck(read, gene)
+    checkResult = FrameshiftCheck(read, gene, config)
     if not(checkResult):
         #If not F-tagged and has frameshifts till the end of query sequence
         FinalCount(gene, read)
         return None                                
     
     #If S-tagged and needs suppression, seq and map of interest, removes index 1602
-    seqOfInterest, mapOfInterest = MapQueryToReference(read, gene)
+    seqOfInterest, mapOfInterest = MapQueryToReference(read, gene, config)
     if seqOfInterest == False:
         FinalCount(gene, read)
         return None
