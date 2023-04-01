@@ -376,6 +376,7 @@ def aaAlignment(nt_alignment_map):
     has_deletion = False
     full_codon_deletion = False
     last_add_to_map_scenario = None
+    first_ref_codon = True
 
     # Maps one query codon to one reference codon
     def addOneToOne(aa_query_index, aa_ref_index):
@@ -400,240 +401,239 @@ def aaAlignment(nt_alignment_map):
 
     def addToMapScenario(aa_ref_index, current_aa_shift):
         nonlocal last_add_to_map_scenario 
-        #1
-        # If (first==last, 
-        #     ref_index%3 == 0, 
-        #     prev_aa_shift%3 == 0, 
-        #     nt[3]%3 == 0, 
-        #     not full_codon_deletion,
-        #     nt[3] - prev_aa_shift == 0) : add last to aa_ref_index
-        if ((first_alignment == last_alignment) and
-            (nt_ref_index % 3 == 0) and
-            (prev_aa_shift % 3 == 0) and
-            (current_aa_shift % 3 == 0) and
-            ((current_aa_shift - prev_aa_shift) == 0) and
-            (full_codon_deletion or not has_deletion)):
-                if DEBUGGING_MODE: print(str(nt_ref_index) + ' add to map scenario: 1')
-                addOneToOne(last_alignment, aa_ref_index)
-                last_add_to_map_scenario = 1
-        #2
-        # If (first==last,
-        #     ref_index%3 == 0, 
-        #     prev_aa_shift%3 == 0, 
-        #     nt[3]%3 == 0, 
-        #     nt[3] - prev_aa_shift == 3   
-        #     not full_codon_deletion,
-        #     not has_deletion) : add last to aa_ref_index-1
-        elif ((first_alignment == last_alignment) and
-              (nt_ref_index % 3 == 0) and
-              (prev_aa_shift % 3 == 0) and
-              (current_aa_shift % 3 == 0) and
-              ((current_aa_shift - prev_aa_shift) == 3) and
-              (not full_codon_deletion) and
-              (not has_deletion)):
-                if DEBUGGING_MODE: print(str(nt_ref_index) + ' add to map scenario: 2')
-                addOneToOne(last_alignment, aa_ref_index-1)
-                last_add_to_map_scenario = 2
 
-        #ID - occurs for instances where ref codon can align to a codon with insertion(s) followed by a codon with deletion(s)
-        elif (has_deletion
-                and (first_alignment != None) 
-                and ((prev_aa_shift % 3) == 0 )
-                and (first_alignment <= (last_alignment - 1))
-                and ((nt[3]-prev_aa_shift+delete_count)%3 == 0)):
-            if DEBUGGING_MODE: print(str(nt_ref_index) + ' add to map scenario: ID')
+        # Scenario 1:   Full match (3M) or pseudo-full match (1D1I2M) 
+        #               b/w query codon and ref codon
+        # Add last query codon to current ref codon
+        if ((nt_ref_index % 3 == 0)                                             # reached end of ref codon
+                and (prev_aa_shift % 3 == 0)                                    # start of ref codon not in frameshift
+                and (current_aa_shift % 3 == 0)                                 # end of ref codon is not in frameshift
+                and (current_aa_shift - prev_aa_shift == 0)):                   # no insertions of length 3 or more (no new query codon introduced either)
+            
+            if DEBUGGING_MODE: print(str(nt_ref_index) + ' add to map scenario: 1')
+            addOneToOne(last_alignment, aa_ref_index)
+            last_add_to_map_scenario = 1
+
+        # Scenario 2:   First full codon insertion (3I)
+        # Add last query codon to previous ref codon
+        elif (not has_deletion                                                  # no deletions allowed
+                and (nt_ref_index % 3 == 0)                                     # between two reference codons
+                and (prev_aa_shift % 3 == 0)                                    # start of ref codon not in frameshift
+                and (current_aa_shift % 3 == 0)                                 # end of ref codon is not in frameshift
+                and (first_alignment == last_alignment)                         # only insertions in query codon
+                and (current_aa_shift - prev_aa_shift) == 3):                   # is first codon insertion
+            
+            if DEBUGGING_MODE: print(str(nt_ref_index) + ' add to map scenario: 2')
+            addOneToOne(last_alignment, aa_ref_index-1)
+            last_add_to_map_scenario = 2
+
+        # Scenario 3:   Occurs for instances where ref codon can align 
+        #               to a codon with insertion(s) followed by a codon 
+        #               with deletion(s)
+        # Change current ref codon to last two query codons 
+        elif (has_deletion                                                      # deletions are allowed
+                and not full_codon_deletion                                     # no full codon deletion
+                and (nt_ref_index % 3 == 0)                                     # reached end of ref codon
+                and (prev_aa_shift % 3 == 0)                                    # start of ref codon not in frameshift
+                and (first_alignment <= (last_alignment - 1))                   # enough insertions present to start a new query codon
+                and ((nt[3]-prev_aa_shift+delete_count)%3 == 0)):               # before first deletion, we left frameshift (insertion count is multiple of 3)
+            
+            if DEBUGGING_MODE: print(str(nt_ref_index) + ' add to map scenario: 3')
             if aa_ref_index in list(aa_alignment_map.keys()):
                 aa_alignment_map.pop(aa_ref_index)
             addTwoToOne(last_alignment - 1, last_alignment, aa_ref_index)
-            last_add_to_map_scenario = 'ID'
-        #3
-        # If ((not has_deletion)
-        #     first == last-1,
-        #     ref_index%3 == 0, 
-        #     (prev_aa_shift%3 == 0 or, 
-        #     nt[3]%3 == 0),
-        #     not full_codon_deletion) : add first and last to aa_ref_index
-        elif ((not has_deletion) and
-              (first_alignment == (last_alignment - 1)) and
-              (nt_ref_index % 3 == 0) and
-              ((prev_aa_shift % 3 == 0) or
-               (current_aa_shift % 3 == 0)) and
-              (not full_codon_deletion)):
-                if DEBUGGING_MODE: print(str(nt_ref_index) + ' add to map scenario: 3')
+            last_add_to_map_scenario = 3
+
+        # Scenario 4:   We started or ended frameshift with insertions, 
+        #               or we're right after the first full codon insertion
+        # Add last two query codons to current ref codon
+        elif (not has_deletion                                                      # no deletions allowed
+                and (nt_ref_index % 3 == 0)                                         # reached end of ref codon
+                and (first_alignment == (last_alignment - 1))                       # we are or were in frameshift 
+                and ((prev_aa_shift % 3 == 0) or (current_aa_shift % 3 == 0))):     # start of ref codon or end of ref codon not in frameshift 
+              
+            if DEBUGGING_MODE: print(str(nt_ref_index) + ' add to map scenario: 4')
+            addTwoToOne(first_alignment, last_alignment, aa_ref_index)
+            last_add_to_map_scenario = 4
+
+        # Scenario 5:   We're right after at least two full codon insertions
+        # Change current ref codon to last two query codons 
+        elif (not has_deletion                                                  # no deletions allowed
+                and (nt_ref_index % 3 == 0)                                     # between two reference codons
+                and (current_aa_shift % 3 == 0)                                 # end of ref codon not in frameshift
+                and (first_alignment < (last_alignment - 1))                    # two or more full codon insertions
+                and (aa_ref_index in list(aa_alignment_map.keys()))):           # must update map at ref codon
+            
+            if DEBUGGING_MODE: print(str(nt_ref_index) + ' add to map scenario: 5')
+            aa_alignment_map.pop(aa_ref_index)
+            addTwoToOne(last_alignment - 1, last_alignment, aa_ref_index)
+            last_add_to_map_scenario = 5
+
+        # Scenario 6:   We had a multiple of three (but not three) 
+        #               insertions added inside ref codon
+        # Add first and last query codons to current ref codon
+        # If one query codon in the middle, also add it to current ref codon
+        elif (not has_deletion                                                  # no deletions allowed
+                and (nt_ref_index % 3 == 0)                                     # reached end of ref codon
+                and (prev_aa_shift % 3 == 0)                                    # start of ref codon not in frameshift
+                and (current_aa_shift % 3 == 0)                                 # end of ref codon is not in frameshift
+                and (first_alignment < (last_alignment - 1))                    # multiple of three (but not three) insertions
+                and (aa_ref_index not in list(aa_alignment_map.keys()))):       # ref codon not added to map previously (i.e insertions not b/w two ref codons)
+            
+            if DEBUGGING_MODE: print(str(nt_ref_index) + ' add to map scenario: 6')
+            if (first_alignment+1) != (last_alignment-1): 
                 addTwoToOne(first_alignment, last_alignment, aa_ref_index)
-                last_add_to_map_scenario = 3
-        #4
-        # If (first < last-1,
-        #     ref_index%3 == 0, 
-        #     nt[3]%3 == 0,    
-        #     not full_codon_deletion,
-        #     not has_deletion,
-        #     aa_ref_index has stuff) : update aa_ref_index to last and last-1
-        elif ((first_alignment != None) and
-              (first_alignment < (last_alignment - 1)) and
-              (nt_ref_index % 3 == 0) and
-              (current_aa_shift % 3 == 0) and
-              (aa_alignment_map.get(aa_ref_index, False) != False) and
-              (not full_codon_deletion) and
-              (not has_deletion)):
-                if DEBUGGING_MODE: print(str(nt_ref_index) + ' add to map scenario: 4')
-                aa_alignment_map.pop(aa_ref_index)
+            else:
+                addOneToOne(first_alignment, aa_ref_index)
                 addTwoToOne(last_alignment - 1, last_alignment, aa_ref_index)
-                last_add_to_map_scenario = 4
-        #5
-        # If (first < last-1,
-        #     ref_index%3 == 0, 
-        #     nt[3]%3 == 0,    
-        #     not full_codon_deletion,
-        #     not has_deletion,
-        #     aa_ref_index is empty) : add first and last to aa_ref_index, add first+1 and last-1 too if first+1 == last-1
-        elif ((first_alignment != None) and
-              (first_alignment < (last_alignment - 1)) and
-              (nt_ref_index % 3 == 0) and
-              (current_aa_shift % 3 == 0) and
-              (aa_alignment_map.get(aa_ref_index, False) == False) and
-              (not full_codon_deletion) and
-              (not has_deletion)):
-                if DEBUGGING_MODE: print(str(nt_ref_index) + ' add to map scenario: 5')
-                if (first_alignment+1) != (last_alignment-1): 
-                    addTwoToOne(first_alignment, last_alignment, aa_ref_index)
-                else:
-                    addOneToOne(first_alignment, aa_ref_index)
-                    addTwoToOne(last_alignment - 1, last_alignment, aa_ref_index)
-                last_add_to_map_scenario = 5
-        #6
-        # If (first < last-1,
-        #     ref_index%3 == 0, 
-        #     prev_aa_shift%3 == 0, 
-        #     nt[3]%3 != 0,    
-        #     not full_codon_deletion,
-        #     not has_deletion,
-        #     aa_ref_index is empty) : update aa_ref_index to first and first+1
-        elif ((first_alignment != None) and
-              (first_alignment < (last_alignment - 1)) and
-              (nt_ref_index % 3 == 0) and
-              (prev_aa_shift % 3 == 0) and
-              (current_aa_shift % 3 != 0) and
-              (aa_alignment_map.get(aa_ref_index, False) == False) and
-              (not full_codon_deletion) and
-              (not has_deletion)):
-                if DEBUGGING_MODE: print(str(nt_ref_index) + ' add to map scenario: 6')
-                addTwoToOne(first_alignment, first_alignment+1, aa_ref_index)
-                last_add_to_map_scenario = 6
-        #7
-        # If (11 was not last called
+            last_add_to_map_scenario = 6
+
+        # Scenario 7:   We had more than three insertions added 
+        #               inside ref codon that ended frameshift
+        # Add last two query codons to current ref codon
+        elif (not has_deletion                                                  # no deletions allowed
+                and (nt_ref_index % 3 == 0)                                     # reached end of ref codon
+                and (prev_aa_shift % 3 != 0)                                    # start of ref codon in frameshift
+                and (current_aa_shift % 3 == 0)                                 # end of ref codon is not in frameshift
+                and (first_alignment < (last_alignment - 1))):                  # more than three insertions
+            
+            if DEBUGGING_MODE: print(str(nt_ref_index) + ' add to map scenario: 7')
+            addTwoToOne(last_alignment - 1, last_alignment, aa_ref_index)
+            last_add_to_map_scenario = 7
+
+
+        # Scenario 8:   We had more than three insertions added 
+        #               inside ref codon that started frameshift
+        # Add first two query codons to current ref codon
+        elif (not has_deletion                                                  # no deletions allowed
+                and (nt_ref_index % 3 == 0)                                     # reached end of ref codon
+                and (prev_aa_shift % 3 == 0)                                    # start of ref codon not in frameshift
+                and (current_aa_shift % 3 != 0)                                 # end of ref codon currently in frameshift
+                and (first_alignment < (last_alignment - 1))):                  # more than three insertions
+            
+            if DEBUGGING_MODE: print(str(nt_ref_index) + ' add to map scenario: 8')
+            addTwoToOne(first_alignment, first_alignment+1, aa_ref_index)
+            last_add_to_map_scenario = 8
+
+        # Scenario 9: 
+        # If (13 was not last called
         #     full_codon_deletion, 
         #     ref_index%3 == 0, 
         #     prev_aa_shift%3 == 0, 
         #     nt[3]%3 == 0, 
         #     prev_aa_shift - nt[3] == 3) : add '-' to aa_ref_index
-        elif ((last_add_to_map_scenario != 11) and
-              (full_codon_deletion) and
-              (nt_ref_index % 3 == 0) and
-              (prev_aa_shift % 3 == 0) and
-              (current_aa_shift % 3 == 0) and
-              ((prev_aa_shift - current_aa_shift) == 3)):
-                if DEBUGGING_MODE: print(str(nt_ref_index) + ' add to map scenario: 7')
-                addOneToOne('-', aa_ref_index)
-                last_add_to_map_scenario = 7
-        #8
-        # If (first==last, 
+        elif (full_codon_deletion
+                and (nt_ref_index % 3 == 0)
+                and (prev_aa_shift % 3 == 0)
+                and (current_aa_shift % 3 == 0)
+                and (last_add_to_map_scenario != 13)
+                and ((prev_aa_shift - current_aa_shift) == 3)):
+              
+            if DEBUGGING_MODE: print(str(nt_ref_index) + ' add to map scenario: 9')
+            addOneToOne('-', aa_ref_index)
+            last_add_to_map_scenario = 9
+        #10
+        # If (first==last or first_ref_codon, 
         #     ref_index%3 == 0, 
         #     prev_aa_shift%3 == 0
-        #     nt[3]%3 != 0,
+        #     nt[3]%3 != 0 or first_ref_codon,
         #     has_deletion) : add last to aa_ref_index
-        elif ((first_alignment == last_alignment) and
-              (nt_ref_index % 3 == 0) and
-              (prev_aa_shift % 3 == 0) and
-              (current_aa_shift % 3 != 0) and
-              (has_deletion)):
-                if DEBUGGING_MODE: print(str(nt_ref_index) + ' add to map scenario: 8')
-                addOneToOne(last_alignment, aa_ref_index)
-                last_add_to_map_scenario = 8
-        #9
-        # If (8 or ID was last called,
-        #     first==last-1, 
+        elif (has_deletion
+                and (nt_ref_index % 3 == 0)
+                and (current_aa_shift % 3 != 0)
+                and ((prev_aa_shift % 3 == 0) or first_ref_codon)
+                and ((first_alignment == last_alignment) or first_ref_codon)):
+            
+            if DEBUGGING_MODE: print(str(nt_ref_index) + ' add to map scenario: 10')
+            addOneToOne(last_alignment, aa_ref_index)
+            last_add_to_map_scenario = 10
+        #11
+        # If (3 or 10 was last called,
+        #     first==last-1 , 
         #     ref_index%3 == 0, 
         #     prev_aa_shift%3 != 0,
         #     nt[3]%3 != 0) : add first to aa_ref_index
-        elif ((last_add_to_map_scenario in [8, 'ID']) and
-              (first_alignment == (last_alignment-1)) and
-              (nt_ref_index % 3 == 0) and
-              (prev_aa_shift % 3 != 0) and
-              (current_aa_shift % 3 != 0)):
-                if DEBUGGING_MODE: print(str(nt_ref_index) + ' add to map scenario: 9')
-                addOneToOne(first_alignment, aa_ref_index)
-                last_add_to_map_scenario = 9
-        #10
-        # If (8 or ID was last called,
+        elif ((nt_ref_index % 3 == 0)
+                and (prev_aa_shift % 3 != 0)
+                and (current_aa_shift % 3 != 0)
+                and (last_add_to_map_scenario in [3, 10])
+                and (first_alignment == (last_alignment-1))):
+                
+            if DEBUGGING_MODE: print(str(nt_ref_index) + ' add to map scenario: 11')
+            addOneToOne(first_alignment, aa_ref_index)
+            last_add_to_map_scenario = 11
+        #12
+        # If (3 or 10 was last called,
         #     first==last, 
         #     ref_index%3 == 0, 
         #     nt[3]%3 == 0),
         #     has_deletion) : add '-' to aa_ref_index and aa_ref_index-1, add last to aa_ref_index
-        elif ((last_add_to_map_scenario in [8, 'ID']) and
-              (first_alignment == last_alignment) and
-              (nt_ref_index % 3 == 0) and
-              (has_deletion) and
-              (current_aa_shift % 3 == 0)):
-                if DEBUGGING_MODE: print(str(nt_ref_index) + ' add to map scenario: 10')
-                addOneToTwo('-', aa_ref_index-1, aa_ref_index)
-                addOneToOne(last_alignment, aa_ref_index)
-                last_add_to_map_scenario = 10
-        #11
+        elif (has_deletion
+                and (nt_ref_index % 3 == 0)
+                and (current_aa_shift % 3 == 0)
+                and (first_alignment == last_alignment)
+                and (last_add_to_map_scenario in [3, 10])):
+            
+            if DEBUGGING_MODE: print(str(nt_ref_index) + ' add to map scenario: 12')
+            addOneToTwo('-', aa_ref_index-1, aa_ref_index)
+            addOneToOne(last_alignment, aa_ref_index)
+            last_add_to_map_scenario = 12
+        #13
         # If (ref_index%3 != 0, 
-        #     full_codon_deletion) : add '-' to aa_ref_index, aa_ref_index-1 unless if last_add_to_map_scenario == 6, 11 or None;
+        #     full_codon_deletion) : add '-' to aa_ref_index, aa_ref_index-1 unless if last_add_to_map_scenario == 8, 13 or None;
         #                            in that scenario, only add '-' to aa_ref_index
-        elif ((full_codon_deletion) and
-              (nt_ref_index % 3 != 0)):
-                if DEBUGGING_MODE: print(str(nt_ref_index) + ' add to map scenario: 11')
-                if last_add_to_map_scenario not in [6, 11, None]:
-                    addOneToTwo('-', aa_ref_index-1, aa_ref_index)
-                else:
-                     addOneToOne('-', aa_ref_index)
-                last_add_to_map_scenario = 11
-        #12
+        elif (full_codon_deletion and (nt_ref_index % 3 != 0)):
+
+            if DEBUGGING_MODE: print(str(nt_ref_index) + ' add to map scenario: 13')
+            if last_add_to_map_scenario not in [8, 13, None]:
+                addOneToTwo('-', aa_ref_index-1, aa_ref_index)
+            else:
+                    addOneToOne('-', aa_ref_index)
+            last_add_to_map_scenario = 13
+        #14
         # If (first==last, 
         #     ref_index%3 == 0, 
         #     prev_aa_shift%3 != 0
         #     nt[3]%3 == 0,
         #     full_codon_deletion) : add last to aa_ref_index
-        elif ((first_alignment == last_alignment) and
-              (nt_ref_index % 3 == 0) and
-              (prev_aa_shift % 3 != 0) and
-              (current_aa_shift % 3 == 0) and
-              (full_codon_deletion)):
-                if DEBUGGING_MODE: print(str(nt_ref_index) + ' add to map scenario: 12')
-                addOneToOne(last_alignment, aa_ref_index)
-                last_add_to_map_scenario = 12
-        #13
-        # If (9 was last called,
+        elif (full_codon_deletion
+                and (nt_ref_index % 3 == 0)
+                and (prev_aa_shift % 3 != 0)
+                and (current_aa_shift % 3 == 0)
+                and (first_alignment == last_alignment)):
+            
+            if DEBUGGING_MODE: print(str(nt_ref_index) + ' add to map scenario: 14')
+            addOneToOne(last_alignment, aa_ref_index)
+            last_add_to_map_scenario = 14
+        #15
+        # If (11 was last called,
         #     first==last, 
         #     ref_index%3 == 0, 
         #     nt[3]%3 == 0,
         #     has_deletion)  : add '-' to aa_ref_index-1, add last to aa_ref_index and aa_ref_index-1
-        elif ((last_add_to_map_scenario == 9) and
-              (first_alignment == last_alignment) and
-              (nt_ref_index % 3 == 0) and
-              (current_aa_shift % 3 == 0) and
-              (has_deletion)):
-                if DEBUGGING_MODE: print(str(nt_ref_index) + ' add to map scenario: 13')
-                addOneToTwo(last_alignment, aa_ref_index-1, aa_ref_index)
-                addOneToOne('-', aa_ref_index-1)
-                last_add_to_map_scenario = 13
-        #14
+        elif (has_deletion 
+                and (nt_ref_index % 3 == 0) 
+                and (current_aa_shift % 3 == 0) 
+                and (last_add_to_map_scenario == 11) 
+                and (first_alignment == last_alignment)):
+            if DEBUGGING_MODE: print(str(nt_ref_index) + ' add to map scenario: 15')
+            addOneToTwo(last_alignment, aa_ref_index-1, aa_ref_index)
+            addOneToOne('-', aa_ref_index-1)
+            last_add_to_map_scenario = 15
+        #16
         # If (first==last, 
         #     ref_index%3 == 0, 
         #     nt[3]%3 == 0,
         #     has_deletion
         #     not full_codon_deletion)  : add last to aa_ref_index and aa_ref_index-1
-        elif ((first_alignment == last_alignment) 
+        elif (has_deletion
+                and not full_codon_deletion
                 and (nt_ref_index % 3 == 0) 
                 and (current_aa_shift % 3 == 0) 
-                and (has_deletion) 
-                and (not full_codon_deletion)):
-            if DEBUGGING_MODE: print(str(nt_ref_index) + ' add to map scenario: 14')
+                and (first_alignment == last_alignment)):
+            if DEBUGGING_MODE: print(str(nt_ref_index) + ' add to map scenario: 16')
             addOneToTwo(last_alignment, aa_ref_index-1, aa_ref_index)
-            last_add_to_map_scenario = 14
+            last_add_to_map_scenario = 16
 
         else: 
             if DEBUGGING_MODE: print(str(nt_ref_index) + ' add to map scenario: else')
@@ -677,8 +677,10 @@ def aaAlignment(nt_alignment_map):
                     # If there has been three consecutive insertions
                     if insert_count % 3 == 0:
                         addToMapScenario(int(nt_ref_index//3), nt[3])
+
+                    # We are leaving a frameshift and we're heading into a new codon
                     elif (count == len(nt_alignment_map)-1) or nt_alignment_map[count+1][0] != "I":
-                        if DEBUGGING_MODE: print(str(nt_ref_index) + ' add to map scenario: 3 special')
+                        if DEBUGGING_MODE: print(str(nt_ref_index) + ' add to map scenario: 4 special')
                         addOneToOne(last_alignment, int(nt_ref_index//3))
                         first_alignment = None
                         prev_aa_shift = None
@@ -692,7 +694,7 @@ def aaAlignment(nt_alignment_map):
                 has_deletion = True
 
                 # For scenario such as the codon MDDDMM, maps a deletion to previous and current reference codons
-                if delete_count % 3 == 0:
+                if (delete_count % 3 == 0) and (prev_aa_shift % 3 != 0):
                     full_codon_deletion = True
                     addToMapScenario(int(nt_ref_index//3), nt[3])
 
@@ -745,7 +747,7 @@ def aaAlignment(nt_alignment_map):
 
                 # For scenario such as the codon MMDDDM, maps a deletion to previous reference codon
                 # Since the current query codon has already been mapped in line 
-                if delete_count % 3 == 0:
+                if (delete_count % 3 == 0) and (prev_aa_shift % 3 != 0):
                     full_codon_deletion = True
                     addToMapScenario(int(nt_ref_index//3), nt[3])
 
@@ -802,25 +804,27 @@ def aaAlignment(nt_alignment_map):
                 insert_count = 0
                 has_deletion = True
 
-
-                # Case 1: the reference codon is not entirely deleted and we are in first codon in 
-                #         MDDMM|M... or MMDM|MM.. and must map to first in ABC|ABC
-                if (first_alignment != None) and (prev_aa_shift % 3) == 0:
-                    addToMapScenario(int(nt_ref_index//3)-1, nt[3])
-
-                # Case 2: the entire reference codon has been deleted
-                elif delete_count >= 3:
+                # For reference: in cases where we have an extended cigar like SMDMDD where 
+                # the first M is considered as the second base of a codon,
+                # we consider the current reference codon to be fully deleted
+                if first_alignment == None: 
                     full_codon_deletion = True
-                    addToMapScenario(int(nt_ref_index//3)-1, nt[3])
-                # Case 3: previous reference codon went through case 8
-                elif last_add_to_map_scenario == 8:
-                    addToMapScenario(int(nt_ref_index//3)-1, nt[3])
 
-                elif nt[3] % 3 == 0 and last_add_to_map_scenario == 9:
+                elif nt_query_index % 3 == 0:
+                    last_alignment -= 1
+                
+                # Run addToMapScenario if one of these applies:
+                if (first_ref_codon                                                     # first reference codon aligned to query
+                        or full_codon_deletion                                          # entire reference codon has been deleted
+                        or (prev_aa_shift % 3 == 0)                                     # we weren't in a frameshift at the start
+                        or (last_add_to_map_scenario in [3,10])                         # previous reference codon went through scenario 3 or 10
+                        or ((nt[3] % 3 == 0) and (last_add_to_map_scenario == 11))):    # we left frameshift and previous ref codon went through scenario 11
+
                     addToMapScenario(int(nt_ref_index//3)-1, nt[3])
 
                 prev_aa_shift = None
                 first_alignment = None
+                first_ref_codon = False
 
             # Not indel
             else: #nt[0] == "M"
@@ -844,6 +848,7 @@ def aaAlignment(nt_alignment_map):
                 prev_aa_shift = None
                 first_alignment = None
                 full_codon_deletion = False
+                first_ref_codon = False
 
         aa_query_index = int(nt_query_index / 3)
         last_alignment = aa_query_index

@@ -1302,71 +1302,71 @@ def edge_cases_test():
     SAM_file.write(make_test(snp_num, full_gene_name[7], "ATCTTCGCA", "20H9M20H", 530 * 3 - 2, 532 * 3, True))
     snp_num += 1
     # Case 2: |MMM|III|MMM|
-    #             1   2   3
+    #             1   2   4
     SAM_file.write(make_test(snp_num, full_gene_name[7], "ATCTTCTCC", "20H3M3I3M20H", 530 * 3 - 2, 531 * 3, True))
     snp_num += 1
     # Case 3: |MMM|MII|IMM|MMM|
-    #             1       3   1
+    #             1       4   1
     SAM_file.write(make_test(snp_num, full_gene_name[7], "ATCTTCTCCGCA", "20H4M3I5M20H", 530 * 3 - 2, 532 * 3, True))
     snp_num += 1
     # Case 4: |MMM|IMM|M II|MMM|
-    #             1     3  3   1
+    #             1     4  4   1
     SAM_file.write(make_test(snp_num, full_gene_name[7], "ATCTTCCCCGCA", "20H3M1I3M2I3M20H", 530 * 3 - 2, 532 * 3, True))
     snp_num += 1
     # Case 5: |MMM|IMM|M MI|IMM|MMM|
-    #             1     3      3   1
+    #             1     4      4   1
     SAM_file.write(make_test(snp_num, full_gene_name[7], "TCCCGCACGTTCGGC", "20H3M1I4M2I5M20H", 531 * 3 - 2, 534 * 3, True))
     snp_num += 1
     # Case 6: |MMM|III|III|III|MMM|
-    #             1   2   3   4   4
+    #             1   2   4   5   5
     SAM_file.write(make_test(snp_num, full_gene_name[7], "TCCCGCACGTTCGCA", "20H3M9I3M20H", 531 * 3 - 2, 532 * 3, True))
     snp_num += 1
     # Case 7: |MMM|MMI|III|IIM|MMM|
-    #             1           5   1
+    #             1           6   1
     SAM_file.write(make_test(snp_num, full_gene_name[7], "ATCTCCCGCACCGCA", "20H5M6I4M20H", 530 * 3 - 2, 532 * 3, True))
     snp_num += 1
     # Case 8: |MMM|MMI|III|M MM|IIM|MMM|
-    #             1         6      3   1
+    #             1         8      4   1
     SAM_file.write(make_test(snp_num, full_gene_name[7], "ATCTCCCGCCGCCGACTC", "20H5M4I3M2I4M20H", 530 * 3 - 2, 533 * 3, True))
     snp_num += 1
     # Case 9: |MMM|MMI|III|M II|MMM|
-    #             1         6  3   1
+    #             1         8  4   1
     SAM_file.write(make_test(snp_num, full_gene_name[7], "ATCTCCCGCCCTGCA", "20H5M4I1M2I3M20H", 530 * 3 - 2, 532 * 3, True))
     snp_num += 1
     # Case 10:  |MMM|DDD DDD DDD MMM|
-    #               1   7   7   7   1
+    #               1   9   9   9   1
     SAM_file.write(make_test(snp_num, full_gene_name[7], "ATCGGC", "20H3M9D3M20H", 530 * 3 - 2, 534 * 3, True))
     snp_num += 1
     # Case 11:  |MMM|MMD M|MM M|MM DDM|MMM|
-    #               1   8    9    e   14  1
+    #               1   10   11   e   16  1
     SAM_file.write(make_test(snp_num, full_gene_name[7], "ATCTCGCACTCCCCA", "20H5M1D6M2D4M20H", 530 * 3 - 2, 535 * 3, True))
     snp_num += 1
     # Case 12:  |MMM|MMD M|MM M|DD MMM|MMM|
-    #               1   8    9    e   14  1
+    #               1   10   11   e   16  1
     SAM_file.write(make_test(snp_num, full_gene_name[7], "ATCTCGCACGGCCCA", "20H5M1D4M2D6M20H", 530 * 3 - 2, 535 * 3, True))
     snp_num += 1
     # Case 13:  |MMM|MMD DDM |MMM|
-    #               1   8 11 12  1
+    #               1   1013 14  1
     SAM_file.write(make_test(snp_num, full_gene_name[7], "ATCTTACTC", "20H5M3D4M20H", 530 * 3 - 2, 533 * 3, True))
     snp_num += 1
     # Case 14:  |MMM|DMM DDM|MMM|
-    #               1   8   10  1
+    #               1   10  12  1
     SAM_file.write(make_test(snp_num, full_gene_name[7], "ATCCCACTC", "20H3M1D2M2D4M20H", 530 * 3 - 2, 533 * 3, True))
     snp_num += 1
     # Case 15:  |MMM|DMM M|DD MMM|MMM|
-    #               1   8    9   13  1
+    #               1   10   11  15  1
     SAM_file.write(make_test(snp_num, full_gene_name[7], "CGTTCTGCACTC", "20H3M1D3M2D6M20H", 529 * 3 - 2, 533 * 3, True))
     snp_num += 1
     # Case 16:  |MMM|MDM M|MD DMM|MMM|
-    #               1   8    9   13  1
+    #               1   10   11  15  1
     SAM_file.write(make_test(snp_num, full_gene_name[7], "CGTCTATTCGCA", "20H4M1D3M2D5M20H", 528 * 3 - 2, 532 * 3, True))
     snp_num += 1
     # Case 17:  |MMM|MDD DMI|IIM|MMM|
-    #               1   8 11    3   1
+    #               1   1013    4   1
     SAM_file.write(make_test(snp_num, full_gene_name[7], "CGTACTTTCGCA", "20H4M3D1M3I4M20H", 529 * 3 - 2, 532 * 3, True))
     snp_num += 1
     # Case 18:  |MMM|MII|IMD DDM  |MMM|
-    #               1       3  11 12  1 
+    #               1       3  13 14  1 
     SAM_file.write(make_test(snp_num, full_gene_name[7], "ATCTTTTCACTC", "20H4M3I1M3D4M20H", 530 * 3 - 2, 533 * 3, True))
     snp_num += 1
     # Case 19: S|SSS|MMM|MMM|MMM|MMM|MMM|SSS|S
@@ -1374,72 +1374,76 @@ def edge_cases_test():
     SAM_file.write(make_test(snp_num, full_gene_name[7], "GGGGCGTATCTTCGCACTCGGGG", "4S15M4S", 529 * 3 - 2, 533 * 3, True))
     snp_num += 1
     # Case 20: SSS|SMM|IMM|M MM|M MM|M DMM|SSS|S
-    #                       3    e    e   14
+    #                       4    e    e   16
     SAM_file.write(make_test(snp_num, full_gene_name[7], "GGGGTCTCCCGCACTCGCGGGG", "4S2M1I9M1D2M4S", 530 * 3 - 1, 534 * 3, True))
     snp_num += 1
     # Case 21: SSS|SMM|MDM M|MM M|MM M|MM I|MMS|SSS
-    #                     8    9    e    e 3
+    #                     10   11   e    e 4
     SAM_file.write(make_test(snp_num, full_gene_name[7], "GGGGGTACTCCGCACTCCGGGGGG", "4S3M1D10M1I2M4S", 529 * 3 - 1, 534 * 3 - 1, True))
     snp_num += 1
     # Case 22: SSS|SMM|DMM M|MM M|MM I|MMM|SSS|S
-    #                     8    9    e 3   1
+    #                     10   11   e 4   1
     SAM_file.write(make_test(snp_num, full_gene_name[7], "GGGGGTTCTCCGCACCTCGGGG", "4S2M1D8M1I3M4S", 529 * 3 - 1, 533 * 3, True))
     snp_num += 1
     # Case 23: S|SSS|MMI|M MM|M MM|M DMS|SSS
-    #                     3    e    e
+    #                     4    e    
     SAM_file.write(make_test(snp_num, full_gene_name[7], "GGGGTCCCGCACTCGGGGG", "4S2M1I7M1D1M4S", 530 * 3 - 2, 534 * 3 - 1, True))
     snp_num += 1
     # Case 24: S|SSS|MMM|III|MMM|MMM|DDD|MMM|SSS|S
-    #                   1   2   3   1   7   1
+    #                   1   2   4   1   9   1
     SAM_file.write(make_test(snp_num, full_gene_name[7], "GGGGATCTTCTCCGCAGGCGGGG", "4S3M3I6M3D3M4S", 530 * 3 - 2, 534 * 3, True))
     snp_num += 1
     # Case 25: S|SSS|MII|III|IMM|MDD DDD DMM|SSS|S
-    #                           5   8 11e11 12
+    #                           6  1013 e13 14
     SAM_file.write(make_test(snp_num, full_gene_name[7], "GGGGTTCACCTCCGGCGGGG", "4S1M6I3M6D2M4S", 531 * 3 - 2, 534 * 3, True))
     snp_num += 1
     # Case 26: S|SSS|MII|MM M|III|IMM|DMM DDD DDM|SSS|S
-    #                      3   n   3 1   8   11  12
+    #                      4         7   10  13  14
     SAM_file.write(make_test(snp_num, full_gene_name[7], "GGGGAAAATCTTTTCCCACGGGG", "4S1M2I3M4I2M1D2M5D1M4S", 530 * 3 - 2, 534 * 3, True))
     snp_num += 1
     # Case 27: S|SSS|MMI|III|M II|MDM M|MD DDM M|MD DMM|SSS|S
-    #                         6  3   8    9 e e    e   14
+    #                         8  4   10  11 e e    n   16
     SAM_file.write(make_test(snp_num, full_gene_name[7], "GGGGCGACACTACCTATCGCTCGGGG", "4S2M4I1M2I1M1D3M3D3M2D2M4S", 528 * 3 - 2, 533 * 3, True))
     snp_num += 1
     # Case 28: S|SSS|MMM|III|III|III|MMD DM|D DDD MMM|SSS|S
-    #                   1   2   3   4   48   10  7   1
+    #                   1   2   4   5   3    12  9   1
     SAM_file.write(make_test(snp_num, full_gene_name[7], "GGGGATCGCAGATTTCTCCGGCGGGG", "4S3M9I2M2D1M4D3M4S", 530 * 3 - 2, 534 * 3, True))
     snp_num += 1
     # Case 29: SSS|SMI|M MM|M II|MMM|MII|MM M|IMS|SSS
-    #                   e    3  3   1      3
+    #                   e    4  4   1      4
     SAM_file.write(make_test(snp_num, full_gene_name[7], "GGGGGCTATTTCTCCGTGCACATGGGG", "4S1M1I4M2I4M2I3M1I1M4S", 529 * 3 - 1, 533 * 3 - 1, True))
     snp_num += 1
     # Case 30: SSS|SMD M|MM M|MM M|MD DMM|MMM|SSS|S
-    #                      8    9    e   14  1
+    #                      10   11   e   16  1
     SAM_file.write(make_test(snp_num, full_gene_name[7], "GGGGGATTTCCGCTCGGCGGGG", "4S1M1D8M2D5M4S", 529 * 3 - 1, 534 * 3, True))
     snp_num += 1
     # Case 31: SSS|SMD M|MD DMM|MMM|IMM|S SS|S
-    #                      8   10  1   special
+    #                      10  12  1   special
     SAM_file.write(make_test(snp_num, full_gene_name[6], "GGGGACGGTATCTTCGGGG", "4S1M1D2M2D5M1I2M4S", 446 * 3 - 1, 450 * 3 - 1, True))
     snp_num += 1
     # Case 32: SSS|SMD M|MM M|IMM|SSS|S
-    #                      8     3
+    #                      10    4
     SAM_file.write(make_test(snp_num, full_gene_name[7], "GGGGGATCTTCCGGGG", "4S1M1D4M1I2M4S", 529 * 3 - 1, 531 * 3, True))
     snp_num += 1
     # Case 33: SSS|SMM|MDD MM|M MM|M IM|SS S|S
-    #                     8    9    e
+    #                     10   11   e
     SAM_file.write(make_test(snp_num, full_gene_name[6], "GGGGAACCGTATCTTGGGG", "4S3M2D6M1I1M4S", 446 * 3 - 1, 450 * 3 - 2, True))
     snp_num += 1
     # Case 34: S|SSS|MMM|IIM|MD DMM|SSS|S
-    #                   1      3   14
+    #                   1      4   16
     SAM_file.write(make_test(snp_num, full_gene_name[7], "GGGGCGTTCATTCGGGG", "4S3M2I2M2D2M4S", 529 * 3 - 2, 531 * 3, True))
     snp_num += 1
     # Case 35: S|SSS|MMI|M MDM|SSS|S
-    #                     3   14
+    #                     4   16
     SAM_file.write(make_test(snp_num, full_gene_name[7], "GGGGTTTCGAGGGG", "4S2M1I2M1D1M4S", 531 * 3 - 2, 532 * 3, True))
     snp_num += 1
     # Case 36: S|SSS|MMM|III|MDD MM|M SS|SS
-    #                   1   2   8    special
+    #                   1   2   3    
     SAM_file.write(make_test(snp_num, full_gene_name[6], "GGGGATCTTCTGCAGGGG", "4S3M3I1M2D3M4S", 449 * 3 - 2, 451 * 3, True))
+    snp_num += 1
+    # Case 37: S|SSS|MII|MM I|III|MMM|DMM DDD DDM|SSS|S
+    #                      4 n   4   1   10  13  14
+    SAM_file.write(make_test(snp_num, full_gene_name[7], "GGGGAAAATCTTTTCCCACGGGG", "4S1M2I2M4I3M1D2M5D1M4S", 530 * 3 - 2, 534 * 3, True))
     snp_num += 1
 
     SAM_file.close()
