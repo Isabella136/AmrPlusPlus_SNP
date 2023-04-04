@@ -1,1 +1,0 @@
->16|A64V|ARO:3003788|Bacillus subtilis pgsA with mutation conferring resistance to daptomycin|MEG_5779|Drugs|Lipopeptides|Daptomycin-resistant_mutant|PGSA|RequiresSNPConfirmation|NA|NA|NA|NA|NA|NA|NA|wt_coherence=TRUE
