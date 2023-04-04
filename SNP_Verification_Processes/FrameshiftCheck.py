@@ -1,10 +1,12 @@
 from SNP_Verification_Tools import dnaTranslate
-
+DEBUGGING_MODE = False
 
 # Description of input for all functions:
 #   read:                               Reference to current AlignmentSegment 
 #   gene:                               Reference to current Gene
-def FrameshiftCheck(read, gene):
+def FrameshiftCheck(read, gene, config):
+    global DEBUGGING_MODE
+    DEBUGGING_MODE = config.getboolean('SETTINGS', 'DEBUGGING_MODE')
     # rRNA skips straight to extendedIndelCheck
     if gene.rRna():
         extendedIndelCheck(read, gene)
@@ -105,7 +107,7 @@ def MEG_6142Check(read, gene):
     # Remove soft-clipping
     start_index = read.cigartuples[0][1] if read.cigartuples[0][0] == 4 else 0
     end_index = read.cigartuples[-1][1] if read.cigartuples[-1][0] == 4 else 0
-    aligned_pairs = read.get_aligned_pairs()[start_index:len(read.cigartuples) - end_index]
+    aligned_pairs = read.get_aligned_pairs()[start_index:len(read.get_aligned_pairs()) - end_index]
     
     query_sequence = read.query_alignment_sequence
     stop_codon = ["TAA", "TGA", "TAG"]
@@ -144,16 +146,24 @@ def MEG_6142Check(read, gene):
     # Update output info accordingly        
     if fs482:
         gene.updateCurrentReadNonstopInformation(True)
+        if DEBUGGING_MODE:
+            print('Nonstop')
         gene.addDetails(read, "nonstop")
         if deletion76:
+            if DEBUGGING_MODE:
+                print('special deletion at 76')
             gene.hasSpecialCase()
         return True
     else:
         gene.updateCurrentReadNonstopInformation(False)
         if (shift_count%3) == 0:
             if deletion76:
+                if DEBUGGING_MODE:
+                    print('special deletion at 76')
                 gene.hasSpecialCase()
             return True
+    if DEBUGGING_MODE:
+        print('FS till end')
     gene.addDetails(read, 'FS till end')
 
     # Return False if frameshift is unexplained
@@ -168,13 +178,13 @@ def MEG_6142Check(read, gene):
 #   deletion_count_after_C_insertion:   Number of deltions after the insertion at codon 531 that weren't negated by insertions;
 #                                       if deletion_count_after_C_insertion % 3 == 1, the insertion at codon 531 shouldn't be 
 #                                       suppressed in this analysis
-#   in_codon531:                        True only when analyzing codon 531
 #   has_C_insertion:                    True if, and only if, there is a cytosine insertion in codon 531 that causes a frameshift
 #   residue_531_to_534/536:             Keeps track of amino acids in query residues 531 to 534 or 536
 #   aligned_pairs:                      List of tuples with aligned read and reference positions
 #   query_sequence:                     Sequence of read portion that aligned to MEGARes
 #   last_before_full:                   Keeps track of last query nucleotide index before next codon
 #   ref_index:                          Current index of reference sequence
+#   in_codon531:                        True only when analyzing codon 531
 #   valid:                              False if, and only if, there is still a frameshift by the end of the query
 #   insertion_position:                 If has_C_insertion is True, contains the position of the insertion; else is None
 #   remove_from_long_frameshift_check:  If cytosine insertion in codon 531 causes a frameshift that isn't suppressible,
@@ -185,7 +195,7 @@ def MEG_6142Check(read, gene):
 
 def MEG_6094Check(read, gene):
     shift_count, insertion_count_after_C_insertion, deletion_count_after_C_insertion = 0, 0, 0
-    in_codon531, has_C_insertion = False, False
+    has_C_insertion = False
     residue_531_to_536, residue_531_to_534 = "", ""
 
     # Remove soft-clipping
@@ -194,8 +204,10 @@ def MEG_6094Check(read, gene):
     aligned_pairs = read.get_aligned_pairs()[start_index:len(read.get_aligned_pairs()) - end_index]
 
     query_sequence = read.query_sequence
-    last_before_full = (3 - (aligned_pairs[0][1]) % 3) % 3 - 1 
+    last_before_full = (3 - (aligned_pairs[0][1]) % 3) % 3 - 1 + start_index
     ref_index = aligned_pairs[0][1]
+
+    in_codon531 = True if aligned_pairs[0][1] in range(1591,1594) else False
 
     valid = True
     insertion_position = None
@@ -259,27 +271,40 @@ def MEG_6094Check(read, gene):
 
     # Alignment should not continue through SNP_Verification
     if not(valid):
+        if DEBUGGING_MODE:
+            print('Not valid')
         gene.addDetails(read, 'FS till end')
         return False
 
     # Unless if deletion_after or two_insertions_after are True, shift_count % 3 == 0
-    elif has_C_insertion:    
+    elif has_C_insertion:
+        if DEBUGGING_MODE:
+            print('C insertion')      
         # Must have thoe residues SRTR due to insertion                                             
         if (residue_531_to_534 == "SRTR"[0:len(residue_531_to_534)]):    
             # In that case, must not have FS suppression in analysis     
             if (deletion_after or two_insertions_after):
+                if DEBUGGING_MODE:
+                    print('C insert followed by del/ins')
                 gene.addDetails(read, 'C insert followed by del/ins')                                                  
-            elif (residue_531_to_536 == "SRTRPR"[0:len(residue_531_to_536)]):                                                       
+            elif (residue_531_to_536 == "SRTRPR"[0:len(residue_531_to_536)]):  
+                if DEBUGGING_MODE:
+                    print('Suppressible C insert')                                                     
                 gene.addDetails(read, 'Suppressible C insert')
             # Suppression won't happen during RNA translation to protein in the cell if there is no PR in residues 535 and 536
             else:
+                if DEBUGGING_MODE:
+                    print('C insert + not SRTRPR')
                 gene.addDetails(read, 'C insert + not SRTRPR')          
                 gene.addDetails(read, 'FS till end')
-                return False
+                return False       
             return True 
         # Because SRTR is not present, can't make prediction on resistance
-        elif (shift_count % 3) == 0:                                     
+        elif (shift_count % 3) == 0:     
+            if DEBUGGING_MODE:
+                print('C insert + not SRTR')                                    
             gene.addDetails(read, 'C insert + not SRTR')
             gene.addDetails(read, 'FS till end')
             return False
+    if DEBUGGING_MODE: print('not suppressible but valid')
     return True
