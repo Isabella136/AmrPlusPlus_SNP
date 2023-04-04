@@ -24,11 +24,11 @@ def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest, config):
                             res = 1
                         elif mtInfo[0] == seqOfInterest[queryIndex]:
                             if ((mapOfInterest.get(mtInfo[1],False)) != False) and (queryIndex in mapOfInterest[mtInfo[1]]):
-                                if gene.aaSequence()[mtInfo[1]] != mtInfo[0]:
+                                if gene.finalSequence()[mtInfo[1]] != mtInfo[0]:
                                     res = -1
                                     break
                             elif ((mapOfInterest.get(mtInfo[1]-2,False)) != False) and queryIndex in mapOfInterest[mtInfo[1]-2]:
-                                if gene.aaSequence()[mtInfo[1]-2] != mtInfo[0]:
+                                if gene.finalSequence()[mtInfo[1]-2] != mtInfo[0]:
                                     res = -1
                                     break
                             else:
@@ -141,10 +141,10 @@ def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest, config):
                         if seqOfInterest[queryIndex] == mtInfo[0]:
                             remainingResidueIsEqualToOriginal = (True,False)
                             if ((mapOfInterest.get(pos,False)) != False) and (queryIndex in mapOfInterest[pos]):
-                                if gene.aaSequence()[pos] == mtInfo[0]:
+                                if gene.finalSequence()[pos] == mtInfo[0]:
                                     remainingResidueIsEqualToOriginal = (True,True)
                             elif ((mapOfInterest.get(pos-2,False)) != False) and queryIndex in mapOfInterest[pos-2]:
-                                if gene.aaSequence()[pos-2] == mtInfo[0]:
+                                if gene.finalSequence()[pos-2] == mtInfo[0]:
                                     remainingResidueIsEqualToOriginal = (True,True)
                 if (misMut > 0) and (delMut > 0):
                     codonNotFullyDeleted += 1
@@ -159,7 +159,7 @@ def MisInDelCheck(read, gene, mapOfInterest, seqOfInterest, config):
             missenseCheck(mtInfo)
 
     nonstop, alongWithNonstop = gene.getNonstopInfo()
-    if nonstop and (gene.currentReadHasNonstop == None):                #Only MEG_3594 can fullfill this condition
+    if nonstop and (gene.getCurrentReadNonstopInformation() == None):                #Only MEG_3594 can fullfill this condition
         nonstop = False
         if (read.reference_end == gene.ntSeqLength()):
             if (mapOfInterest.get(gene.ntSeqLength()/3-1, False)) != False:

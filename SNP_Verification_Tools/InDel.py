@@ -1,145 +1,96 @@
+from . import establishContext
+from . import lookThroughContext
+
+# Superclass for Insertiona and Deletion
+# 
+# Contains the following local variable:
+#   name:                           Has the form MEG_XXXX
+#   position_list:                  Positions of all deletions or insertions
+#   left_context:                   List of the 5 bases or residues that are located to the left of the mutation
+#   right_context:                  List of the 5 bases or residues that are located to the right of the mutation
+#   wildtype_base_ACT:              The original base (or residue) according to the MEGARes sequence
+#   position_ACT:                   The position of the mutation according to the MEGARes sequence
+
 class InDel:
-    def __init__(this, mtString, name, insertion):
-        this.indel = mtString
+    def __init__(this, mutant_string, name):
         this.name = name
-        i = 1
-        this.inserted = None
-        this.deleted = None
-        if insertion:
-            this.inserted = [mtString[0]]
-            while not(mtString[i].isdigit()):
-                this.inserted.append(mtString[i])
-                i+=1
-        else:
-            this.deleted = mtString[0]
-        posString = mtString[i:mtString.find("_")]
-        mtString = mtString[mtString.find("_")+1:]
-        this.posList = posString.split("/")
-        this.posList = [int(i) for i in this.posList]
-        InDel.establishContext(this, mtString)
-    def establishContext(this, mtString) :
-        contextList = mtString.split("_")
-        goToNext = True
-        this.leftContext = []
-        for char in contextList[0]:
-            if char == '[':
-                goToNext = False
-                this.leftContext.append([])
-            elif char == ']':
-                goToNext = True
-            else:
-                if goToNext:
-                    this.leftContext.append([char])
-                else:
-                    this.leftContext[-1].append(char)
-        this.rightContext = []
-        for char in contextList[1]:
-            if char == '[':
-                goToNext = False
-                this.rightContext.append([])
-            elif char == ']':
-                goToNext = True
-            else:
-                if goToNext:
-                    this.rightContext.append([char])
-                else:
-                    this.rightContext[-1].append(char)
-    def checkLeft(this, index, currentPos, sequence, errorMargin, rRNA = False):
-        if (len(this.leftContext) != 0):
-            for aa in this.leftContext[index]:
-                if aa == sequence[currentPos]:
-                    if index == len(this.leftContext) - 1:
-                        nextPos = currentPos + (this.posList[-1]-this.posList[0]) + 1
-                        nextPos = nextPos if this.inserted != None else nextPos+1
-                        return InDel.checkRight(this, 0, nextPos , sequence, errorMargin, rRNA)
-                    else:
-                        return InDel.checkLeft(this, index + 1, currentPos + 1, sequence, errorMargin, rRNA)
-        else:
-            nextPos = currentPos + (this.posList[-1]-this.posList[0]) + 1
-            nextPos = nextPos if this.inserted != None else nextPos+1
-            return this.checkRight(0, nextPos, sequence, errorMargin, rRNA)
-        if (errorMargin < 3) and not(rRNA):
-            if index == len(this.leftContext) - 1:
-                nextPos = currentPos + (this.posList[-1]-this.posList[0]) + 1
-                nextPos = nextPos if this.inserted != None else nextPos+1
-                return InDel.checkRight(this, 0, nextPos, sequence, errorMargin + 1, rRNA)
-            else:
-                return InDel.checkLeft(this, index + 1, currentPos + 1, sequence, errorMargin + 1, rRNA)
-        else:
-            return False
-    def checkRight(this, index, currentPos, sequence, errorMargin, rRNA):
-        if (len(this.rightContext) != 0):
-            for aa in this.rightContext[index]:
-                if aa == sequence[currentPos]:
-                    if index == len(this.rightContext) - 1:
-                        return True
-                    else:
-                        return InDel.checkRight(this, index + 1, currentPos + 1, sequence, errorMargin, rRNA)
-        else:
-            return True
-        if (errorMargin < 3) and not(rRNA):
-            if index == len(this.rightContext) - 1:
-                return True
-            else:
-                return InDel.checkRight(this, index + 1, currentPos + 1, sequence, errorMargin + 1, rRNA)
-        else:
-            return False
-    def changeACT(this, i):
-        lastPos = 0
-        diff = 0
-        for pos in this.posList:
-            if lastPos > 0:
-                diff += (pos-lastPos)
-            lastPos = pos
-            this.posACT.append(i+len(this.leftContext)+1+diff)
+        position_string = mutant_string[:mutant_string.find("_")]
+        mutant_string = mutant_string[mutant_string.find("_")+1:]
+        this.position_list = position_string.split("/")
+        this.position_list = [int(i) for i in this.position_list]
+        this.left_context = list()
+        this.right_context = list()
+        establishContext(mutant_string, this.left_context, this.right_context)
+
+    def changeACT(this, sequence_index):
+        previous = this.position_list[0]                            # Previous indel postion
+        difference_from_first = 0                                   # Difference from first indel position
+        for current in this.position_list:                          # Current indel position
+            difference_from_first += (current - previous)
+            previous = current
+            this.position_list_ACT.append(1 +                       # Left-most position changed from 0 to 1
+                sequence_index +                                    # Index of first base/residue in left_context
+                len(this.left_context) +                            # Length of left_context
+                difference_from_first)                              # Difference from first indel position
     def isValid(this):
-        return len(this.posACT) != 0
+        return len(this.position_list_ACT) != 0
 
 class Insertion(InDel):
-    def __init__(this, sequence, mtString, name):
-        InDel.__init__(this, mtString, name, True)
-        this.findACT(sequence)
-    def findACT(this, sequence):
-        this.posACT = []
-        begin = this.posList[0] - 35
-        end = this.posList[-1] + 25
+    def __init__(this, sequence, mutant_string, name, rRNA = False):
+        this.indel = mutant_string
+        this.inserted = list()
+        while not(mutant_string[0].isdigit()):
+            this.inserted.append(mutant_string[0])
+            mutant_string = mutant_string[1:]
+        InDel.__init__(this, mutant_string, name)
+        this.findACT(sequence, rRNA)
+    def findACT(this, sequence, rRNA):
+        this.position_list_ACT = []
+        # Actual insertion needs to be thirty base pairs/residues 
+        # away from recorded insertion position
+        begin = this.position_list[0] - 30 - len(this.left_context)
+        end = this.position_list[-1] + 30 - len(this.left_context)
         if begin < 0:
             begin = 0
             end = begin + 60
-        elif end > (len(sequence) - (this.posList[-1]-this.posList[0]) - len(this.leftContext) - len(this.rightContext)):
-            end = len(sequence) - (this.posList[-1]-this.posList[0]) - len(this.leftContext) - len(this.rightContext)
+        elif end > (len(sequence) - 1 - (this.position_list[-1]-this.position_list[0]) - len(this.left_context) - len(this.right_context)):
+            end = len(sequence) - 1 - (this.position_list[-1]-this.position_list[0]) - len(this.left_context) - len(this.right_context)
             begin = end - 60
-        for i in range(begin, end+1):
-            if this.checkLeft(0, i, sequence, 0):
-                this.changeACT(i)
+        for sequence_index in range(begin, end+1):
+            if lookThroughContext(sequence_index, sequence, this.left_context, this.right_context, rRNA=rRNA, inserted = True, position_list=this.position_list):
+                this.changeACT(sequence_index)
                 break
     def condensedInfo(this):
-        return (this.inserted, this.posACT, "+", "Ins:" + this.indel)
-    def longIndel(this):
-        return len(this.inserted) >= 4
+        return (this.inserted, this.position_list_ACT, "+", "Ins:" + this.indel)
+    def getInsertionCount(this):
+        return len(this.inserted)
 
 class Deletion(InDel):
-    def __init__(this, sequence, mtString, name, rRNA = False):
-        InDel.__init__(this, mtString, name, False)
+    def __init__(this, sequence, mutant_string, name, rRNA = False):
+        this.indel = mutant_string
+        this.deleted = mutant_string[0]
+        InDel.__init__(this, mutant_string[1:], name)
         this.findACT(sequence, rRNA)
-    def changeACT(this, sequence, i):
-        this.deletionACT = sequence[i+len(this.leftContext)]
-        InDel.changeACT(this, i)
+    def changeACT(this, sequence, sequence_index):
+        this.deletionACT = sequence[sequence_index+len(this.left_context)]
+        InDel.changeACT(this, sequence_index)
     def findACT(this, sequence, rRNA):
-        this.posACT = []
-        begin = this.posList[0] - 35
-        end = this.posList[-1] + 26
+        this.position_list_ACT = []
+        # Actual deletion needs to be thirty base pairs/residues 
+        # away from recorded deletion position
+        begin = this.position_list[0] - 30 - len(this.left_context)
+        end = this.position_list[-1] + 31  - len(this.left_context)
         if begin < 0:
             begin = 0
             end = begin + 61
-        elif end > (len(sequence) - 1 - (this.posList[-1]-this.posList[0]) - len(this.leftContext) - len(this.rightContext)):
-            end = len(sequence) - 1 - (this.posList[-1]-this.posList[0]) - len(this.leftContext) - len(this.rightContext)
+        elif end > (len(sequence) - 2 - (this.position_list[-1]-this.position_list[0]) - len(this.left_context) - len(this.right_context)):
+            end = len(sequence) - 2 - (this.position_list[-1]-this.position_list[0]) - len(this.left_context) - len(this.right_context)
             begin = end - 61
-        for i in range(begin, end+1):
-            if this.checkLeft(0, i, sequence, 0):
-                this.changeACT(sequence, i)
+        for sequence_index in range(begin, end+1):
+            if lookThroughContext(sequence_index, sequence, this.left_context, this.right_context, rRNA=rRNA, position_list=this.position_list):
+                this.changeACT(sequence, sequence_index)
                 break
     def isValid(this):
-        return (len(this.posACT) != 0) and (this.deleted == this.deletionACT)
+        return (len(this.position_list_ACT) != 0) and (this.deleted == this.deletionACT)
     def condensedInfo(this):
-        return (this.deleted, this.posACT, "-", "Del:" + this.indel)
+        return (this.deleted, this.position_list_ACT, "-", "Del:" + this.indel)
