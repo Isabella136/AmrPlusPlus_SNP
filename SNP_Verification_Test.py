@@ -1196,7 +1196,7 @@ def insertion_deletion_test3():
     SAM_file = open("test/insertion_deletion3.sam", "w")
     SAM_file.write(header)
     snp_num = 1
-    SAM_file.write(make_test(snp_num, full_gene_name[5], "C", "20H1D1M1I1M20H", 45 * 3 - 2, 45 * 3)) 
+    SAM_file.write(make_test(snp_num, full_gene_name[5], "TCG", "20H4M1D1M1I3M20H", 44 * 3 - 2, 46 * 3)) 
     SAM_file.close()
     pysam.sort('-o', 'test/insertion_deletion3.bam', 'test/insertion_deletion3.sam')
 
@@ -1204,7 +1204,7 @@ def insertion_deletion_test4():
     SAM_file = open("test/insertion_deletion4.sam", "w")
     SAM_file.write(header)
     snp_num = 1
-    SAM_file.write(make_test(snp_num, full_gene_name[5], "C", "20H1I1M1D1M20H", 45 * 3 - 2, 45 * 3)) 
+    SAM_file.write(make_test(snp_num, full_gene_name[5], "CG", "20H1M1I1M1D3M20H", 45 * 3 - 2, 46 * 3)) 
     SAM_file.close()
     pysam.sort('-o', 'test/insertion_deletion4.bam', 'test/insertion_deletion4.sam')
 
@@ -1342,7 +1342,7 @@ def edge_cases_test():
     SAM_file.write(make_test(snp_num, full_gene_name[7], "ATCTCGCACTCCCCA", "20H5M1D6M2D4M20H", 530 * 3 - 2, 535 * 3, True))
     snp_num += 1
     # Case 12:  |MMM|MMD M|MM M|DD MMM|MMM|
-    #               1   10   11   e   16  1
+    #               1   10   11   15  1   1
     SAM_file.write(make_test(snp_num, full_gene_name[7], "ATCTCGCACGGCCCA", "20H5M1D4M2D6M20H", 530 * 3 - 2, 535 * 3, True))
     snp_num += 1
     # Case 13:  |MMM|MMD DDM |MMM|
@@ -1354,7 +1354,7 @@ def edge_cases_test():
     SAM_file.write(make_test(snp_num, full_gene_name[7], "ATCCCACTC", "20H3M1D2M2D4M20H", 530 * 3 - 2, 533 * 3, True))
     snp_num += 1
     # Case 15:  |MMM|DMM M|DD MMM|MMM|
-    #               1   10   11  15  1
+    #               1   10   12  1   1
     SAM_file.write(make_test(snp_num, full_gene_name[7], "CGTTCTGCACTC", "20H3M1D3M2D6M20H", 529 * 3 - 2, 533 * 3, True))
     snp_num += 1
     # Case 16:  |MMM|MDM M|MD DMM|MMM|
@@ -1445,6 +1445,37 @@ def edge_cases_test():
     #                      4 n   4   1   10  13  14
     SAM_file.write(make_test(snp_num, full_gene_name[7], "GGGGAAAATCTTTTCCCACGGGG", "4S1M2I2M4I3M1D2M5D1M4S", 530 * 3 - 2, 534 * 3, True))
     snp_num += 1
+    # MEG_6094 extreme edge case of C insertion suppression
+    # Case 38: SSS|SM I|III|M MM|M MM|M MM|M MM|M MM|SSS|S 
+    #               C'C TCC'C|GC A|CT C|GG C|CC A|GG
+    # Modified:SSS|SM M|II  I|MM M|MM M|MM M|MM M|MMS|SSS
+    #                        2    4    1    1    1
+    SAM_file.write(make_test(snp_num, full_gene_name[7], "GGGGCCTCCCGCACTCGGCCCAGGGGGG", "4S1M4I15M4S", 531 * 3 - 1, 536 * 3 - 1, True))
+    snp_num += 1
+    # Case 39: MMI|M MM|III|M MM|M II|IMM|IIM
+    #               4        e    e         7
+    SAM_file.write(make_test(snp_num, full_gene_name[7], "CGTTATCATCTTCTCTGCTAA", "20H2M1I3M3I4M3I2M2I1M20H", 529 * 3 - 2, 532 * 3, True))
+    snp_num += 1
+    # Case 40: MMM|DDD DDM MM|M MM|M DMM
+    #             1   9   10   11   e   16
+    SAM_file.write(make_test(snp_num, full_gene_name[7], "CGTTTCCGCATC", "20H3M5D7M1D2M20H", 528 * 3 - 2, 533 * 3, True))
+    snp_num += 1
+    # Case 41: MMM|DMM M|MM M|MD DDD  DMM
+    #             1   10   11   e  13 13 14
+    SAM_file.write(make_test(snp_num, full_gene_name[7], "CGTGTATCTCTC", "20H3M1D7M5D2M20H", 528 * 3 - 2, 533 * 3, True))
+    snp_num += 1
+    # Case 42: MMM|DMM M|MM DDD DDD M|MM DDM
+    #             1   10   11   13 13   e   16
+    SAM_file.write(make_test(snp_num, full_gene_name[7], "CACAACGTTCCA", "20H3M1D5M6D3M2D1M20H", 526 * 3 - 2, 532 * 3, True))
+    snp_num += 1
+    # Case 43: MMM|DMM M|MD DDD DDM M|MM DDM
+    #             1   10   11   13 e    e   16
+    SAM_file.write(make_test(snp_num, full_gene_name[7], "CACAACGCTCCA", "20H3M1D4M6D4M2D1M20H", 526 * 3 - 2, 532 * 3, True))
+    snp_num += 1
+    # Case 44: MMM|DMM M|MM MDD|DMM DDM
+    #             1   10   11  15  10  12
+    SAM_file.write(make_test(snp_num, full_gene_name[7], "CACAACGTCTCC", "20H3M1D6M3D2M2D1M20H", 526 * 3 - 2, 531 * 3, True))
+    snp_num += 1
 
     SAM_file.close()
     pysam.sort('-o', 'test/edge_cases.bam', 'test/edge_cases.sam')
@@ -1490,8 +1521,8 @@ def main():
     # test2()
     # insertion_deletion_test1()
     # insertion_deletion_test2()
-    # insertion_deletion_test3()
-    # insertion_deletion_test4()
+    insertion_deletion_test3()
+    insertion_deletion_test4()
     # insertion_test1()
     # insertion_test2()
     # insertion_test3()
@@ -1504,7 +1535,7 @@ def main():
     # deletion_test4()
     # deletion_test5()
     # deletion_test6()
-    edge_cases_test()
+    # edge_cases_test()
 
 if __name__ == '__main__':
     main()

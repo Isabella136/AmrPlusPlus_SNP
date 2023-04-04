@@ -43,7 +43,8 @@ def MapQueryToReference(read, gene, config):
 
     # For MEG_6094, if gene.mustSuppressFrameshift() is True, calls suppressFS function
     if gene.mustSuppressFrameshift():
-         query_seq = suppressFS(1602, map_of_interest, query_seq)
+        soft_clipping_beginning = read.cigartuples[0][1] if read.cigartuples[0][0] == 4 else 0
+        query_seq = suppressFS(1602, map_of_interest, query_seq, soft_clipping_beginning)
 
     # Trimms query sequence in order to not have broken codons during translation
     # for rRNA, the mapCigarToAlignment returns full map, so sequence won't be trimmed
@@ -61,11 +62,9 @@ def MapQueryToReference(read, gene, config):
         end -= 1
     seq_of_interest = trimmed_query_sequence = query_seq[start:end+1]
 
-    # ?????????? what did I meant by extend past
     if not(gene.rRna()):
         seq_of_interest = dnaTranslate(trimmed_query_sequence, gene.getName())
-        map_of_interest = aaAlignment(nt_alignment_map)           #for 'F' type of genes, seq_of_interest may extend past map_of_interest
-                                                                #due to frameshift that extend past the end of query sequence
+        map_of_interest = aaAlignment(nt_alignment_map)         
     if DEBUGGING_MODE: print((seq_of_interest, map_of_interest))
     if DEBUGGING_MODE: print(gene.finalSequence()[list(map_of_interest.keys())[0]:list(map_of_interest.keys())[-1]+1])
     return (seq_of_interest, map_of_interest)
@@ -79,10 +78,10 @@ def MapQueryToReference(read, gene, config):
 # For MEG_6094, if gene.mustSuppressFrameshift() is True, the aligned_pair for reference position 1602
 # was removed in map_of_interest; this function removes it from query_sequence as well
 
-def suppressFS(nucleotide_to_delete, map_of_interest, query_sequence):
+def suppressFS(nucleotide_to_delete, map_of_interest, query_sequence, soft_clipping_beginning):
     # Because aligned_pair for reference position 1602 was removed
     # Looks for query position that aligned to position 1601 and add one
-    query_index_to_remove = map_of_interest[nucleotide_to_delete-1][0]+1
+    query_index_to_remove = map_of_interest[nucleotide_to_delete-1][0] + 1 + soft_clipping_beginning
     query_sequence = query_sequence[:query_index_to_remove] + query_sequence[query_index_to_remove+1:]
     return query_sequence
 
@@ -116,6 +115,13 @@ def mapCigarToAlignment(cigar, aligned_pair, rRNA, suppress, special):
 
     alignment_map = []
 
+    # To facilitate aa alignment, can slightly tweak alignment in a manner such as that:
+    # ...|SSS|SMI|MMM changed to ...|SSS|SMM|IMM
+    # ...|SSS|SMI|III|MMM changed to ...|SSS|SMM|III|IMM
+    # Requires keeping track of count of insertions that must be moved
+
+    insertions_to_move = 0
+
     # Traverses through extended cigar string
     for op in cigar:
         # Not in aligned_pair, so skip
@@ -147,8 +153,13 @@ def mapCigarToAlignment(cigar, aligned_pair, rRNA, suppress, special):
                 if (split_index % 3) == 0:
                     translatable = True
                     query_length += 1
-                    ref_length += 1
-                    alignment_map.append(("M", aligned_pair[index][0], aligned_pair[index][1], shift, prev_shift))
+                    if insertions_to_move == 0:
+                        ref_length += 1
+                        alignment_map.append(("M", aligned_pair[index][0], aligned_pair[index][1], shift, prev_shift))
+                    else:
+                        shift += 1
+                        alignment_map.append(("I", aligned_pair[index][0], None, shift, prev_shift))
+                        insertions_to_move -= 1
 
             # If gene is either rRNA or we've already encountered its first fulll codon
             else:
@@ -161,10 +172,15 @@ def mapCigarToAlignment(cigar, aligned_pair, rRNA, suppress, special):
                     continue
 
                 query_length += 1
-                ref_length += 1
+                if insertions_to_move == 0:
+                    ref_length += 1
 
-                # For MEG_6094, if query had suppressible cytosine insertion, maps query base pair to next reference base pair
-                alignment_map.append(("M", aligned_pair[index][0], ref_index+1 if suppressing_insertion else aligned_pair[index][1], shift, prev_shift))
+                    # For MEG_6094, if query had suppressible cytosine insertion, maps query base pair to next reference base pair
+                    alignment_map.append(("M", aligned_pair[index][0], ref_index+1 if suppressing_insertion else aligned_pair[index][1], shift, prev_shift))
+                else:
+                    shift += 1
+                    alignment_map.append(("I", aligned_pair[index][0], None, shift, prev_shift))
+                    insertions_to_move -= 1
 
         # Insertion
         elif op == "I":
@@ -200,6 +216,9 @@ def mapCigarToAlignment(cigar, aligned_pair, rRNA, suppress, special):
                     translatable = True
                     query_length += 1
                     alignment_map.append((op, aligned_pair[index][0], aligned_pair[index][1], shift, prev_shift))
+                else:
+                    insertions_to_move += 1
+                    shift -= 1
 
             # If gene is either rRNA or we've already encountered its first fulll codon
             else:
@@ -208,10 +227,13 @@ def mapCigarToAlignment(cigar, aligned_pair, rRNA, suppress, special):
                 if suppress and (ref_index + 1 > 1590) and not(suppressing_insertion):
                     suppressing_insertion = True
                     query_length += 1
-                    ref_length += 1
-                    alignment_map.append(("M", aligned_pair[index][0], ref_index+1, shift, prev_shift))
-                    shift -= 1
-
+                    if insertions_to_move == 0:
+                        ref_length += 1
+                        alignment_map.append(("M", aligned_pair[index][0], ref_index+1 + insertions_to_move, shift, prev_shift))
+                        shift -= 1
+                    else:
+                        insertions_to_move -= 1
+                        alignment_map.append((op, aligned_pair[index][0], aligned_pair[index][1], shift, prev_shift))
                 else:
                     query_length += 1
                     alignment_map.append((op, aligned_pair[index][0], aligned_pair[index][1], shift, prev_shift))
@@ -447,10 +469,13 @@ def aaAlignment(nt_alignment_map):
         # Scenario 4:   We started or ended frameshift with insertions, 
         #               or we're right after the first full codon insertion
         # Add last two query codons to current ref codon
-        elif (not has_deletion                                                      # no deletions allowed
-                and (nt_ref_index % 3 == 0)                                         # reached end of ref codon
-                and (first_alignment == (last_alignment - 1))                       # we are or were in frameshift 
-                and ((prev_aa_shift % 3 == 0) or (current_aa_shift % 3 == 0))):     # start of ref codon or end of ref codon not in frameshift 
+        elif ((nt_ref_index % 3 == 0)                                           # reached end of ref codon
+                and (not has_deletion                                           # no deletions allowed if last scenario is 11
+                    or last_add_to_map_scenario != 11)
+                and ((prev_aa_shift % 3 == 0)                                   # start or end of ref codon not in frameshift
+                    or (current_aa_shift % 3 == 0))
+                and (first_alignment == (last_alignment - 1))):                 # we are or were in frameshift 
+
               
             if DEBUGGING_MODE: print(str(nt_ref_index) + ' add to map scenario: 4')
             addTwoToOne(first_alignment, last_alignment, aa_ref_index)
@@ -533,16 +558,16 @@ def aaAlignment(nt_alignment_map):
             addOneToOne('-', aa_ref_index)
             last_add_to_map_scenario = 9
         #10
-        # If (first==last or first_ref_codon, 
+        # If (first==last, 
         #     ref_index%3 == 0, 
-        #     prev_aa_shift%3 == 0
-        #     nt[3]%3 != 0 or first_ref_codon,
-        #     has_deletion) : add last to aa_ref_index
-        elif (has_deletion
-                and (nt_ref_index % 3 == 0)
+        #     prev_aa_shift%3 == 0 or first_ref_codon,
+        #     nt[3]%3 != 0,
+        #     has_deletion or first_ref_codon) : add last to aa_ref_index
+        elif ((nt_ref_index % 3 == 0)
                 and (current_aa_shift % 3 != 0)
-                and ((prev_aa_shift % 3 == 0) or first_ref_codon)
-                and ((first_alignment == last_alignment) or first_ref_codon)):
+                and (has_deletion or first_ref_codon)
+                and (first_alignment == last_alignment)
+                and ((prev_aa_shift % 3 == 0) or first_ref_codon)):
             
             if DEBUGGING_MODE: print(str(nt_ref_index) + ' add to map scenario: 10')
             addOneToOne(last_alignment, aa_ref_index)
@@ -582,13 +607,14 @@ def aaAlignment(nt_alignment_map):
         # If (ref_index%3 != 0, 
         #     full_codon_deletion) : add '-' to aa_ref_index, aa_ref_index-1 unless if last_add_to_map_scenario == 8, 13 or None;
         #                            in that scenario, only add '-' to aa_ref_index
-        elif (full_codon_deletion and (nt_ref_index % 3 != 0)):
+        elif (full_codon_deletion 
+                and ((nt_ref_index % 3 != 0) or (current_aa_shift % 3 != 0))):
 
             if DEBUGGING_MODE: print(str(nt_ref_index) + ' add to map scenario: 13')
-            if last_add_to_map_scenario not in [8, 13, None]:
+            if last_add_to_map_scenario not in [8, 11, 13, None]:
                 addOneToTwo('-', aa_ref_index-1, aa_ref_index)
             else:
-                    addOneToOne('-', aa_ref_index)
+                addOneToOne('-', aa_ref_index)
             last_add_to_map_scenario = 13
         #14
         # If (first==last, 
@@ -643,7 +669,6 @@ def aaAlignment(nt_alignment_map):
         # If previous alignment pair was last query base pair in codon
         if ((nt_query_index % 3) == 0) and (delete_count == 0): 
             has_deletion = False
-            full_codon_deletion = False
 
         # In the improbale case that insertion and deletion are together, combine them into one:
         combine = False
@@ -694,9 +719,12 @@ def aaAlignment(nt_alignment_map):
                 has_deletion = True
 
                 # For scenario such as the codon MDDDMM, maps a deletion to previous and current reference codons
-                if (delete_count % 3 == 0) and (prev_aa_shift % 3 != 0):
-                    full_codon_deletion = True
-                    addToMapScenario(int(nt_ref_index//3), nt[3])
+                # For scenarios such as DMMDDDDDM, maps deletion to current reference codon since deletions were mapped to last
+                #       two codons in line 849
+                if (count == len(nt_alignment_map)-1) or nt_alignment_map[count+1][0] != "D":
+                    if (delete_count >= 3) and (prev_aa_shift % 3 != 0) and (nt[3] %3 == 0):
+                        full_codon_deletion = True
+                        addToMapScenario(int(nt_ref_index//3), nt[3])
 
             # Not indel
             else:
@@ -745,11 +773,13 @@ def aaAlignment(nt_alignment_map):
                 insert_count = 0
                 has_deletion = True
 
-                # For scenario such as the codon MMDDDM, maps a deletion to previous reference codon
-                # Since the current query codon has already been mapped in line 
-                if (delete_count % 3 == 0) and (prev_aa_shift % 3 != 0):
-                    full_codon_deletion = True
-                    addToMapScenario(int(nt_ref_index//3), nt[3])
+                # For scenario such as the codon MMDDDM, maps a deletion to previous and current reference codons
+                # For scenarios such as DMMDDDDDM, maps deletion to current reference codon since deletions were mapped to last
+                #       two codons in line 849
+                if (count == len(nt_alignment_map)-1) or nt_alignment_map[count+1][0] != "D":
+                    if (delete_count >= 3) and (prev_aa_shift % 3 != 0) and (nt[3] %3 == 0):
+                        full_codon_deletion = True
+                        addToMapScenario(int(nt_ref_index//3), nt[3])
 
             # Not indel
             else:
@@ -814,17 +844,18 @@ def aaAlignment(nt_alignment_map):
                     last_alignment -= 1
                 
                 # Run addToMapScenario if one of these applies:
-                if (first_ref_codon                                                     # first reference codon aligned to query
-                        or full_codon_deletion                                          # entire reference codon has been deleted
-                        or (prev_aa_shift % 3 == 0)                                     # we weren't in a frameshift at the start
-                        or (last_add_to_map_scenario in [3,10])                         # previous reference codon went through scenario 3 or 10
-                        or ((nt[3] % 3 == 0) and (last_add_to_map_scenario == 11))):    # we left frameshift and previous ref codon went through scenario 11
+                if ((nt[3] % 3 == 0)                                        # we have left frameshift                                
+                        or first_ref_codon                                  # first reference codon aligned to query
+                        or full_codon_deletion                              # entire reference codon has been deleted
+                        or (prev_aa_shift % 3 == 0)                         # we weren't in a frameshift at the start
+                        or (last_add_to_map_scenario in [3, 10, 11])):      # previous reference codon went through scenario 3, 10, or 11
 
                     addToMapScenario(int(nt_ref_index//3)-1, nt[3])
 
                 prev_aa_shift = None
                 first_alignment = None
                 first_ref_codon = False
+                full_codon_deletion = False
 
             # Not indel
             else: #nt[0] == "M"

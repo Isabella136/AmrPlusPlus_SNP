@@ -10,6 +10,7 @@ import pysam
 def verify(read, gene, config):
     if config.getboolean('SETTINGS', 'DEBUGGING_MODE'):
         print(read.qname)
+        print(gene.getName())
     rRna = gene.rRna()
     #Counts read; other data will be counted in FinalCount method
     gene.addToOutputInfo(0)

@@ -224,7 +224,6 @@ def iterate(process_vars):
     for read in alignment_iterator:
         if (read.cigarstring == None):
             continue
-        #elif (read.qname not in ['test_28']): continue
         elif (len(argList) != 0) and (gene_variant.getName().split("|")[0] not in argList):
             continue
         verify(read, gene_variant, config)

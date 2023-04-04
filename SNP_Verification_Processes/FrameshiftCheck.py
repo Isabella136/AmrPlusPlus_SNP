@@ -146,16 +146,24 @@ def MEG_6142Check(read, gene):
     # Update output info accordingly        
     if fs482:
         gene.updateCurrentReadNonstopInformation(True)
+        if DEBUGGING_MODE:
+            print('Nonstop')
         gene.addDetails(read, "nonstop")
         if deletion76:
+            if DEBUGGING_MODE:
+                print('special deletion at 76')
             gene.hasSpecialCase()
         return True
     else:
         gene.updateCurrentReadNonstopInformation(False)
         if (shift_count%3) == 0:
             if deletion76:
+                if DEBUGGING_MODE:
+                    print('special deletion at 76')
                 gene.hasSpecialCase()
             return True
+    if DEBUGGING_MODE:
+        print('FS till end')
     gene.addDetails(read, 'FS till end')
 
     # Return False if frameshift is unexplained
@@ -170,13 +178,13 @@ def MEG_6142Check(read, gene):
 #   deletion_count_after_C_insertion:   Number of deltions after the insertion at codon 531 that weren't negated by insertions;
 #                                       if deletion_count_after_C_insertion % 3 == 1, the insertion at codon 531 shouldn't be 
 #                                       suppressed in this analysis
-#   in_codon531:                        True only when analyzing codon 531
 #   has_C_insertion:                    True if, and only if, there is a cytosine insertion in codon 531 that causes a frameshift
 #   residue_531_to_534/536:             Keeps track of amino acids in query residues 531 to 534 or 536
 #   aligned_pairs:                      List of tuples with aligned read and reference positions
 #   query_sequence:                     Sequence of read portion that aligned to MEGARes
 #   last_before_full:                   Keeps track of last query nucleotide index before next codon
 #   ref_index:                          Current index of reference sequence
+#   in_codon531:                        True only when analyzing codon 531
 #   valid:                              False if, and only if, there is still a frameshift by the end of the query
 #   insertion_position:                 If has_C_insertion is True, contains the position of the insertion; else is None
 #   remove_from_long_frameshift_check:  If cytosine insertion in codon 531 causes a frameshift that isn't suppressible,
@@ -186,10 +194,8 @@ def MEG_6142Check(read, gene):
 # If present, this insertion can be suppressed during protein translation and confer resistance.
 
 def MEG_6094Check(read, gene):
-    if DEBUGGING_MODE:
-        print('MEG_6094 Check')
     shift_count, insertion_count_after_C_insertion, deletion_count_after_C_insertion = 0, 0, 0
-    in_codon531, has_C_insertion = False, False
+    has_C_insertion = False
     residue_531_to_536, residue_531_to_534 = "", ""
 
     # Remove soft-clipping
@@ -200,6 +206,8 @@ def MEG_6094Check(read, gene):
     query_sequence = read.query_sequence
     last_before_full = (3 - (aligned_pairs[0][1]) % 3) % 3 - 1 + start_index
     ref_index = aligned_pairs[0][1]
+
+    in_codon531 = True if aligned_pairs[0][1] in range(1591,1594) else False
 
     valid = True
     insertion_position = None
