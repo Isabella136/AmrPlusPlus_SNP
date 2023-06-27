@@ -281,13 +281,13 @@ def MEG_6094Check(read, gene):
         if DEBUGGING_MODE:
             print('C insertion')      
         # Must have thoe residues SRTR due to insertion                                             
-        if (residue_531_to_534 == "SRTR"[0:len(residue_531_to_534)]):    
+        if (residue_531_to_534 == "SRTR"):    
             # In that case, must not have FS suppression in analysis     
             if (deletion_after or two_insertions_after):
                 if DEBUGGING_MODE:
                     print('C insert followed by del/ins')
                 gene.addDetails(read, 'C insert followed by del/ins')                                                  
-            elif (residue_531_to_536 == "SRTRPR"[0:len(residue_531_to_536)]):  
+            elif (residue_531_to_536 == "SRTRPR"):  
                 if DEBUGGING_MODE:
                     print('Suppressible C insert')                                                     
                 gene.addDetails(read, 'Suppressible C insert')
