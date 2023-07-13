@@ -60,7 +60,7 @@ def parse_config():
         """
     argList = []
     try:
-        options, args = getopt.getopt(sys.argv[1:], "hlra:c:i:o:", ["mt_and_wt=", "detailed_output=", "count_matrix=", "count_matrix_final="])
+        options, args = getopt.getopt(sys.argv[1:], "hlra:c:i:o:t:", ["mt_and_wt=", "detailed_output=", "count_matrix=", "count_matrix_final="])
     except getopt.GetoptError:
         print("ERROR - this is the list of arguments recognized by the program:{}".format(arguments_string))
         sys.exit(-1)
