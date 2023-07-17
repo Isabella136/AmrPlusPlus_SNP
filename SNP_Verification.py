@@ -120,7 +120,7 @@ def parse_config():
         elif opt == "-t":
             if i == 0:
                 config.read(configFile)
-            config['SETTINGS']['THREADS'] = int(arg)
+            config['SETTINGS']['THREADS'] = arg
         elif opt == "--mt_and_wt":
             if i == 0:
                 config.read(configFile)
