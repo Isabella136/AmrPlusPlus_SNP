@@ -1,0 +1,2 @@
+Gene,Number of reads,Resistant,Missense,Insertion,Deletion,Previously recorded nonsense,N-tuple,Nonstop,12+bp indel,12+ bp frameshift,Newly found nonsense,Frameshift till end,Hypersusceptible mutations + resistance-conferring mutations
+MEG_3180|Drugs|Fluoroquinolones|Fluoroquinolone-resistant_DNA_topoisomerases|GYRA|RequiresSNPConfirmation,18,0,0,0,0,0,0,0,0,0,0,0,0

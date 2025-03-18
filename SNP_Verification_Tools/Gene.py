@@ -193,6 +193,14 @@ class Gene:
             else:
                 header[info] = "T"
 
+        def writeResistantReads(this, file):
+            row_of_res_reads = this.full_name
+            for read in this.additional_info:
+                if read[-1] == 'res':
+                    row_of_res_reads = ','.join((row_of_res_reads, read[0]))
+            file.write(row_of_res_reads)
+            file.write('\n')
+
         def writeAdditionalInfo(this, file):
             header = {"Read": None}
             this.createAdditionalInfoHeader(header)

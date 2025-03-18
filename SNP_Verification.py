@@ -52,7 +52,8 @@ def parse_config():
         -r: conditions for redistribution
         -t: threads for multiprocessing
         
-        --mt_and_wt:            true by default, used in case of insertion leading to presence of both mt and wt; if true, mark as resistant; if false, mark as susceptible
+        --mt_and_wt:            false by default, used in case of insertion leading to presence of both mt and wt; if true, mark as resistant; if false, mark as susceptible
+        --output_reads:         false by default, output list of resistant reads per gene
         --detailed_output:      false by default, determines whether a more detailed output will be given; can be either 'false', 'all', or include a list of accessions seperated by commas
         --count_matrix:         count matrix that will be updated if amrplusplus is true
         --count_matrix_final:   the file where the updated count matrix will be found if amrplusplus is true
@@ -135,6 +136,13 @@ def parse_config():
                 config['SETTINGS']['DETAILED'] = "true"
                 if arg != "all":
                     argList = arg.split(',')
+        elif opt =="--output_reads":
+            if i == 0:
+                config.read(configFile)
+            if arg not in ['true', 'false']:
+                print("ERROR: output_reads argument can only be either 'true' or 'false'")
+                sys.exit(-1)
+            config['SETTINGS']['READS'] = arg
         elif opt == "--count_matrix":
             if i == 0:
                 config.read(configFile)
@@ -309,6 +317,11 @@ def create_output(config, argList, gene_variant_dict):
         # Retrieve count matrix data
         countMatrix = pd.read_csv(config['SOURCE_FILES']['COUNT_MATRIX']) if config.getboolean('SETTINGS', 'AMRPLUSPLUS') else None
 
+        # Create new output file for resistant reads if requested
+        if config.getboolean('SETTINGS', 'READS'):
+            with open(config['FOLDERS']['SAMPLE_OUTPUT'] + 'resistant_reads' + ".csv", "w") as readsOutput:
+                readsOutput.write("Gene Header, List of Reads\n")
+
         # Run through results
         for name, gene in gene_variant_dict.items():
             if (len(argList) != 0) and (gene.getName().split("|")[0] not in argList):
@@ -326,6 +339,11 @@ def create_output(config, argList, gene_variant_dict):
             if config.getboolean('SETTINGS', 'DETAILED') and (gene.getOutputInfo()[0] > 0):
                 with open(config['FOLDERS']['SAMPLE_DETAILED_OUTPUT'] + name + ".csv", "w") as detailedOutput:
                     gene.writeAdditionalInfo(detailedOutput)
+
+            # Print resistant reads if requested
+            if config.getboolean('SETTINGS', 'READS') and (gene.getOutputInfo()[0] > 0):
+                with open(config['FOLDERS']['SAMPLE_OUTPUT'] + 'resistant_reads' + ".csv", "a") as readsOutput:
+                    gene.writeResistantReads(readsOutput)
             
             gene.clearOutputInfo()
 
